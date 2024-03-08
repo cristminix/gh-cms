@@ -1,42 +1,42 @@
 import DB from "./DB"
 import DBIndexed from "./DBIndexed"
-import App from "./App"
-import Author from "./Author"
-import Course from "./Course"
+// import App from "./App"
+// import Author from "./Author"
+// import Course from "./Course"
 // import Download from "./unused/Download"
 // import DownloadConfig from "./unused/DownloadConfig"
 // import DownloadState from "./unused/DownloadState"
-import ExerciseFile from "./ExerciseFile"
-import Section from "./Section"
-import StreamLocation from "./StreamLocation"
-import Toc from "./Toc"
-import Message from "./Message"
-import DMSetup from "./DMSetup"
-import DMStatus from "./DMStatus"
+// import ExerciseFile from "./ExerciseFile"
+// import Section from "./Section"
+// import StreamLocation from "./StreamLocation"
+// import Toc from "./Toc"
+// import Message from "./Message"
+// import DMSetup from "./DMSetup"
+// import DMStatus from "./DMStatus"
 // import Cookie from "./unused/Cookie"
-import Transcript from "./Transcript"
+// import Transcript from "./Transcript"
 import PrxCache from "./PrxCache"
-import Thumbnail from "./Thumbnail"
-import QState from "./QState"
+// import Thumbnail from "./Thumbnail"
+// import QState from "./QState"
 
 class Store {
-  mApp = null
-  mAuthor = null
-  mCourse = null
+  // mApp = null
+  // mAuthor = null
+  // mCourse = null
   // mDownload = null
   // mDownloadConfig = null
   // mDownloadState = null
-  mExerciseFile = null
-  mSection = null
-  mStreamLocation = null
-  mToc = null
-  mDB = null
-  mMessage = null
-  mDMSetup = null
-  mDMStatus = null
-  mTranscript = null
+  // mExerciseFile = null
+  // mSection = null
+  // mStreamLocation = null
+  // mToc = null
+  // mDB = null
+  // mMessage = null
+  // mDMSetup = null
+  // mDMStatus = null
+  // mTranscript = null
   mPrxCache = null
-  mQState = null
+  // mQState = null
 
   /**
    * List of model class names that the Store will initialize instances of.
@@ -45,24 +45,24 @@ class Store {
    */
   availables = [
     "DB",
-    "App",
-    "Author",
-    "Course",
+    // "App",
+    // "Author",
+    // "Course",
     // "Download",
     // "DownloadConfig",
     // "DownloadState",
-    "ExerciseFile",
-    "Section",
-    "StreamLocation",
-    "Toc",
-    "Message",
-    "QState",
-    "DMSetup",
-    "DMStatus",
+    // "ExerciseFile",
+    // "Section",
+    // "StreamLocation",
+    // "Toc",
+    // "Message",
+    // "QState",
+    // "DMSetup",
+    // "DMStatus",
     // "Cookie",
-    "Transcript",
+    // "Transcript",
     "PrxCache",
-    "Thumbnail",
+    // "Thumbnail",
   ]
 
   static instance = null
@@ -79,26 +79,26 @@ class Store {
    * This allows consumer code to wait for all models to initialize before continuing.
    */
   async ready(callback) {
-    this.mDB = await DB.getInstance()
-    this.mApp = await App.getInstance()
-    this.mAuthor = await Author.getInstance()
-    this.mCourse = await Course.getInstance()
+    // this.mDB = await DB.getInstance()
+    // this.mApp = await App.getInstance()
+    // this.mAuthor = await Author.getInstance()
+    // this.mCourse = await Course.getInstance()
     // this.mDownload = await Download.getInstance()
     // this.mDownloadConfig = await DownloadConfig.getInstance()
     // this.mDownloadState = await DownloadState.getInstance()
-    this.mExerciseFile = await ExerciseFile.getInstance()
-    this.mSection = await Section.getInstance()
-    this.mStreamLocation = await StreamLocation.getInstance()
-    this.mToc = await Toc.getInstance()
-    this.mMessage = await Message.getInstance()
-    this.mDMSetup = await DMSetup.getInstance()
-    this.mDMStatus = await DMStatus.getInstance()
-    // this.mCookie = await Cookie.getInstance()
-    this.mTranscript = await Transcript.getInstance()
+    // this.mExerciseFile = await ExerciseFile.getInstance()
+    // this.mSection = await Section.getInstance()
+    // this.mStreamLocation = await StreamLocation.getInstance()
+    // this.mToc = await Toc.getInstance()
+    // this.mMessage = await Message.getInstance()
+    // this.mDMSetup = await DMSetup.getInstance()
+    // this.mDMStatus = await DMStatus.getInstance()
+    // // this.mCookie = await Cookie.getInstance()
+    // this.mTranscript = await Transcript.getInstance()
     this.mPrxCache = PrxCache.getInstance()
-    this.mThumbnail = await Thumbnail.getInstance()
-    this.mQState = await QState.getInstance()
-    await this.mApp.init()
+    // this.mThumbnail = await Thumbnail.getInstance()
+    // this.mQState = await QState.getInstance()
+    // await this.mApp.init()
     callback()
   }
 

@@ -11,7 +11,7 @@ export default defineConfig({
   },
   ollupOptions: {
     input: {
-      option: resolve("./src/cp/option-pages.option.html"),
+      cp: resolve("./src/cp/index.html"),
     },
   },
   plugins: [react(), nodePolyfills()],
