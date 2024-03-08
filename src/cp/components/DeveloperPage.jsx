@@ -1,5 +1,5 @@
 import { useLoaderData } from "react-router-dom"
-import VideoPlayer from "./developers/VideoPlayer"
+// import VideoPlayer from "./developers/VideoPlayer"
 import MenuManager from "./developers/MenuManager"
 export async function loader({ params }) {
   const { table, page } = params
@@ -18,7 +18,7 @@ const DeveloperPage = ({ store, config }) => {
     return <MenuManager store={store} config={config} />
   }
   if (page == "video-player") {
-    return <VideoPlayer store={store} config={config} />
+    // return <VideoPlayer store={store} config={config} />
   }
 
   return (
