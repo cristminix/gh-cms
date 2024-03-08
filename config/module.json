@@ -1,0 +1,5 @@
+{
+    "thumbnailDir" : "${app.storageDir}/thumbnails",
+    "thumbnailTTDir" : "${app.storageDir}/thumbnails_tt",
+    "manualDir" : "${app.storageDir}/manuals"
+}

@@ -1,0 +1,33 @@
+{"name":"llfetcher-native","hostname":"eleven","pid":2068,"level":30,"msg":"sqlite storage/cms.sqlite","time":"2024-03-08T07:03:09.432Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2068,"level":30,"msg":"cwd F:\\projects\\gh-cms","time":"2024-03-08T07:03:09.433Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2068,"level":30,"msg":"Memulai pendengar StayFresh.","time":"2024-03-08T07:03:09.438Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2068,"level":30,"msg":"Mendengarkan HTTP/1.1 di port 7700","time":"2024-03-08T07:03:09.438Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2068,"level":30,"msg":"Berbicara dengan ekstensi Chrome pada stdin/stdout","time":"2024-03-08T07:03:09.438Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2068,"level":30,"msg":"Database connected","time":"2024-03-08T07:03:10.586Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2068,"level":30,"msg":"Mendapatkan peristiwa \"end\" pada stdin. Keluar.","time":"2024-03-08T07:05:01.647Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2208,"level":30,"msg":"sqlite storage/cms.sqlite","time":"2024-03-08T07:05:16.938Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2208,"level":30,"msg":"cwd F:\\projects\\gh-cms","time":"2024-03-08T07:05:16.939Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2208,"level":30,"msg":"Memulai pendengar StayFresh.","time":"2024-03-08T07:05:16.942Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2208,"level":30,"msg":"Mendengarkan HTTP/1.1 di port 7700","time":"2024-03-08T07:05:16.942Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2208,"level":30,"msg":"Berbicara dengan ekstensi Chrome pada stdin/stdout","time":"2024-03-08T07:05:16.942Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2208,"level":30,"msg":"Database connected","time":"2024-03-08T07:05:17.126Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":2208,"level":30,"msg":"Mendapatkan peristiwa \"end\" pada stdin. Keluar.","time":"2024-03-08T07:09:24.166Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":1236,"level":30,"msg":"sqlite storage/cms.sqlite","time":"2024-03-08T07:09:32.250Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":1236,"level":30,"msg":"cwd F:\\projects\\gh-cms","time":"2024-03-08T07:09:32.250Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":1236,"level":30,"msg":"Memulai pendengar StayFresh.","time":"2024-03-08T07:09:32.254Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":1236,"level":30,"msg":"Mendengarkan HTTP/1.1 di port 7700","time":"2024-03-08T07:09:32.254Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":1236,"level":30,"msg":"Berbicara dengan ekstensi Chrome pada stdin/stdout","time":"2024-03-08T07:09:32.254Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":1236,"level":30,"msg":"Database connected","time":"2024-03-08T07:09:32.464Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":11556,"level":30,"msg":"sqlite storage/cms.sqlite","time":"2024-03-08T07:09:37.086Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":11556,"level":30,"msg":"cwd F:\\projects\\gh-cms","time":"2024-03-08T07:09:37.086Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":11556,"level":30,"msg":"Memulai pendengar StayFresh.","time":"2024-03-08T07:09:37.089Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":11556,"level":30,"msg":"Mendengarkan HTTP/1.1 di port 7700","time":"2024-03-08T07:09:37.089Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":11556,"level":30,"msg":"Berbicara dengan ekstensi Chrome pada stdin/stdout","time":"2024-03-08T07:09:37.090Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":11556,"level":30,"msg":"Database connected","time":"2024-03-08T07:09:37.275Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":11556,"level":30,"msg":"Mendapatkan peristiwa \"end\" pada stdin. Keluar.","time":"2024-03-08T07:09:39.839Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":8280,"level":30,"msg":"sqlite storage/cms.sqlite","time":"2024-03-08T07:09:44.446Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":8280,"level":30,"msg":"cwd F:\\projects\\gh-cms","time":"2024-03-08T07:09:44.447Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":8280,"level":30,"msg":"Memulai pendengar StayFresh.","time":"2024-03-08T07:09:44.450Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":8280,"level":30,"msg":"Mendengarkan HTTP/1.1 di port 7700","time":"2024-03-08T07:09:44.450Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":8280,"level":30,"msg":"Berbicara dengan ekstensi Chrome pada stdin/stdout","time":"2024-03-08T07:09:44.450Z","v":0}
+{"name":"llfetcher-native","hostname":"eleven","pid":8280,"level":30,"msg":"Database connected","time":"2024-03-08T07:09:44.665Z","v":0}
