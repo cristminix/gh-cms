@@ -84,11 +84,11 @@ router.get('/${ctl}s', async (req, res) => {
         const ${modelInstanceName}s =  await AppDataSource.manager.find(${config.model}, option)
         const records = ${modelInstanceName}s
         
-        res.send({ page, limit, order_by, order_dir, records, total_pages, total_records})
+        return res.send({ page, limit, order_by, order_dir, records, total_pages, total_records})
 
     }catch(e){
         console.error(e)
-        res.send(e)
+        return res.send(e)
 
     }
 });
@@ -100,7 +100,7 @@ router.get('/${ctl}/:id',async (req, res) => {
     try{
       const ${modelInstanceName} = await AppDataSource.manager.findOne(${config.model}, {where:{${config.pk}}})
 
-      res.send({data : ${modelInstanceName}})
+      return res.send({data : ${modelInstanceName}})
     }catch(e){
       console.error(e)
     }
@@ -125,7 +125,7 @@ router.post('/${ctl}/create',async (req, res) => {
         message = "Create failed"
 
     }
-    res.send({success, data, message})
+    return res.send({success, data, message})
 
 });
 
@@ -159,7 +159,7 @@ router.post('/${ctl}/update/:${config.pk}?',async (req, res) => {
     }catch(e){
       console.error(e)
     }
-    res.send({success, data, message})
+    return res.send({success, data, message})
 
 });
 
@@ -192,7 +192,7 @@ router.post('/${ctl}/delete/:id?',async (req, res) => {
     }catch(e){
       console.error(e)
     }
-    res.send({success, data, message})
+    return res.send({success, data, message})
 });
 export {router}
     `

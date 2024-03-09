@@ -41,19 +41,19 @@ class YtUploadRouter extends AuthenticatedRouter {
   async getList(req, res) {
     const { page, limit, order_by, order_dir } = req.query
     const results = await this.mYtUpload.getList(page, limit, order_by, order_dir)
-    res.send(results)
+    return res.send(results)
   }
   async getState(req, res) {
     let { limit, page } = req.query
     page = parseInt(page) || null
     const results = await this.mYtUpload.getState(limit, page)
-    res.send(results)
+    return res.send(results)
   }
   async get(req, res) {
     // Route logic for handling GET '/yt-upload/:id'
     let id = req.params.id
     const row = await this.mYtUpload.getByPk(id)
-    res.send({ row })
+    return res.send({ row })
   }
 
   async create(req, res) {
@@ -89,9 +89,9 @@ class YtUploadRouter extends AuthenticatedRouter {
     try {
       ytupload = await this.mYtUpload.create(title, description, category, tags, thumbnail, video)
 
-      res.send({ data: ytupload })
+      return res.send({ data: ytupload })
     } catch (e) {
-      res.send({ data: e.toString() })
+      return res.send({ data: e.toString() })
     }
   }
 
@@ -157,9 +157,9 @@ class YtUploadRouter extends AuthenticatedRouter {
         updatedData.thumbnail = thumbnail
       }
       const ytupload = await this.mYtUpload.update(id, updatedData)
-      res.send({ success: true, data: ytupload, message: "Record updated" })
+      return res.send({ success: true, data: ytupload, message: "Record updated" })
     } else {
-      res.send({ success: false, message: "Record not found" })
+      return res.send({ success: false, message: "Record not found" })
     }
   }
   async delete(req, res) {
@@ -185,9 +185,9 @@ class YtUploadRouter extends AuthenticatedRouter {
           this.logger.info("File deleted successfully!")
         }
       })
-      res.send({ success: true, data: ytupload, message: "Record deleted" })
+      return res.send({ success: true, data: ytupload, message: "Record deleted" })
     } else {
-      res.send({ success: false, message: "Record not found" })
+      return res.send({ success: false, message: "Record not found" })
     }
   }
   initRouter() {

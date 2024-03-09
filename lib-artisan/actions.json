@@ -86,6 +86,26 @@
         }
       }
     },
+    "createModelAPIRouteV3": {
+      "arguments": {
+        "table_name": {
+          "type": "string",
+          "desc": "Table name",
+          "required": true
+        },
+        "target_dir": {
+          "type": "string",
+          "desc": "Target directory",
+          "required": true
+        },
+        "json_path": {
+          "type": "string",
+          "desc": "Model entity definition",
+          "required": false,
+          "defaultValue": "./model_entities.json"
+        }
+      }
+    },
     "listModelAPIRoutes": {
       "arguments": {
         "json_path": {

@@ -190,11 +190,11 @@ export default ${config.model}Router
     }
 }
 
-const createModelAPIRouteV2 = async(table_name, target_dir, json_path) => {
+const createModelAPIRouteV3 = async(table_name, target_dir, json_path) => {
     
     let config = await jsonParseFile(json_path, table_name, 'table', 'schema')
     await createRouteFile(config, table_name, target_dir)
     
 }
-createModelAPIRouteV2.HELP = `createModelAPIRouteV2 <table_name> <target_dir> [model_entities.json]`
-export default createModelAPIRouteV2
+createModelAPIRouteV3.HELP = `createModelAPIRouteV3 <table_name> <target_dir> [model_entities.json]`
+export default createModelAPIRouteV3

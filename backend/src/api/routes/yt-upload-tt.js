@@ -43,18 +43,18 @@ class YtUploadTTRouter extends AuthenticatedRouter {
     let { uploadId } = req.params
     page = parseInt(page) || null
     const results = await this.mYtUploadTT.getState(uploadId, limit, page)
-    res.send(results)
+    return res.send(results)
   }
   async getList(req, res) {
     const { uploadId, page, limit, order_by, order_dir } = req.query
     const results = await this.mYtUploadTT.getList(uploadId, page, limit, order_by, order_dir)
-    res.send(results)
+    return res.send(results)
   }
   async get(req, res) {
     // Route logic for handling GET '/yt-upload-tt/:id'
     let id = req.params.id
     const row = await this.mYtUploadTT.getByPk(id)
-    res.send({ row, success: true })
+    return res.send({ row, success: true })
   }
 
   async create(req, res) {
@@ -92,9 +92,9 @@ class YtUploadTTRouter extends AuthenticatedRouter {
     try {
       record = await this.mYtUploadTT.create(uploadId, title, description, thumbnail)
 
-      res.send({ success, data: record })
+      return res.send({ success, data: record })
     } catch (e) {
-      res.send({ success, data: e.toString() })
+      return res.send({ success, data: e.toString() })
     }
   }
   async clone(req, res) {
@@ -151,9 +151,9 @@ class YtUploadTTRouter extends AuthenticatedRouter {
         if (record) {
           success = true
         }
-        res.send({ success, data: record })
+        return res.send({ success, data: record })
       } catch (e) {
-        res.send({ success, errors: [{ type: "Esception", message: e.toString() }] })
+        return res.send({ success, errors: [{ type: "Esception", message: e.toString() }] })
       }
     }
     return res.send({ success, errors: [{ type: "unknown", message: "unknown error" }] })
@@ -219,9 +219,9 @@ class YtUploadTTRouter extends AuthenticatedRouter {
         updatedData.thumbnail = thumbnail
       }
       const record = await this.mYtUploadTT.update(id, updatedData)
-      res.send({ success: true, data: record, message: "Record updated" })
+      return res.send({ success: true, data: record, message: "Record updated" })
     } else {
-      res.send({ success: false, message: "Record not found" })
+      return res.send({ success: false, message: "Record not found" })
     }
   }
   async delete(req, res) {
@@ -248,9 +248,9 @@ class YtUploadTTRouter extends AuthenticatedRouter {
           this.logger.info("File deleted successfully!")
         }
       })
-      res.send({ success: true, data: record, message: "Record deleted" })
+      return res.send({ success: true, data: record, message: "Record deleted" })
     } else {
-      res.send({ success: false, message: "Record not found" })
+      return res.send({ success: false, message: "Record not found" })
     }
   }
   initRouter() {
