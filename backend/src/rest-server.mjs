@@ -12,7 +12,13 @@ import RequestLogger from "bunyan-request-logger"
 import { DS } from "./api/data-source/index.js"
 import routers from "./api/routes/routers.js"
 import AppConfig from "./api/AppConfig.js"
-
+import twing from "twing"
+import livereload from "livereload"
+import connectLiveReload from "connect-livereload"
+// console.log(twing)
+const { createEnvironment, createArrayLoader, createFilesystemLoader } = twing
+// import { TwingExtensionStringLoader } from 'twing-extension-string-loader'
+// import TwingEnvironment from 'twing'
 let BASEPATH = "."
 const DEFAULT_LOG_PATH = os.tmpdir()
 // const ENV = {
@@ -28,7 +34,7 @@ const main = async () => {
     streams: [
       {
         type: "rotating-file",
-        path: `${appConfig.get("logDir")}/llfetcher-native.log`,
+        path: `${appConfig.get("logDir")}/gh-cms-rest-server.log`,
         count: 7,
         period: "1h", // Others: 1h, 1w, 1m, 1y. See https://github.com/trentm/node-bunyan#stream-type-rotating-file
       },
@@ -46,79 +52,52 @@ const main = async () => {
   app.use(cors())
   app.use(HTTP_LOG)
   app.use(bodyParser.urlencoded({ extended: true }))
-  app.get("/native-messaging/:eventName", function (request, response) {
-    const delay = request.query.delay
-    // On an HTTP request, write stuff to stdout to communicate with Chrome.
-    const outputMessage = JSON.stringify(request.params.eventName)
-    const buf = Buffer.allocUnsafe(4) // 32 bits.
 
-    buf.writeInt32LE(outputMessage.length, 0) // Use writeInt32BE if you're running on a big-endian architecture.
-
-    function sendMessageToChrome() {
-      process.stdout.write(buf)
-      process.stdout.write(outputMessage)
-      LOG.info("Mengirim pesan di stdout: " + buf + outputMessage)
+  // LOG.info("Memulai gh-cms rest server.")
+  // console.log(fs.existsSync(`./templates/index.twig`))
+  const liveReloadServer = livereload.createServer()
+  liveReloadServer.server.once("connection", () => {
+    setTimeout(() => {
+      liveReloadServer.refresh("/")
+    }, 100)
+  })
+  app.use(connectLiveReload())
+  app.set("views", path.join(".", "src/cms/templates/pug/default/"))
+  app.set("view engine", "pug")
+  app.use(express.static(path.join(".", "public")))
+  app.get("/", (req, res) => {
+    res.render("template")
+  })
+  app.get("/twig", function (req, res) {
+    const siteData = {
+      title: "Hello World",
+      description: "This is a simple website.",
+      author: "Author",
+      keywords: "keyword1, keyword2",
+      url: "http://localhost:3000",
+      image: "http://localhost:3000/images/image.jpg",
+      twitter: "@author",
+      content: "Main content",
     }
-
-    if (delay) {
-      LOG.info("Menunda selama", delay, "milidetik")
-      setTimeout(sendMessageToChrome, delay)
-    } else {
-      sendMessageToChrome()
-    }
-
-    // Return a response immediately
-    response.send(outputMessage)
-  })
-  LOG.info("Memulai pendengar StayFresh.")
-  LOG.info("Mendengarkan HTTP/1.1 di port 7700")
-  LOG.info("Berbicara dengan ekstensi Chrome pada stdin/stdout")
-
-  process.stdin.on("readable", async () => {
-    // Read input as UTF-8 strings. Note the first 4 bytes contain the
-    // message length, so we have to re-cast them into a raw Buffer and then
-    // read as an unsigned 32-bit integer.
-    process.stdin.setEncoding("utf8")
-    var chunk = process.stdin.read(4) // Read the first 4 bytes to get length
-    var length = Buffer.from(chunk).readUInt32LE(0) // Convert to integer
-
-    // TODO: What if we don't have all the data yet?
-    let message = process.stdin.read()
-    // while (chunk !== null) {
-    //     message += chunk
-    //     chunk - process.stdin.read()
-    // }
-    // if(isBase64(message)){
-    //     message = base64.decode(message)
-    // }
-    try {
-      const seed = new Date().getTime()
-      const moduleImport = await import(/* @vite-ignore */ `./dynamic-module.mjs?rand=${seed}`)
-      const { parseMessage } = moduleImport
-      parseMessage(message, LOG, datasource)
-    } catch (e) {
-      // console.error(e)
-      LOG.error(e.toString())
-    }
-
-    LOG.info("Menerima pesan sepanjang " + length + " bytes pada stdin: " + message)
+    let loader = createFilesystemLoader(fs)
+    loader.addPath("./src/cms/templates/default/")
+    loader.addPath("./src/cms/templates/default/sections/")
+    let environment = createEnvironment(loader)
+    environment
+      .render("template.twig", siteData)
+      .then((output) => {
+        res.end(output)
+      })
+      .catch((e) => {
+        res.end(e.toString())
+      })
   })
 
-  process.stdin.on("end", function () {
-    // Note: "close" is not guaranteed to fire. The "end" event will.
-    LOG.info('Mendapatkan peristiwa "end" pada stdin. Keluar.')
-    process.exit(0) // Exit successfully.
+  app.get("/name/:name", function (req, res) {
+    environment.render("index.twig", req.params).then((output) => {
+      res.end(output)
+    })
   })
-
-  process.on("exit", function (code) {
-    console.log("Proses keluar dengan kode", code)
-    LOG.info("Proses keluar dengan kode", code)
-  })
-
-  process.on("uncaughtException", function (error) {
-    console.error("Process got uncaughtException", error)
-  })
-
   ds = datasource.initialize()
   if (ds) {
     ds.then((f) => {

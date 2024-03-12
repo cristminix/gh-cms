@@ -1,27 +1,37 @@
 {
-    "name": "gh-cms-rest-server",
-    "version": "1.0.0",
-    "description": "GH CMS Express Rest Server",
-    "main": "src/main.mjs",
-    "type": "module",
-    "scripts": {
-        "start": "node src/main.mjs"
-    },
-    "author": "Putra Budiman <cristminix@gmail.com>",
-    "license": "MIT",
-    "dependencies": {
-        "base-64": "^1.0.0",
-        "better-sqlite3": "^9.4.0",
-        "bunyan-request-logger": "^0.2.5",
-        "bunyan-sfdx-no-dtrace": "^1.8.2",
-        "cors": "^2.8.5",
-        "dotenv": "^16.4.1",
-        "express": "^4.18.2",
-        "express-validator": "^7.0.1",
-        "jsonwebtoken": "^9.0.2",
-        "mime-types": "^2.1.35",
-        "multer": "^1.4.5-lts.1",
-        "serve-index": "^1.9.1",
-        "typeorm": "^0.3.20"
-    }
+  "name": "gh-cms-rest-server",
+  "version": "1.0.0",
+  "description": "GH CMS Express Rest Server",
+  "main": "src/main.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.mjs",
+    "tailwind:css": "postcss public/styles/tailwind.css -o public/styles/style.css -w",
+    "dev": "nodemon --watch src src/rest-server.mjs"
+  },
+  "author": "Putra Budiman <cristminix@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "autoprefixer": "^10.4.18",
+    "base-64": "^1.0.0",
+    "better-sqlite3": "^9.4.0",
+    "bunyan-request-logger": "^0.2.5",
+    "bunyan-sfdx-no-dtrace": "^1.8.2",
+    "connect-livereload": "^0.6.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "livereload": "^0.9.3",
+    "mime-types": "^2.1.35",
+    "multer": "^1.4.5-lts.1",
+    "postcss": "^8.4.35",
+    "postcss-cli": "^11.0.0",
+    "pug": "^3.0.2",
+    "serve-index": "^1.9.1",
+    "tailwindcss": "^3.4.1",
+    "twing": "^6.1.0-beta.1",
+    "typeorm": "^0.3.20"
+  }
 }
