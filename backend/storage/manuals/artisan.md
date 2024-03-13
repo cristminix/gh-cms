@@ -53,6 +53,9 @@ Usage :
 
 
 ./artisan createSchemaDef web_menu id [id,title,slug,link,target,parent,hidden,hasChild] [int,string,string,string,string,int,int,int] [hidden,hasChild] --schema=backend/src/api/data-source/config.json
+
+./artisan createSchemaDef web_theme id [id,name,slug,description,previewImage] [int,varchar,varchar,varchar,varchar] --schema=backend/src/api/data-source/config.json
+
 ```
 
 ## createModelEntity
@@ -60,6 +63,13 @@ Usage :
 ```
  createModelEntity  <table_name> <target_dir> [--schema] [--out-model-dir] [--out-entity-dir]
 ./artisan createModelEntity web_menu backend/src/api/data-source/ --schema=backend/src/api/data-source/config.json
+./artisan createModelEntity web_theme backend/src/api/data-source/ --schema=backend/src/api/data-source/config.json
+./artisan createModelEntity web_template backend/src/api/data-source/ --schema=backend/src/api/data-source/config.json
+./artisan createModelEntity web_block backend/src/api/data-source/ --schema=backend/src/api/data-source/config.json
+./artisan createModelEntity web_company backend/src/api/data-source/ --schema=backend/src/api/data-source/config.json
+./artisan createModelEntity web_pages backend/src/api/data-source/ --schema=backend/src/api/data-source/config.json
+./artisan createModelEntity web_contact_person backend/src/api/data-source/ --schema=backend/src/api/data-source/config.json
+./artisan createModelEntity web_site_setting backend/src/api/data-source/ --schema=backend/src/api/data-source/config.json
 
 ```
 
