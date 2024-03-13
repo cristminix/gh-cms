@@ -6,6 +6,7 @@ import { apiUrl } from "./apps/fn"
 
 import "@/cp/global/styles/markdown-viewer.css"
 import WebMenuManager from "./cms-builder/WebMenuManager"
+import WebThemeManager from "./cms-builder/WebThemeManager"
 
 export async function loader({ params }) {
   const { module, fk, pageNumber } = params
@@ -19,6 +20,8 @@ const CMSBuilder = ({ store, config }) => {
   console.log(module)
   if (module == "web-menu-manager") {
     return <WebMenuManager store={store} config={config} />
+  } else if (module == "web-theme-manager") {
+    return <WebThemeManager store={store} config={config} />
   }
   // }
   // useEffect(() => {
