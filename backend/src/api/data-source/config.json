@@ -111,9 +111,9 @@
       "schema": "WebMenuSchema",
       "model": "WebMenu",
       "pk": "id",
-      "fields": ["id", "title", "slug", "link", "target", "parent", "hidden", "hasChild"],
-      "types": ["int", "varchar", "varchar", "varchar", "varchar", "int", "int", "int"],
-      "lengths": [null, 225, 500, 500, 10, null, null, null],
+      "fields": ["id", "title", "slug", "link", "target", "parent", "hidden", "hasChild", "order"],
+      "types": ["int", "varchar", "varchar", "varchar", "varchar", "int", "int", "int", "int"],
+      "lengths": [null, 225, 500, 500, 10, null, null, null, null],
       "nullable": ["hidden", "hasChild"]
     }
   }

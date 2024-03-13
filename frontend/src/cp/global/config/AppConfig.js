@@ -6,7 +6,7 @@ const delayFn = makeDelay(256)
 
 class VersionConfig extends LsConfig {
   constructor() {
-    const config_key = "llfetcher_version_config"
+    const config_key = "gh-cms_version_config"
     super(config_key)
     this.setData("version", 3.0)
     this.setData("firstInstall", true)
@@ -22,7 +22,7 @@ class UiConfig extends LsConfig {
   reloadSidebar_callback_keys = []
   onResize_callback_keys = []
   constructor() {
-    const config_key = "llfetcher_ui_config"
+    const config_key = "gh-cms_ui_config"
     super(config_key)
     this.setData("defaultTheme", this.defaultTheme)
   }
@@ -153,7 +153,7 @@ class AppConfig {
   // push_endpoint 	= null;
   // tts_endpoint 	= null;
   // messaging_endpoint = null;
-  appId = "llfetcher-chrome-ext-30"
+  appId = "gh-cms-app"
 
   uiConfig = null
   // versionConfig = null

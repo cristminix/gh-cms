@@ -40,10 +40,10 @@
     "childIconCls": "",
     "children": [
       {
-        "title": "Main Menu",
-        "slug": "main-menu-manager",
+        "title": "Web Menu",
+        "slug": "web-menu-manager",
         "parent": 2,
-        "path": "/builder/main-menu-manager",
+        "path": "/builder/web-menu-manager",
         "iconCls": "bi bi-menu-app",
         "hidden": false,
         "dev": false,

@@ -23,9 +23,7 @@ class WebMenuRouter extends AuthenticatedRouter {
     this.mWebMenu = datasource.factory("MWebMenu", true)
     this.router = express.Router()
     // this.thumbnailDir = appConfig.get("module.thumbnailDir")
-    // this.uploader = multer({
-    //   dest: this.thumbnailDir,
-    // })
+    this.uploader = multer()
     this.initRouter()
   }
   // validateImageFile(fieldname, files) {
@@ -56,7 +54,7 @@ class WebMenuRouter extends AuthenticatedRouter {
   async create(req, res) {
     // Route logic for handling POST '/web-menu/create'
     const validationErrors = validationResult(req)
-    const [file] = req.files
+    // const [file] = req.files
     // console.log(req.files)
     let errorThumbnails = [] // this.validateImageFile("thumbnail", req.files)
     let errorValidations = validationErrors.array()
@@ -82,9 +80,9 @@ class WebMenuRouter extends AuthenticatedRouter {
           }
       
         */
-    let { title, slug, link, target, parent } = req.body
+    let { title, slug, link, target, parent, hasChild, order } = req.body
     try {
-      const webmenu = await this.mWebMenu.create(title, slug, link, target, parent)
+      const webmenu = await this.mWebMenu.create(title, slug, link, target, parent, hasChild, order)
       return res.send({ data: webmenu })
     } catch (e) {
       return res.send({ data: e.toString() })
@@ -148,8 +146,8 @@ class WebMenuRouter extends AuthenticatedRouter {
             }
             })
         */
-      const { title, slug, link, target, parent } = req.body
-      const updatedData = { title, slug, link, target, parent }
+      const { title, slug, link, target, parent, hasChild, order } = req.body
+      const updatedData = { title, slug, link, target, parent, hasChild, order }
 
       const webmenu = await this.mWebMenu.update(id, updatedData)
       return res.send({ data: webmenu, message: "Record updated", success: true })
@@ -222,26 +220,25 @@ class WebMenuRouter extends AuthenticatedRouter {
       async (req, res, next) => {
         this.authenticateToken(req, res, next)
       },
-      /*this.uploader.array("thumbnail"),
-          // formValidation
-          check("title", "title field is required").not().isEmpty(),
-          check("description", "description field is required").not().isEmpty(),
-          */
+      this.uploader.none(),
+      // formValidation
+      check("title", "title field is required").not().isEmpty(),
+      check("link", "link field is required").not().isEmpty(),
+
       async (req, res) => await this.create(req, res)
     )
-    this.router.post(
+    this.router.put(
       "/web-menu/update/:id?",
       async (req, res, next) => {
         this.authenticateToken(req, res, next)
       },
-      /*this.uploader.array("thumbnail"),
-          // formValidation
-          check("title", "title field is required").not().isEmpty(),
-          check("description", "description field is required").not().isEmpty(),
-          */
+      this.uploader.none(),
+      // formValidation
+      check("title", "title field is required").not().isEmpty(),
+      check("link", "link field is required").not().isEmpty(),
       async (req, res) => await this.update(req, res)
     )
-    this.router.post(
+    this.router.delete(
       "/web-menu/delete/:id?",
       async (req, res, next) => {
         this.authenticateToken(req, res, next)
