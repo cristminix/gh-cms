@@ -52,9 +52,10 @@ class ${config.model}Router  extends AuthenticatedRouter {
         super(datasource, appConfig, logger)
         this.appConfig = appConfig
         this.logger = logger
-        this.m${config.model} = this.datasource.factory('M${config.model}', true)
+        this.m${config.model} = datasource.factory('M${config.model}', true)
         this.router = express.Router()
         // this.thumbnailDir = appConfig.get("module.thumbnailDir")
+        this.uploader = multer()
         // this.uploader = multer({
         //   dest: this.thumbnailDir,
         // })
@@ -216,6 +217,7 @@ class ${config.model}Router  extends AuthenticatedRouter {
         // this.logger.info(id)
         if (existingRec) {
         const  ${modelInstanceName} = await this.m${config.model}.delete(${config.pk})
+        /*
         const oldThumbnailPath = ` +
     "`${this.thumbnailDir}/${existingRec.thumbnail}`" +
     `
@@ -227,6 +229,7 @@ class ${config.model}Router  extends AuthenticatedRouter {
             this.logger.info("File deleted successfully!")
             }
         })
+        */
         return res.send({data: ${modelInstanceName},success: true, message: "Record deleted"})
         } else {
         return res.send({ success: false, message: "Record not found" })
@@ -264,6 +267,7 @@ class ${config.model}Router  extends AuthenticatedRouter {
         async (req, res, next) => {
             this.authenticateToken(req, res, next)
           },
+          this.uploader.none(),
           /*this.uploader.array("thumbnail"),
           // formValidation
           check("title", "title field is required").not().isEmpty(),
@@ -275,6 +279,7 @@ class ${config.model}Router  extends AuthenticatedRouter {
         async (req, res, next) => {
             this.authenticateToken(req, res, next)
           },
+          this.uploader.none(),
           /*this.uploader.array("thumbnail"),
           // formValidation
           check("title", "title field is required").not().isEmpty(),

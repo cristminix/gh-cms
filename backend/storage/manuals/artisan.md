@@ -77,5 +77,6 @@ Usage :
 
 ```
 ./artisan createModelAPIRouteV3 web_menu backend/src/api/routes/ backend/src/api/data-source/config.json
+./artisan createModelAPIRouteV3 web_theme backend/src/api/routes/ backend/src/api/data-source/config.json
 
 ```
