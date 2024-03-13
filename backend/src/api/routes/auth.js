@@ -26,9 +26,9 @@ class AuthRouter {
     const allowedIdentities = this.appConfig.get("auth.allowedIdentities")
     if (allowedIdentities.includes(appId)) {
       const token = generateAccessToken(appId, TOKEN_SECRET)
-      res.send({ appId, token })
+      return res.send({ appId, token })
     }
-    res.send({ appId, token: null })
+    return res.send({ appId, token: null })
   }
 
   initRouter() {

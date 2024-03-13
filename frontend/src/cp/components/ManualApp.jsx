@@ -16,12 +16,16 @@ const ManualApp = ({ store, config }) => {
   const [markdown, setMarkdown] = useState("")
   const loadMarkdown = async (module) => {
     console.log(module)
-    if (module == "dev-notes") {
-      const url = apiUrl(["man/getFile", "DEV-NOTES.md"])
-      const response = await fetch(url).then((response) => response.json())
+    // if (module == "dev-notes") {
+    const url = apiUrl(["man/getFile", `${module}.md`])
+    const response = await fetch(url).then((response) => response.json())
+    if (response.success) {
       const text = response.content
       setMarkdown(text)
+    } else {
+      alert(response.message)
     }
+    // }
   }
   useEffect(() => {
     loadMarkdown(mod)

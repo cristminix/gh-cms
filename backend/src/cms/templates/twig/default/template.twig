@@ -2,8 +2,13 @@
 <html>
   <head>
     <title>This is twig template</title>
+    <link href="./styles/style.css" rel="stylesheet" />
   </head>
-  <body>
-    {% include "header.twig" %} {% include "content.twig" %} {% include "footer.twig" %}
+  <body class="p-4">
+    <div class="p-4 border border-slate-600">
+      <div class="header">{% include "./sections/header.twig" %}</div>
+      <div class="content">{% include "./sections/content.twig" %}</div>
+      <div class="footer">{% include "./sections/footer.twig" %}</div>
+    </div>
   </body>
 </html>

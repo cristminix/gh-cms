@@ -4,10 +4,11 @@ import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import Button from "@/cp/components/shared/ux/Button"
 import jQuery from "jquery"
 import Menu from "@/cp/global/models/Menu"
-import { getInputFileContent } from "@/cp/global/fn"
+import { Prx, getInputFileContent } from "@/cp/global/fn"
 import MenuForm, { createUntitledMenu } from "./menu-manager/MenuForm"
 import Toast from "@/cp/components/shared/ux/Toast"
 import "@/cp/global/styles/treeTable.css"
+import { apiUrl } from "../apps/fn"
 
 const mMenu = Menu.getInstance()
 
@@ -61,6 +62,14 @@ const MenuManager = ({ config, store }) => {
     anchor.click()
     console.log(menus)
   }
+  const saveMenu = async (e) => {
+    const menus = await mMenu.getMenuList(100)
+    const formData = new FormData()
+    formData.append("menus", JSON.stringify(menus))
+    const url = apiUrl("config/saveMenu")
+    const response = await Prx.post(url, null, formData)
+    console.log(menus)
+  }
   const inputFileImportRef = useRef(null)
   const importMenu = async (e) => {
     setBlockMainContent(true)
@@ -93,9 +102,7 @@ const MenuManager = ({ config, store }) => {
     jQuery(`#${modalBtnId}`).trigger("click")
   }
   const deleteMenuForm = async (item) => {
-    if (
-      confirm(`Are you sure want to delete this upload "${item.data.title}"`)
-    ) {
+    if (confirm(`Are you sure want to delete this upload "${item.data.title}"`)) {
       const row = await mMenu.get(item.data.id)
       if (row) {
         const ok = await mMenu.delete(item.data.id)
@@ -124,6 +131,15 @@ const MenuManager = ({ config, store }) => {
   const moveDown = async (row) => {
     // setBlockMainContent(true)
     const ok = await mMenu.moveDown(row.data.id)
+    if (ok) {
+      updateList()
+      config.getUiConfig().reloadSidebar()
+    }
+    // setBlockMainContent(false)
+  }
+  const cloneRow = async (row) => {
+    // setBlockMainContent(true)
+    const ok = await mMenu.clone(row.data.id)
     if (ok) {
       updateList()
       config.getUiConfig().reloadSidebar()
@@ -169,8 +185,7 @@ const MenuManager = ({ config, store }) => {
   useEffect((f) => {
     main()
   }, [])
-  const containerCls =
-    "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700 min-h-screen"
+  const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700 min-h-screen"
   const toast = (message, t) => {
     if (toastRef.current) {
       toastRef.current.add(message, t)
@@ -196,12 +211,7 @@ const MenuManager = ({ config, store }) => {
       <div className="explorer-toolbar pb-2">
         <div className="flex gap-2 justify-between">
           <div className="flex gap-2">
-            <input
-              type="file"
-              ref={inputFileImportRef}
-              className="hidden"
-              onChange={(e) => importMenu(e)}
-            />
+            <input type="file" ref={inputFileImportRef} className="hidden" onChange={(e) => importMenu(e)} />
             <Button
               onClick={(e) => {
                 inputFileImportRef.current.value = ""
@@ -210,19 +220,15 @@ const MenuManager = ({ config, store }) => {
               caption="Import json"
               icon="bi bi-file-arrow-up"
             />
+            <Button onClick={(e) => exportMenu(e)} caption="Export json" icon="bi bi-file-arrow-down" />
             <Button
-              onClick={(e) => exportMenu(e)}
-              caption="Export json"
-              icon="bi bi-file-arrow-down"
+              onClick={(e) => saveMenu(e)}
+              title="Save to installer/data/side-menu.json"
+              caption="Save to side-menu.json"
+              icon="fa fa-save"
             />
           </div>
-          {!showForm ? (
-            <Button
-              onClick={(e) => addMenuForm()}
-              icon="fa fa-plus"
-              caption=""
-            />
-          ) : null}
+          {!showForm ? <Button onClick={(e) => addMenuForm()} icon="fa fa-plus" caption="" /> : null}
         </div>
       </div>
 
@@ -245,19 +251,16 @@ const MenuManager = ({ config, store }) => {
           <div className={`-m-1.5 overflow-x-auto ${niceScrollbarCls}`}>
             <div className="p-1.5 min-w-full inline-block align-middle">
               {treeMenuData.hasData ? (
-                <TreeTable
-                  config={config}
-                  value={treeMenuData}
-                  height={vH}
-                  onChange={handleOnChange2}
-                >
+                <TreeTable config={config} value={treeMenuData} height={vH} onChange={handleOnChange2}>
                   <TreeTable.Column
                     basis="180px"
                     grow="0"
                     renderCell={(row) => {
                       return (
                         <div
-                          className={`${paddingCls[row.metadata.depth * 15]} ${row.metadata.hasChildren ? "with-children" : "without-children"}`}
+                          className={`${paddingCls[row.metadata.depth * 15]} ${
+                            row.metadata.hasChildren ? "with-children" : "without-children"
+                          }`}
                         >
                           {row.metadata.hasChildren ? (
                             <button
@@ -273,9 +276,7 @@ const MenuManager = ({ config, store }) => {
                                 row.toggleChildren()
                               }}
                             >
-                              <i
-                                className={`fa fa-${row.$state.isExpanded ? "minus" : "plus"}`}
-                              />
+                              <i className={`fa fa-${row.$state.isExpanded ? "minus" : "plus"}`} />
                             </button>
                           ) : (
                             ""
@@ -291,11 +292,7 @@ const MenuManager = ({ config, store }) => {
                     basis="128px"
                     grow="1"
                     renderCell={(row) => {
-                      return (
-                        <span className="path-cell font-mono">
-                          {row.data.path}
-                        </span>
-                      )
+                      return <span className="path-cell font-mono">{row.data.path}</span>
                     }}
                     renderHeaderCell={() => <code>Path</code>}
                   />
@@ -315,11 +312,7 @@ const MenuManager = ({ config, store }) => {
                     basis="80px"
                     grow="0"
                     renderCell={(row) => {
-                      return (
-                        <span className="path-cell">
-                          {row.data.hidden ? "true" : "false"}
-                        </span>
-                      )
+                      return <span className="path-cell">{row.data.hidden ? "true" : "false"}</span>
                     }}
                     renderHeaderCell={() => <span>Hidden</span>}
                   />
@@ -327,6 +320,13 @@ const MenuManager = ({ config, store }) => {
                     renderCell={(row) => {
                       return (
                         <div className="flex gap-2">
+                          <Button
+                            loading={false}
+                            icon="fa fa-copy"
+                            title="Clone"
+                            caption=""
+                            onClick={(e) => cloneRow(row)}
+                          />
                           <Button
                             loading={false}
                             icon="fa fa-chevron-up"

@@ -42,7 +42,7 @@
       {
         "title": "Main Menu",
         "slug": "main-menu-manager",
-        "parent": 12,
+        "parent": 2,
         "path": "/builder/main-menu-manager",
         "iconCls": "bi bi-menu-app",
         "hidden": false,
@@ -57,12 +57,12 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 13
+        "id": 3
       },
       {
         "title": "Blok dan Widget",
         "slug": "block-manager",
-        "parent": 12,
+        "parent": 2,
         "path": "/builder/block-manager",
         "iconCls": "bi bi-ui-checks-grid",
         "hidden": false,
@@ -77,12 +77,12 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 15
+        "id": 4
       },
       {
         "title": "Halaman",
         "slug": "page-manager",
-        "parent": 12,
+        "parent": 2,
         "path": "/builder/page-manager",
         "iconCls": "bi bi-file-fill",
         "hidden": false,
@@ -97,12 +97,12 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 14
+        "id": 5
       },
       {
         "title": "Postingan",
         "slug": "post-manager",
-        "parent": 12,
+        "parent": 2,
         "path": "/builder/post-manager",
         "iconCls": "bi bi-file-break-fill",
         "hidden": false,
@@ -117,12 +117,12 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 16
+        "id": 6
       },
       {
         "title": "Publish",
         "slug": "publish-deploy",
-        "parent": 12,
+        "parent": 2,
         "path": "/builder/publish-deploy",
         "iconCls": "fa fa-play",
         "hidden": false,
@@ -137,10 +137,10 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 17
+        "id": 7
       }
     ],
-    "id": 12
+    "id": 2
   },
   {
     "slug": "developers",
@@ -169,7 +169,7 @@
         "path": "/developer/menu-manager",
         "title": "Menu Manager",
         "iconCls": "bi bi-menu-button-wide",
-        "parent": 2,
+        "parent": 8,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -179,10 +179,10 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 3
+        "id": 9
       }
     ],
-    "id": 2
+    "id": 8
   },
   {
     "slug": "native-clients",
@@ -211,7 +211,7 @@
         "path": "/apps/yt-upload",
         "title": "YT Upload PV",
         "iconCls": "fa fa-youtube",
-        "parent": 4,
+        "parent": 10,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -221,7 +221,7 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 5
+        "id": 11
       },
       {
         "dev": false,
@@ -231,7 +231,7 @@
         "path": "/apps/yt-upload-tt",
         "title": "YT Upload T&T",
         "iconCls": "fa fa-youtube",
-        "parent": 4,
+        "parent": 10,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -241,10 +241,10 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 6
+        "id": 12
       }
     ],
-    "id": 4
+    "id": 10
   },
   {
     "slug": "database",
@@ -273,7 +273,7 @@
         "path": "/database/table-manager",
         "title": "Table Manager",
         "iconCls": "bi bi-table",
-        "parent": 7,
+        "parent": 13,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -283,10 +283,10 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 8
+        "id": 14
       }
     ],
-    "id": 7
+    "id": 13
   },
   {
     "slug": "manuals",
@@ -315,7 +315,7 @@
         "path": "/manuals/dev-notes",
         "title": "Dev Notes",
         "iconCls": "fa fa-cog",
-        "parent": 9,
+        "parent": 15,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -325,7 +325,7 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 10
+        "id": 16
       },
       {
         "dev": false,
@@ -335,7 +335,7 @@
         "path": "/manuals/js-store",
         "title": "JsStore",
         "iconCls": "fa fa-cog",
-        "parent": 9,
+        "parent": 15,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -345,10 +345,30 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 11
+        "id": 17
+      },
+      {
+        "dev": false,
+        "slug": "artisan-man",
+        "hidden": false,
+        "order": 1,
+        "path": "/manuals/artisan",
+        "title": "Artisan",
+        "iconCls": "fa fa-cog",
+        "parent": 15,
+        "level": 1,
+        "hasChild": false,
+        "useModel": false,
+        "model": "",
+        "modelListMethod": "",
+        "slugField": "",
+        "displayField": "",
+        "childRoutePath": "",
+        "childIconCls": "",
+        "id": 24
       }
     ],
-    "id": 9
+    "id": 15
   },
   {
     "title": "CMS Module",
@@ -422,13 +442,13 @@
         "order": 0,
         "hasChild": false,
         "useModel": false,
-        "id": 21,
         "model": "",
         "modelListMethod": "",
         "slugField": "",
         "displayField": "",
         "childRoutePath": "",
-        "childIconCls": ""
+        "childIconCls": "",
+        "id": 21
       },
       {
         "title": "Grup Pengguna",
@@ -442,13 +462,13 @@
         "order": 0,
         "hasChild": false,
         "useModel": false,
-        "id": 22,
         "model": "",
         "modelListMethod": "",
         "slugField": "",
         "displayField": "",
         "childRoutePath": "",
-        "childIconCls": ""
+        "childIconCls": "",
+        "id": 22
       },
       {
         "title": "Log Aktifitas",
@@ -462,13 +482,13 @@
         "order": 0,
         "hasChild": false,
         "useModel": false,
-        "id": 23,
         "model": "",
         "modelListMethod": "",
         "slugField": "",
         "displayField": "",
         "childRoutePath": "",
-        "childIconCls": ""
+        "childIconCls": "",
+        "id": 23
       }
     ],
     "id": 19

@@ -182,6 +182,17 @@ class Menu extends JsStoreDB {
     })
     return records.length > 0 ? records[0] : null
   }
+  async clone(pk) {
+    let record = await this.get(pk)
+    const salt = new Date().getTime()
+    record.title = `${record.title}-${salt}`
+    record.slug = `${record.slug}-${salt}`
+    record.path = `${record.path}-${salt}`
+    delete record.id
+
+    record = await this.insert(record)
+    return record
+  }
   async moveUp(pk) {
     let ok = false
     let currentRow = await this.get(pk)

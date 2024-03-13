@@ -59,7 +59,8 @@ const main = async () => {
   liveReloadServer.server.once("connection", () => {
     setTimeout(() => {
       liveReloadServer.refresh("/")
-    }, 100)
+      liveReloadServer.refresh("/twig")
+    }, 50)
   })
   app.use(connectLiveReload())
   app.set("views", path.join(".", "src/cms/templates/pug/default/"))
@@ -70,6 +71,7 @@ const main = async () => {
   })
   app.get("/twig", function (req, res) {
     const siteData = {
+      name: "This is my",
       title: "Hello World",
       description: "This is a simple website.",
       author: "Author",
@@ -80,8 +82,8 @@ const main = async () => {
       content: "Main content",
     }
     let loader = createFilesystemLoader(fs)
-    loader.addPath("./src/cms/templates/default/")
-    loader.addPath("./src/cms/templates/default/sections/")
+    loader.addPath("./src/cms/templates/twig/default/")
+    // loader.addPath("./src/cms/templates/twig/default/sections/")
     let environment = createEnvironment(loader)
     environment
       .render("template.twig", siteData)

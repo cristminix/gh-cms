@@ -32,7 +32,20 @@
         "datetime",
         "datetime"
       ],
-      "lengths": [null, 25, 25, 25, 25, 25, 25, 25, null, null, null, null],
+      "lengths": [
+        null,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        25,
+        null,
+        null,
+        null,
+        null
+      ],
       "validations": [
         null,
         "required,min=8,validUsername,checkUsername,uniqueUsername",
@@ -61,11 +74,34 @@
     "cms_setting": {
       "schema": "CmsSettingSchema",
       "model": "CmsSetting",
-      "fields": ["id", "profileName", "theme", "setAsDefault", "createDate", "lastUpdated"],
-      "types": ["int", "varchar", "varchar", "int", "datetime", "datetime"],
-      "lengths": [null, 20, 100, null, null, null],
+      "fields": [
+        "id",
+        "profileName",
+        "theme",
+        "setAsDefault",
+        "createDate",
+        "lastUpdated"
+      ],
+      "types": [
+        "int",
+        "varchar",
+        "varchar",
+        "int",
+        "datetime",
+        "datetime"
+      ],
+      "lengths": [
+        null,
+        20,
+        100,
+        null,
+        null,
+        null
+      ],
       "pk": "id",
-      "nullable": ["setAsDefault"],
+      "nullable": [
+        "setAsDefault"
+      ],
       "enums": {
         "target": {
           "admin": "Admin",
@@ -77,9 +113,26 @@
       "schema": "YtUploadDataSchema",
       "model": "YtUploadData",
       "pk": "id",
-      "fields": ["id", "uploadId", "kind", "content", "createDate", "owner"],
-      "nullable": ["createDate", "owner"],
-      "types": ["int", "int", "varchar", "varchar", "datetime", "int"],
+      "fields": [
+        "id",
+        "uploadId",
+        "kind",
+        "content",
+        "createDate",
+        "owner"
+      ],
+      "nullable": [
+        "createDate",
+        "owner"
+      ],
+      "types": [
+        "int",
+        "int",
+        "varchar",
+        "varchar",
+        "datetime",
+        "int"
+      ],
       "enums": {
         "kind": {
           "title": "Title",
@@ -94,27 +147,71 @@
       "schema": "YtUploadSchema",
       "model": "YtUpload",
       "pk": "id",
-      "fields": ["id", "title", "descriptions", "category", "tags", "thumbnail", "video", "createDate", "owner"],
-      "nullable": ["category", "tags", "thumbnail", "video", "createDate", "owner"],
-      "types": ["int", "varchar", "varchar", "varchar", "varchar", "varchar", "varchar", "datetime", "int"],
-      "lengths": [null, 225, 400, null, null, null, null]
+      "fields": [
+        "id",
+        "title",
+        "descriptions",
+        "category",
+        "tags",
+        "thumbnail",
+        "video",
+        "createDate",
+        "owner"
+      ],
+      "nullable": [
+        "category",
+        "tags",
+        "thumbnail",
+        "video",
+        "createDate",
+        "owner"
+      ],
+      "types": [
+        "int",
+        "varchar",
+        "varchar",
+        "varchar",
+        "varchar",
+        "varchar",
+        "varchar",
+        "datetime",
+        "int"
+      ],
+      "lengths": [
+        null,
+        225,
+        400,
+        null,
+        null,
+        null,
+        null
+      ]
     },
     "yt_upload_tt": {
       "schema": "YtUploadTTSchema",
       "model": "YtUploadTT",
       "pk": "id",
-      "fields": ["uploadId", "id", "title", "description", "thumbnail"],
-      "types": ["int", "int", "varchar", "varchar", "varchar"],
-      "lengths": [null, null, 225, 400, null]
-    },
-    "web_menu": {
-      "schema": "WebMenuSchema",
-      "model": "WebMenu",
-      "pk": "id",
-      "fields": ["id", "title", "slug", "link", "target", "parent", "hidden", "hasChild"],
-      "types": ["int", "varchar", "varchar", "varchar", "varchar", "int", "int", "int"],
-      "lengths": [null, 225, 500, 500, 10, null, null, null],
-      "nullable": ["hidden", "hasChild"]
+      "fields": [
+        "uploadId",
+        "id",
+        "title",
+        "description",
+        "thumbnail"
+      ],
+      "types": [
+        "int",
+        "int",
+        "varchar",
+        "varchar",
+        "varchar"
+      ],
+      "lengths": [
+        null,
+        null,
+        225,
+        400,
+        null
+      ]
     }
   }
 }
