@@ -12,7 +12,7 @@ const ExampleContent = ({ store, config }) => {
         console.log(status)
         setHideSidebar(status)
       },
-      "example-content",
+      "example-content"
     )
   }, [])
   const outlet = useOutlet()
@@ -20,12 +20,12 @@ const ExampleContent = ({ store, config }) => {
     () => {},
     [
       /*props.children*/
-    ],
+    ]
   )
   const mainContentCls = !hideSidebar ? `${cls28} pb-2` : `${cls28} lg:ps-8`
   return (
     <>
-      <div className={`${mainContentCls}`}>
+      <div className={`${mainContentCls} bg-white dark:bg-transparent`}>
         {/*<!-- Page Heading -->*/}
 
         {outlet || "Hello"}

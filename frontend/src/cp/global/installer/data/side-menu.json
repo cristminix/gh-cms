@@ -81,9 +81,9 @@
       },
       {
         "title": "Blok dan Widget",
-        "slug": "block-manager",
+        "slug": "web-block-manager",
         "parent": 2,
-        "path": "/builder/block-manager",
+        "path": "/builder/web-block-manager",
         "iconCls": "bi bi-ui-checks-grid",
         "hidden": false,
         "dev": false,
