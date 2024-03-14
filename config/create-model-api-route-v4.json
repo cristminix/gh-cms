@@ -13,6 +13,7 @@
       "enableUpload": true,
       "uploadPath": "",
       "uploadField": "previewImage",
+      "uploadServeRoute": "preview",
 
       "***@2": "FORM VALIDATION OPTIONS ***",
 
@@ -30,6 +31,7 @@
       "enableListState": false,
 
       "generateComponent": true,
+      "generateFormComponent": true,
       "componentOutDir": "frontend/src/cp/components/cms-builder",
       "componentFormOutDir": "frontend/src/cp/components/cms-builder/form",
       "gridOptions": {},
@@ -50,7 +52,10 @@
       "enableSubModule": true,
       "parentModuleRoutePath": "/builder/web-block-manager/template",
       "parentModuleFk": "templateId",
-      "parentModuleItemName": "Template"
+      "parentModuleItemName": "Template",
+
+      "***@7": "FORM RELATED ",
+      "formFieldTypes": {}
     }
   }
 }

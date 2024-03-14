@@ -1,5 +1,5 @@
 import { camelToDashCase, jsonParseFile, writeFile } from "./lib.mjs"
-import { createEnvironment, createArrayLoader, createFilesystemLoader } from "twing"
+import { createEnvironment, createFilter, createFilesystemLoader } from "twing"
 
 import fs from "fs"
 const createModelApiRouteV4 = async (table_name) => {
@@ -28,10 +28,20 @@ const createModelApiRouteV4 = async (table_name) => {
     return
   }
   const options = availables[table_name]
-
+  // const filterUcFirst = createFilter(
+  //   "ucfirst",
+  //   (value) => {
+  //     if (typeof value !== "string") {
+  //       return value
+  //     }
+  //     return value.charAt(0).toUpperCase() + value.slice(1)
+  //   },
+  //   []
+  // )
   const twigLoader = createFilesystemLoader(fs)
   twigLoader.addPath("./lib-artisan/actions/create-model-api-route-v4/templates/")
   const twigEnv = createEnvironment(twigLoader)
+  // twigEnv.addFilter(filterUcFirst)
   const ctl = camelToDashCase(schemaDef.model)
   const modelInstanceName = schemaDef.model.toLowerCase()
   let requiredFields = schemaDef.fields.filter((i) => !schemaDef.nullable.includes(i) && i != schemaDef.pk)
@@ -72,6 +82,16 @@ const createModelApiRouteV4 = async (table_name) => {
       fieldsStr,
       headersStr,
     }
+    if (options.generateFormComponent) {
+      let outputComponentFormBuffer = await twigEnv.render("componentFormFile.twig", templateData)
+      // console.log(outputComponentBuffer)
+      await writeFile(
+        `${options.componentFormOutDir}/${options.itemName}Form.jsx`,
+        outputComponentFormBuffer,
+        `create component ${options.itemName}Form on ${options.componentFormOutDir}`
+      )
+    }
+    // return
     let outputComponentBuffer = await twigEnv.render("componentFile.twig", templateData)
     // console.log(outputComponentBuffer)
     await writeFile(
@@ -80,7 +100,7 @@ const createModelApiRouteV4 = async (table_name) => {
       `create component ${options.componentName} on ${options.componentOutDir}`
     )
   }
-  return
+  // return
   let outputContentBuffer = await twigEnv.render("routerFile.twig", templateData)
   const outputPath = `${outDir}/${ctl}.js`
   await writeFile(outputPath, outputContentBuffer, `create route ${schemaDef.model} on ${outDir}`)

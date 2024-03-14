@@ -1,0 +1,23 @@
+  const getRemoteRowData = async () => {
+    const url = apiUrl(["{{ctl}}", pk])
+
+    try {
+      const { data, validJson, code, text } = await Prx.get(url, requestToken)
+      if (validJson) {
+{% if options.enableUpload %} 
+
+        const { {{options.uploadField}} } = data.data
+        const {{options.uploadField}}Url = apiUrl(["{{ctl}}/{{options.uploadServeRoute}}", {{options.uploadField}}])
+        set{{options.uploadField|capitalize}}Url({{options.uploadField}}Url)
+{% endif %}
+        setFormChecksum(calculateFormChecksum(data.data))
+      } else {
+        toast(
+          `Failed to get record id:${pk} server sent http ${code} ${text}`,
+          "error",
+        )
+      }
+    } catch (e) {
+      toast(e.toString(), "error")
+    }
+  }

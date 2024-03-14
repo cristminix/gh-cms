@@ -1,0 +1,76 @@
+import { useEffect, useRef, useState } from "react"
+import { crc32 } from "crc"
+import { getFile64, isEmpty } from "@/cp/global/fn"
+import jQuery from "jquery"
+
+import { apiUrl } from "../../apps/fn"
+import {
+  btnCls,
+  modalCls,
+  modalBtnCloseCls,
+  modalBtnFrmCloseCls,
+  modalBtnFrmSaveCls,
+} from "@/cp/components/shared/ux/cls"
+import CryptoJS from "crypto-js"
+
+import {
+  FormRow,
+  FormRowImageValidation,
+  FormRowValidation,
+} from "@/cp/components/shared/ux/Form"
+import { Prx } from "@/cp/global/fn"
+
+const createUntitled{{options.itemName}}= () => {
+  const idx = crc32(new Date().getTime().toString()).toString(16)
+  const {{options.fieldItemName}} = `Untitled-${idx}`
+  {% for field in schemaDef.fields %}
+{% if field != schemaDef.pk and field != options.fieldItemName %}
+
+  const {{ field }} = ""{% endif %}
+  {% endfor %}
+
+  return { 
+    {% for field in schemaDef.fields %}
+{% if field != schemaDef.pk and field != options.fieldItemName %}
+
+    {{ field }},{% endif %}
+  {% endfor %}
+   }
+}
+
+const {{options.itemName}}Form = ({
+{% if options.enableSubModule %}
+  {{options.parentModuleFk}},
+{% endif %}
+  requestToken,
+  getRequestToken,
+  setRequestToken,
+  data = null,
+  className,
+  hideForm,
+  updateList,
+  formId,
+  modalBtnId,
+  modalCloseBtnId,
+  goToLastPage,
+  toast,
+}) => {
+{% include './components/form/vars.twig' %}
+{% include './components/form/hooks/calculateFormChecksum.twig' %}
+{% include './components/form/hooks/updateFormChecksum.twig' %}
+{% include './components/form/hooks/isFormDirty.twig' %}
+{% include './components/form/hooks/hideModalForm.twig' %}
+{% include './components/form/hooks/onCancelForm.twig' %}
+{% include './components/form/hooks/saveForm.twig' %}
+{% include './components/form/hooks/setUploadFile.twig' %}
+{% include './components/form/hooks/getRemoteRowData.twig' %}
+{% include './components/form/hooks/initFormData.twig' %}
+{% include './components/form/hooks/onTab.twig' %}
+{% include './components/form/useEffect.twig' %} 
+{% include './components/form/render.twig' %} 
+{# {% include './components/form/hooks/hideModalForm.twig' %}  #}
+
+}
+
+export default {{options.itemName}}Form
+export {createUntitled{{options.itemName}}}

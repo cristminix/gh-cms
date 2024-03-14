@@ -1,0 +1,70 @@
+
+  const saveForm = async (f) => {
+    let pk = null
+    if (data.{{schemaDef.pk}}) {
+      pk = data.{{schemaDef.pk}}
+    }
+    const formDataItem = { {{schemaDef.pk}}:pk,  {% for field in schemaDef.fields %}{% if field != schemaDef.pk and field != options.uploadField %}{{ field }},{% endif %}{% endfor %} }
+    const formData = new FormData()
+{% if options.enableUpload %}    
+    const [file] = {{options.uploadField}}Ref.current.files
+    if (file) {
+      formData.append("{{options.uploadField}}", file)
+    }
+{% endif %}
+    Object.keys(formDataItem).map((key) => {
+      formData.append(key, formDataItem[key])
+    })
+    const url = apiUrl(["{{ctl}}", pk ? `update/${pk}` : "create"])
+    const method = pk ? "put" : "post"
+    try {
+      const { data, validJson, code, text } = await Prx[method](
+        url,
+        requestToken,
+        formData,
+      )
+      if (validJson) {
+        let hasErrors = false
+        if (data.errors) {
+          if (data.errors.length > 0) {
+            hasErrors = 1
+          }
+        }
+        if (hasErrors) {
+          const { errors } = data
+          let newValidationErrors = {}
+          let firstField = null
+          errors.map((item) => {
+            if (!firstField) {
+              firstField = item.path
+            }
+            newValidationErrors[item.path] = { message: item.msg }
+          })
+          setValidationErrors(newValidationErrors)
+          toast("Error processing form", "error")
+
+          // focus first field
+          jQuery(`#${formId}`).find(`.${firstField}:first`).trigger("focus")
+        } else {
+          // console.log(data)
+          hideModalForm()
+          updateFormChecksum(data)
+          setValidationErrors({})
+          if (!pk) {
+            toast("Record created", "success")
+            goToLastPage()
+          } else {
+            toast("Record updated", "success")
+            updateList()
+          }
+        }
+      } else {
+        toast(
+          `Failed to create record server sent http ${code} ${text}`,
+          "error",
+        )
+      }
+    } catch (e) {
+      toast(e.toString(), "error")
+    }
+  }

@@ -1,0 +1,24 @@
+
+
+  const calculateFormChecksum = (data = null) => {
+    let formDataItem = null
+    if (data) {
+      const { {% for field in schemaDef.fields %}{{field}}, {% endfor %} } = data
+      formDataItem = { {% for field in schemaDef.fields %}{{ field }},{% endfor %} }
+    } else {
+      formDataItem = { {{schemaDef.pk}}:pk,{% for field in schemaDef.fields %}{% if field != schemaDef.pk%}{{ field }},{% endif %}{% endfor %} }
+    }
+    if (!formDataItem.id) {
+      formDataItem.id = null
+    }
+    let values = []
+    const keys = Object.keys(formDataItem)
+    for (const key of keys) {
+      const value = formDataItem[key]
+      values.push(key + "=" + value)
+    }
+    var formString = values.join("&")
+    return CryptoJS.SHA256(formString).toString()
+  }
+
+  

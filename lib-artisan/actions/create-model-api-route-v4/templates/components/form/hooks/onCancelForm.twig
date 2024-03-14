@@ -1,0 +1,14 @@
+
+  const onCancelForm = (e) => {
+    if (isFormDirty()) {
+      if (confirm("Data might not being saved, Are you sure to cancel?")) {
+        hideModalForm(e)
+      }
+    } else {
+      hideModalForm(e)
+    }
+    if (e) {
+      return e.preventDefault()
+    }
+  }
+  

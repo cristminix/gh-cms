@@ -1,0 +1,26 @@
+
+  useEffect(() => {
+    initFormData(data)
+  }, [data])
+  
+  useEffect(() => {
+    onTabExecutedRef.current = false
+    HSOverlay.onTabOverride = (t, e) => {
+      onTab(t, e)
+    }
+   
+    const $el = jQuery(`#${modalBtnId}`)
+    if (!$el.prop("hasOverlay")) {
+      $el.prop("hasOverlay", "yes")
+      HSOverlay.autoInit()
+    }
+    return () => {
+      onTabExecutedRef.current = false
+
+      try {
+        document
+          .querySelector("div[data-hs-overlay-backdrop-template]")
+          .remove()
+      } catch (e) {}
+    }
+  }, [])

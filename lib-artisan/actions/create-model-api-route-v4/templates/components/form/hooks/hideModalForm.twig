@@ -1,0 +1,13 @@
+
+  const hideModalForm = (e) => {
+{% if options.enableUpload %}    
+    {{options.uploadField}}Ref.current.value = ""
+{% endif %}
+    const modalIdSelector = `#${formId}`
+    HSOverlay.close(modalIdSelector)
+    hideForm()
+
+    if (e) {
+      return e.preventDefault()
+    }
+  }

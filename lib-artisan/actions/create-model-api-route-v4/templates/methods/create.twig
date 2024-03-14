@@ -52,8 +52,8 @@
         let { {{requiredFieldLabels}} }= req.body
         try {
             const  {{modelInstanceName}} = await this.m{{schemaDef.model}}.create({{requiredFieldLabels}}{% if  options.enableUpload %},{{options.uploadField}}{% endif %})
-            return res.send({ row: {{modelInstanceName}} })
+            return res.send({ data: {{modelInstanceName}} })
         }catch(e){
-            return res.send({ row: e.toString() })
+            return res.send({ data: e.toString() })
         }
     }

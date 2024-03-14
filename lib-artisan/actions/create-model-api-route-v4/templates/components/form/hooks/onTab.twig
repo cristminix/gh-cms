@@ -1,0 +1,33 @@
+
+  const onTab = (target, focusableElements) => {
+    console.log(onTabExecutedRef.current)
+    if (!onTabExecutedRef.current) {
+      onTabExecutedRef.current = true
+      // Your code here (will run only once)
+      console.log(`onTab called`)
+      if (!focusableElements.length) return false
+
+      const focused = target.element.overlay.querySelector(":focus")
+      const focusedIndex = Array.from(focusableElements).indexOf(focused)
+      try {
+        if (focusedIndex > -1) {
+          onTabNextIndexRef.current = focusedIndex + 1
+          focusableElements[onTabNextIndexRef.current].focus()
+        } else {
+          focusableElements[0].focus()
+        }
+      } catch (e) {
+        focusableElements[0].focus()
+        onTabNextIndexRef.current = 0
+      }
+
+      // jQuery(target.element).prop("hasOnTabHandler", 0)
+      setTimeout(() => {
+        onTabExecutedRef.current = false
+      }, 256)
+    } else {
+      setTimeout(() => {
+        onTabExecutedRef.current = false
+      }, 256)
+    }
+  }

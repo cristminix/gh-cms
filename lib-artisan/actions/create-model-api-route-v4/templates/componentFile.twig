@@ -5,7 +5,7 @@ import Button from "@/cp/components/shared/ux/Button"
 {% if options.enableSubModule %}
 import { useLocation } from "react-router-dom"
 {% endif %}
-//import {{options.itemName}}Form, { createUntitled{{options.itemName}} } from "./form/{{options.itemName}}Form"
+import {{options.itemName}}Form, { createUntitled{{options.itemName}} } from "./form/{{options.itemName}}Form"
 import { apiUrl } from "../apps/fn"
 
 import jQuery from "jquery"
@@ -13,7 +13,7 @@ import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import Toast from "@/cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@/cp/global/fn"
 
-const {{options.itemName}}Form = ({})=>"FORM"
+{# const {{options.itemName}}Form = ({})=>"FORM" #}
 
 const {{options.componentName}} = ({ store, config, pageNumber {% if options.enableSubModule %},{{options.parentModuleFk}} {% endif %} }) => {
 {% include './components/vars.twig' %}

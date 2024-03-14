@@ -1,0 +1,21 @@
+
+  const [pk, setPk] = useState("")
+   {% for field in schemaDef.fields %}
+{% if field != schemaDef.pk and field != options.uploadField %}
+
+  const [{{ field }},set{{field|capitalize}}] = useState(""){% endif %}
+  {% endfor %}
+  
+
+{% if options.enableUpload %}  
+  const [{{options.uploadField}}, set{{options.uploadField|capitalize}}] = useState("")
+  const [{{options.uploadField}}Valid, set{{options.uploadField|capitalize}}Valid] = useState(false)
+  const [{{options.uploadField}}Url, set{{options.uploadField|capitalize}}Url] = useState("")
+{% endif %}  
+  const {{options.uploadField}}Ref = useRef(null)
+  const formRef = useRef(null)
+  const onTabExecutedRef = useRef(false)
+  let onTabNextIndexRef = useRef(0)
+
+  const [validationErrors, setValidationErrors] = useState({})
+  const [formChecksum, setFormChecksum] = useState("")

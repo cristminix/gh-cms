@@ -1,0 +1,20 @@
+
+{% if options.enableUpload %} 
+  const set{{options.uploadField|capitalize}}File = async (target) => {
+    const file64 = await getFile64(target.files[0])
+    const [file] = target.files
+    set{{options.uploadField|capitalize}}(file.name)
+    const fileType = file.type.split("/")[0]
+    if (fileType === "image") {
+      set{{options.uploadField|capitalize}}Valid(true)
+      set{{options.uploadField|capitalize}}Url(file64)
+      const newValidationErrors = { ...validationErrors }
+      delete newValidationErrors.{{options.uploadField}}
+      setValidationErrors(newValidationErrors)
+    } else {
+      alert("Only image file is allowed")
+      {{options.uploadField}}Ref.current.value = ""
+    }
+  }
+
+{% endif %}

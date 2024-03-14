@@ -3,7 +3,7 @@ import Pager from "@/cp/components/shared/Pager"
 import Grid from "@/cp/components/shared/Grid"
 import Button from "@/cp/components/shared/ux/Button"
 import { useLocation } from "react-router-dom"
-//import BlockForm, { createUntitledBlock } from "./form/BlockForm"
+import BlockForm, { createUntitledBlock } from "./form/BlockForm"
 import { apiUrl } from "../apps/fn"
 
 import jQuery from "jquery"
@@ -11,7 +11,6 @@ import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import Toast from "@/cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@/cp/global/fn"
 
-const BlockForm = ({})=>"FORM"
 
 const WebBlockManager = ({ store, config, pageNumber ,templateId  }) => {
 
