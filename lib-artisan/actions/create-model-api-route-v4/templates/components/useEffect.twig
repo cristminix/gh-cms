@@ -1,0 +1,12 @@
+
+  
+  useEffect(() => {
+    if (requestToken) {
+      updateList()
+    }
+  }, [pageNumber, requestToken])
+
+  useEffect(() => {
+    retrieveIdentityToken()
+  }, [])
+

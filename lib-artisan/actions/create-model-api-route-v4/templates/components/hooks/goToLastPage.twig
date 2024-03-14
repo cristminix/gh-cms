@@ -1,0 +1,13 @@
+  
+  const goToLastPage = async () => {
+    try {
+      const response = await getListState(grid.limit)
+      const { total_pages } = response
+      if (total_pages > 0) {
+        goToPage(total_pages)
+      }
+      //   console.log(response)
+    } catch (e) {
+      toast(e.toString(), "error")
+    }
+  }

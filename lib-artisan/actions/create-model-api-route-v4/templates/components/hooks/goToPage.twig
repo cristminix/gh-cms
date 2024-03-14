@@ -1,0 +1,10 @@
+
+  const goToPage = (pageNum) => {
+    pageNum = parseInt(pageNum) || 1
+
+    document.location.hash = `{{options.routePath}}/page/${pageNum}`
+    if (pageNum == grid.page) {
+      updateList()
+    }
+  }
+  

@@ -1,0 +1,38 @@
+import { useEffect, useState, useRef } from "react"
+import Pager from "@/cp/components/shared/Pager"
+import Grid from "@/cp/components/shared/Grid"
+import Button from "@/cp/components/shared/ux/Button"
+{% if options.enableSubModule %}
+import { useLocation } from "react-router-dom"
+{% endif %}
+//import {{options.itemName}}Form, { createUntitled{{options.itemName}} } from "./form/{{options.itemName}}Form"
+import { apiUrl } from "../apps/fn"
+
+import jQuery from "jquery"
+import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
+import Toast from "@/cp/components/shared/ux/Toast"
+import { Prx, requestIdentityToken } from "@/cp/global/fn"
+
+const {{options.itemName}}Form = ({})=>"FORM"
+
+const {{options.componentName}} = ({ store, config, pageNumber {% if options.enableSubModule %},{{options.parentModuleFk}} {% endif %} }) => {
+{% include './components/vars.twig' %}
+{% include './components/toast.twig' %}
+{% include './components/useEffect.twig' %}
+{% include './components/hooks/retrieveIdentityToken.twig' %}
+{% include './components/hooks/onRefresh.twig' %}
+{% include './components/hooks/updateList.twig' %}
+{% include './components/hooks/addForm.twig' %}
+{% include './components/hooks/editForm.twig' %}
+{% include './components/hooks/deleteForm.twig' %}
+{% include './components/hooks/getListState.twig' %}
+{% include './components/hooks/goToLastPage.twig' %}
+{% include './components/hooks/goToPage.twig' %}
+{% include './components/hooks/goToSubModule.twig' %}
+{% include './components/hooks/backToParentModule.twig' %}
+{% include './components/gridOptions.twig' %}
+{% include './components/render.twig' %}
+
+}
+
+export default {{options.componentName}}

@@ -1,0 +1,68 @@
+const containerCls =
+    "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
+  return (
+    <div className="min-h-screen">
+      <Toast ref={toastRef} />
+      <{{options.itemName}}Form
+        requestToken={requestToken}
+        setRequestToken={setRequestToken}
+        getRequestToken={retrieveIdentityToken}
+        showForm={showForm}
+        toast={toast}
+        goToLastPage={goToLastPage}
+        updateList={(e) => updateList()}
+        data={formData}
+        className={containerCls}
+        hideForm={(e) => setShowForm(false)}
+        formId={formId}
+        modalBtnId={modalBtnId}
+        modalCloseBtnId={modalCloseBtnId}
+      />
+
+      <div className={`user-manager ${containerCls}`}>
+        <div className="grid-toolbar pb-4">
+          <div className="flex justify-end gap-2">
+            {!showForm ? (
+              <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" />
+            ) : null}
+            <Button
+              onClick={(e) => goToLastPage()}
+              caption="Go to last page"
+              icon="fa fa-next"
+            />
+          </div>
+        </div>
+        <div className="flex flex-col ">
+          <div className={`-m-1.5 overflow-x-auto ${niceScrollbarCls}`}>
+            <div className="p-1.5 ">
+              <div className="">
+                {grid ? (
+                  <Grid
+                    options={gridOptions}
+                    records={grid.records}
+                    page={grid.page}
+                    limit={grid.limit}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="pager-container mt-3">
+            {grid ? (
+              <Pager
+                path="{{options.routePath}}"
+                page={grid.page}
+                total_pages={grid.total_pages}
+                limit={grid.limit}
+                onRefresh={(e) => onRefresh()}
+              />
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )

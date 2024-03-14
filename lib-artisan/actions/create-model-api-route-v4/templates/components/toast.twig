@@ -1,0 +1,6 @@
+
+  const toast = (message, t) => {
+    if (toastRef.current) {
+      toastRef.current.add(message, t)
+    }
+  }

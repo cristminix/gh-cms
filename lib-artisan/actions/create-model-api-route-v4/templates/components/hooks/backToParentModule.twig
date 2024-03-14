@@ -1,0 +1,6 @@
+
+{% if options.enableSubModule %}  
+  const backTo{{options.parentModuleItemName}} = (item) => {
+    document.location.hash = `{{options.parentModuleRoutePath}}/page/${lastParentPage}`
+  }
+{% endif %}

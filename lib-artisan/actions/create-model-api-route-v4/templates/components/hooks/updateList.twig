@@ -1,0 +1,28 @@
+  
+  const updateList = async () => {
+    const page = parseInt(pageNumber) || 1
+
+    const { limit, order_by, order_dir } = grid
+    const url = apiUrl("{{ctl}}s", { 
+      {% if options.enableSubModule %}{{options.parentModuleFk}}, {% endif %}
+      limit, 
+      page, order_by, order_dir })
+    try {
+      const { data, validJson, code, text } = await Prx.get(url, requestToken)
+      if (validJson) {
+        const nGrid = data
+        setGrid((prevGrid) => {
+          return {
+            ...prevGrid,
+            ...nGrid,
+          }
+        })
+      } else {
+        toast(`Failed to get list server sent http ${code} ${text}`, "error")
+      }
+    } catch (e) {
+      console.log(e)
+      toast(e.toString(), "error")
+    }
+  }
+  

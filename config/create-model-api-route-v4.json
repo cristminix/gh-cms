@@ -22,7 +22,35 @@
 
       "enableServeIndex": true,
       "serveIndexStaticPath": "",
-      "serveIndexRoutePath": ""
+      "serveIndexRoutePath": "",
+
+      "***@4": "CLIENT OPTIONS ***",
+      "enableGoToPage": false,
+      "enableGoToLastPage": false,
+      "enableListState": false,
+
+      "generateComponent": true,
+      "componentOutDir": "frontend/src/cp/components/cms-builder",
+      "componentFormOutDir": "frontend/src/cp/components/cms-builder/form",
+      "gridOptions": {},
+      "pagerOptions": {},
+      "routePath": "/builder/web-block-manager",
+      "componentName": "WebBlockManager",
+      "formName": "BlockForm",
+      "itemName": "Block",
+      "fieldItemName": "name",
+
+      "***@5": "PARENT MODULE MODE OPTIONS Add access to sub module ***",
+      "enableParentModule": false,
+      "subModuleFk": "parent",
+      "subModuleRoutePath": "",
+      "subModuleItemName": "",
+
+      "***@6": "SUB MODULE MODE OPTIONS Add access with parent module ***",
+      "enableSubModule": true,
+      "parentModuleRoutePath": "/builder/web-block-manager/template",
+      "parentModuleFk": "templateId",
+      "parentModuleItemName": "Template"
     }
   }
 }

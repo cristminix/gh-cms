@@ -1,0 +1,6 @@
+
+{% if options.enableParentModule %}  
+  const goToTT = (item) => {
+    document.location.hash = `{{subModuleRoutePath}}/${item.{{schemaDef.pk}}}?parentPage=${grid.page}`
+  }
+{% endif %}

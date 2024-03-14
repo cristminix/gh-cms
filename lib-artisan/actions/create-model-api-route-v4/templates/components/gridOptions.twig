@@ -1,0 +1,37 @@
+
+  const gridOptions = {
+    numberWidthCls: "w-[10px]",
+    actionWidthCls: "w-[50px]",
+    widthCls: [""],
+    headers: {{headersStr}},
+    fields: {{fieldsStr}},
+    enableEdit: true,
+    callbackFields: {
+    },
+    callbackHeaders: {
+    },
+    callbackActions: {
+      edit: (item, index, options, linkCls, gridAction) => {
+        return (
+          <>
+            
+            <Button
+              title="Edit"
+              loading={false}
+              icon="fa fa-edit"
+              caption=""
+              onClick={(e) => editForm(item, index)}
+            />
+            <Button
+              title="Delete"
+              loading={false}
+              icon="fa fa-trash"
+              caption=""
+              onClick={(e) => deleteForm(item, index)}
+            />
+          </>
+        )
+      },
+    },
+  }
+  

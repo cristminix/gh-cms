@@ -55,7 +55,7 @@ const createModelApiRouteV4 = async (table_name) => {
     })
   }
 
-  const templateData = {
+  let templateData = {
     options,
     schemaDef,
     ctl,
@@ -64,7 +64,23 @@ const createModelApiRouteV4 = async (table_name) => {
     requiredFieldValidations,
   }
   console.log(templateData)
-
+  if (options.generateComponent) {
+    const fieldsStr = JSON.stringify(schemaDef.fields)
+    const headersStr = JSON.stringify(schemaDef.fields)
+    templateData = {
+      ...templateData,
+      fieldsStr,
+      headersStr,
+    }
+    let outputComponentBuffer = await twigEnv.render("componentFile.twig", templateData)
+    // console.log(outputComponentBuffer)
+    await writeFile(
+      `${options.componentOutDir}/${options.componentName}.jsx`,
+      outputComponentBuffer,
+      `create component ${options.componentName} on ${options.componentOutDir}`
+    )
+  }
+  return
   let outputContentBuffer = await twigEnv.render("routerFile.twig", templateData)
   const outputPath = `${outDir}/${ctl}.js`
   await writeFile(outputPath, outputContentBuffer, `create route ${schemaDef.model} on ${outDir}`)

@@ -7,6 +7,7 @@ import { apiUrl } from "./apps/fn"
 import "@/cp/global/styles/markdown-viewer.css"
 import WebMenuManager from "./cms-builder/WebMenuManager"
 import WebThemeManager from "./cms-builder/WebThemeManager"
+import WebBlockManager from "./cms-builder/WebBlockManager"
 
 export async function loader({ params }) {
   const { module, fk, pageNumber } = params
@@ -22,6 +23,8 @@ const CMSBuilder = ({ store, config }) => {
     return <WebMenuManager store={store} config={config} />
   } else if (module == "web-theme-manager") {
     return <WebThemeManager store={store} config={config} />
+  } else if (module == "web-block-manager") {
+    return <WebBlockManager store={store} config={config} />
   }
   // }
   // useEffect(() => {

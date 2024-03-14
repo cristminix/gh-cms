@@ -1,0 +1,34 @@
+const deleteForm = async (item, index) => {
+    // console.log(item)
+    if (confirm(`Are you sure want to delete this upload "${item.{{options.fieldItemName}}}"`)) {
+      const url = apiUrl(["{{ctl}}/delete", item.{{schemaDef.pk}}])
+      try {
+        const { data, validJson, code, text } = await Prx.delete(
+          url,
+          requestToken,
+        )
+        if (validJson) {
+          const { success, message } = data
+          toast(message, success ? "success" : "error")
+
+          if (success) {
+            const listState = await getListState(grid.limit, grid.page)
+            const { total_pages, record_count } = listState
+            if (record_count === 0) {
+              goToPage(total_pages)
+            } else {
+              updateList()
+            }
+          }
+        } else {
+          toast(
+            `Failed to delete {{schemaDef.pk}}:${item.{{schemaDef.pk}}} server sent http ${code} ${text}`,
+            "error",
+          )
+        }
+      } catch (e) {
+        console.log(e)
+        toast(e.toString(), "error")
+      }
+    }
+  }

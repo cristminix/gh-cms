@@ -36,7 +36,7 @@ const main = async () => {
         type: "rotating-file",
         path: path.resolve(`${appConfig.get("logDir")}/gh-cms-rest-server.log`),
         count: 7,
-        period: "1h", // Others: 1h, 1w, 1m, 1y. See https://github.com/trentm/node-bunyan#stream-type-rotating-file
+        period: "1w", // Others: 1h, 1w, 1m, 1y. See https://github.com/trentm/node-bunyan#stream-type-rotating-file
       },
     ],
     level: "debug",

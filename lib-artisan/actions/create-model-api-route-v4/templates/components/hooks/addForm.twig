@@ -1,0 +1,18 @@
+  
+  const addForm = async (item, index) => {
+{% if options.enableSubModule %}
+    let {{options.parentModuleFk}} = null
+    if (item) {
+      {{options.parentModuleFk}} = item.{{options.parentModuleFk}}
+    }
+{% endif %}
+    const default{{options.itemName}} = createUntitled{{options.itemName}}()
+{% if options.enableSubModule %}
+    default{{options.itemName}}.{{options.parentModuleFk}} = {{options.parentModuleFk}}
+{% endif %}
+
+    setFormData(default{{options.itemName}})
+    setShowForm(true)
+
+    jQuery(`#${modalBtnId}`).trigger("click")
+  }

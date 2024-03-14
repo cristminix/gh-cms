@@ -1,0 +1,9 @@
+
+  const retrieveIdentityToken = async () => {
+    const appId = config.getAppId()
+    const url = apiUrl("auth/generateToken")
+    const token = await requestIdentityToken(appId, url, toast)
+    if (token) {
+      setRequestToken(token)
+    }
+  }

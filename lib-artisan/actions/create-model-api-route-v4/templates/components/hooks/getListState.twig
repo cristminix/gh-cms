@@ -1,0 +1,21 @@
+
+{% if options.enableListState %}
+
+  const getListState = async (limit = null, page = null) => {
+    let response = {}
+    const url = apiUrl("{{ctl}}/states", { limit, page })
+    try {
+      const { data, validJson, code, text } = await Prx.get(url, requestToken)
+      if (validJson) {
+        response = data
+      } else {
+        toast(`Failed to get states server sent http ${code} ${text}`, "error")
+      }
+    } catch (e) {
+      toast(e.toString(), "error")
+    }
+    return response
+  }
+
+  {% endif %}
+
