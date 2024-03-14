@@ -1,0 +1,10 @@
+    
+
+    /* Route logic for handling GET /{{ctl}}/:{{schemaDef.pk}} */
+    async get(req,res){
+        let {{schemaDef.pk}}  = req.params.{{schemaDef.pk}}
+        const {{modelInstanceName}} = await this.m{{schemaDef.model}}.getByPk({{schemaDef.pk}})
+        return res.send({
+            row: {{modelInstanceName}} 
+        })
+    }

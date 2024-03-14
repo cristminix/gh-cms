@@ -1,23 +1,30 @@
 import config from "./actions.json" assert { type: "json" }
-import {importActionModules, showHelp, getActionArgs, processAction} from "./fn.mjs"
+import { importActionModules, showHelp, getActionArgs, processAction, snakeToCamel } from "./fn.mjs"
 // console.log(process.argv)
 
 const main = async () => {
-    // process.removeAllListeners('warning')
+  // process.removeAllListeners('warning')
 
-    let {argv} = process
-    const {availables} = config
-    
-    const moduleActions = await importActionModules(availables)
-    const actionName = getActionArgs(argv)
+  let { argv } = process
+  const { availables } = config
 
-    if(actionName){
-        await processAction(actionName, argv, moduleActions, availables)
-    }else{
-        showHelp(availables, moduleActions)
+  const moduleActions = await importActionModules(availables)
+  //   console.log(argv)
+  try {
+    if (argv[2].match(/-/)) {
+      argv[2] = snakeToCamel(argv[2])
     }
+  } catch (e) {}
 
-    // process.exit(0)
+  let actionName = getActionArgs(argv)
+
+  if (actionName) {
+    await processAction(actionName, argv, moduleActions, availables)
+  } else {
+    showHelp(availables, moduleActions)
+  }
+
+  // process.exit(0)
 }
 
 main()

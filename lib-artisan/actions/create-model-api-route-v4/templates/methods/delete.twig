@@ -1,0 +1,32 @@
+
+    /* Route logic for handling POST '/{{ctl}}/delete */
+    async delete(req, res){
+        let {{schemaDef.pk}} = null
+        if(req.body.{{schemaDef.pk}}){
+            {{schemaDef.pk}}= req.body.{{schemaDef.pk}}
+        }
+        if(!{{schemaDef.pk}}){
+            {{schemaDef.pk}}= req.params.{{schemaDef.pk}}
+        }
+        
+        const existingRec = await  this.m{{schemaDef.model}}.getByPk(id)
+
+        if (existingRec) {
+            const  {{modelInstanceName}} = await this.m{{schemaDef.model}}.delete({{schemaDef.pk}})
+{% if  options.enableUpload %}
+
+            const old_{{options.uploadField}} = `${this.{{options.uploadField}}Dir}/${existingRec.{{options.uploadField}}}`
+
+            fs.unlink(old_{{options.uploadField}}, (err) => {
+                if (err) {
+                this.logger.info("Error deleting file:", err)
+                } else {
+                this.logger.info("File deleted successfully!")
+                }
+            })
+{% endif %}
+            return res.send({data: {{modelInstanceName}},success: true, message: "Record deleted"})
+        } else {
+            return res.send({ success: false, message: "Record not found" })
+        }
+    }

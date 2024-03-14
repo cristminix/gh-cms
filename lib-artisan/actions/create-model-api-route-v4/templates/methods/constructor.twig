@@ -1,0 +1,17 @@
+    constructor(datasource, appConfig, logger) {
+        super(datasource, appConfig, logger)
+        this.appConfig = appConfig
+        this.logger = logger
+        this.m{{schemaDef.model}} = datasource.factory('M{{schemaDef.model}}', true)
+        this.router = express.Router()
+{% if options.enableUpload %}
+        this.{{options.uploadField}}Dir = '{{options.uploadPath}}'
+        this.uploader = multer({
+           dest: this.{{options.uploadField}}Dir,
+        })
+{% else %}
+        this.uploader = multer()
+{% endif %}
+       
+        this.initRouter()
+    }

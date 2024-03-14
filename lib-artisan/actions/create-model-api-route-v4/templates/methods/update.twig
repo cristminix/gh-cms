@@ -1,0 +1,86 @@
+
+     /* Route logic for handling POST '/{{ctl}}/update */
+     async update(req,res){
+{% if  options.enableUpload %}
+        const [file] = req.files
+        let {{options.uploadField}} = null
+{% endif %}
+
+{% if options.enableValidation and options.enableUpload %}
+        const validationErrors = validationResult(req)
+        let error_{{options.uploadField}}s = this.validateImageFile("{{options.uploadField}}", req.files)
+        let errorValidations = validationErrors.array()
+        const errors = [...errorValidations, ...error_{{options.uploadField}}s]
+        if (errors.length > 0) {
+            return res.status(422).json({ errors })
+        }
+{% else %}
+    {% if options.enableValidation %}
+        const validationErrors = validationResult(req)
+        let errorValidations = validationErrors.array()
+        const errors = [...errorValidations]
+        if (errors.length > 0) {
+            return res.status(422).json({ errors })
+        }
+    {% endif %}
+    {% if options.enableUpload %}
+        let error_{{options.uploadField}}s = this.validateImageFile("{{options.uploadField}}", req.files)
+        const errors = [ ...error_{{options.uploadField}}s]
+        if (errors.length > 0) {
+            return res.status(422).json({ errors })
+        }
+    {% endif %}
+{% endif %}
+        
+        let {{schemaDef.pk}} = null
+        if(req.body.{{schemaDef.pk}}){
+            {{schemaDef.pk}}= req.body.{{schemaDef.pk}}
+        }
+        if(!{{schemaDef.pk}}){
+            {{schemaDef.pk}}= req.params.{{schemaDef.pk}}
+        }
+        const existingRec = await  this.m{{schemaDef.model}}.getByPk({{schemaDef.pk}})
+        if (existingRec) {
+{% if  options.enableUpload %}
+            {{options.uploadField}} = existingRec.{{options.uploadField}} 
+            let fileUpdated = false
+            if (file) {
+                fileUpdated = true
+                const ext = getFileExtensionFromMimeType(file.mimetype)
+                const baseName = path.basename(file.path)
+                const old_{{options.uploadField}}  = existingRec.{{options.uploadField}} 
+                {{options.uploadField}}  = `${baseName}.${ext}`
+                const oldFilePath = file.path
+                const newFilePath =  `${this.{{options.uploadField}}Dir}/${ {{options.uploadField}} }` 
+                fs.rename(oldFilePath, newFilePath, (err) => {
+                if (err) {
+                    this.logger.info("Error renaming file:", err)
+                } else {
+                    this.logger.info("File renamed successfully!")
+                    const old_{{options.uploadField}}Path = `${this{{options.uploadField}}Dir}/${old_{{options.uploadField}} }` 
+
+                    fs.unlink(old_{{options.uploadField}}Path, (err) => {
+                    if (err) {
+                        this.logger.info("Error deleting file:", err)
+                    } else {
+                        this.logger.info("File deleted successfully!")
+                    }
+                    })
+                }
+                })
+            }
+{% endif %}
+            const { {{requiredFieldLabels}} } = req.body
+            const updatedData = { {{requiredFieldLabels}} }
+{% if  options.enableUpload %}
+            if(fileUpdated){
+                updatedData.{{options.uploadField}} = {{options.uploadField}}
+            }
+{% endif %}
+            const  {{modelInstanceName}} = await this.m{{schemaDef.model}}.update({{schemaDef.pk}},updatedData)
+            return res.send({data: {{modelInstanceName}}, message: "Record updated",success:true})
+        }else{
+            return res.send({ success: false, message: "Record not found" })
+        }
+        
+    }

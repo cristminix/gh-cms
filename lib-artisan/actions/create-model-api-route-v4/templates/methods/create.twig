@@ -1,0 +1,59 @@
+ 
+    /* Route logic for handling POST /{{ctl}}/create */
+    async create(req,res){
+{% if  options.enableUpload %}
+        const [file] = req.files
+        let {{options.uploadField}} = null
+{% endif %}
+
+{% if options.enableValidation and options.enableUpload %}
+        const validationErrors = validationResult(req)
+        let error_{{options.uploadField}}s = this.validateImageFile("{{options.uploadField}}", req.files)
+        let errorValidations = validationErrors.array()
+        const errors = [...errorValidations, ...error_{{options.uploadField}}s]
+        if (errors.length > 0) {
+            return res.status(422).json({ errors })
+        }
+{% else %}
+    {% if options.enableValidation %}
+        const validationErrors = validationResult(req)
+        let errorValidations = validationErrors.array()
+        const errors = [...errorValidations]
+        if (errors.length > 0) {
+            return res.status(422).json({ errors })
+        }
+    {% endif %}
+    {% if options.enableUpload %}
+        let error_{{options.uploadField}}s = this.validateImageFile("{{options.uploadField}}", req.files)
+        const errors = [ ...error_{{options.uploadField}}s]
+        if (errors.length > 0) {
+            return res.status(422).json({ errors })
+        }
+    {% endif %}
+{% endif %}
+
+{% if  options.enableUpload %}
+        if (file) {
+            const ext = getFileExtensionFromMimeType(file.mimetype)
+            const baseName = path.basename(file.path)
+            {{options.uploadField}} =  `${baseName}.${ext}`
+            const oldFilePath = file.path
+            const newFilePath = `${this.{{options.uploadField}}Dir}/${ {{options.uploadField}} }`
+            fs.rename(oldFilePath, newFilePath, (err) => {
+              if (err) {
+                this.logger.info("Error renaming file:", err)
+              } else {
+                this.logger.info("File renamed successfully!")
+              }
+            })
+          }
+{% endif %}
+
+        let { {{requiredFieldLabels}} }= req.body
+        try {
+            const  {{modelInstanceName}} = await this.m{{schemaDef.model}}.create({{requiredFieldLabels}}{% if  options.enableUpload %},{{options.uploadField}}{% endif %})
+            return res.send({ row: {{modelInstanceName}} })
+        }catch(e){
+            return res.send({ row: e.toString() })
+        }
+    }

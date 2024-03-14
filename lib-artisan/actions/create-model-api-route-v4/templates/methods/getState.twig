@@ -1,0 +1,10 @@
+
+{% if options.enableStateRoute %}
+
+    async getState(req, res) {
+        let { limit, page } = req.query
+        page = parseInt(page) || null
+        const results = await this.m{{schemaDef.model}}.getState(limit, page)
+        return res.send(results)
+    }
+{% endif %}

@@ -1,0 +1,3 @@
+{% for item in requiredFieldValidations %}
+            check("{{item.field}}", "{{item.message}}").not().isEmpty(),
+{% endfor %}

@@ -1,0 +1,28 @@
+{
+  "dataSourceConfig": "backend/src/api/data-source/config.json",
+  "outDir": "backend/src/api/routes",
+  "routeConfig": "backend/src/api/routes/config.json",
+  "availables": {
+    "web_block": {
+      "overwrite": true,
+      "useAuthenticatedRouter": true,
+      "enableStateRoute": true,
+
+      "***@1": "UPLOAD OPTIONS ***",
+
+      "enableUpload": true,
+      "uploadPath": "",
+      "uploadField": "previewImage",
+
+      "***@2": "FORM VALIDATION OPTIONS ***",
+
+      "enableValidation": true,
+
+      "***@3": "SERVE INDEX OPTIONS ***",
+
+      "enableServeIndex": true,
+      "serveIndexStaticPath": "",
+      "serveIndexRoutePath": ""
+    }
+  }
+}

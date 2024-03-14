@@ -1,0 +1,62 @@
+    
+    initRouter(){
+{% if options.enableServeIndex %}
+        const staticPath = path.join(this.appConfig.get("basepath"), '{{options.serveIndexStaticPath}}')
+        this.router.use("/{{options.serveIndexRoutePath}}", express.static(staticPath)) 
+        this.router.use("/{{options.serveIndexRoutePath}}", serveIndex(staticPath, { icons: true }) )
+{% endif %}
+     
+        this.router.get('/{{ctl}}s', 
+{% if options.useAuthenticatedRouter %}
+            (req, res, next) => this.authenticateToken(req, res, next),
+{% endif %}
+            (req, res) => this.getList(req, res))
+
+{% if options.enableStateRoute %}
+        this.router.get("{{ctl}}/states",
+    {% if options.useAuthenticatedRouter %}
+            (req, res, next) => this.authenticateToken(req, res, next),
+    {% endif %}
+            (req, res) => this.getState(req, res))
+{% endif %}
+        
+        this.router.get('/{{ctl}}/:{{schemaDef.pk}}', 
+{% if options.useAuthenticatedRouter %}
+            (req, res, next) => this.authenticateToken(req, res, next),
+{% endif %}        
+            (req, res) => this.get(req, res))
+          
+        this.router.post('/{{ctl}}/create',
+{% if options.useAuthenticatedRouter %}
+            (req, res, next) => this.authenticateToken(req, res, next),
+{% endif %} 
+{% if options.enableUpload %}
+            this.uploader.array("{{options.uploadField}}"),
+{% else %} 
+            this.uploader.none(),
+{% endif %} 
+{% if options.enableValidation %}
+{% include './requiredValidation.twig' %}
+{% endif %}
+            (req, res) => this.create(req,res))
+
+        this.router.put('/{{ctl}}/update/:{{schemaDef.pk}}?',
+{% if options.useAuthenticatedRouter %}
+            (req, res, next) => this.authenticateToken(req, res, next),
+{% endif %} 
+{% if options.enableUpload %}
+            this.uploader.array("{{options.uploadField}}"),
+{% else %} 
+            this.uploader.none(),
+{% endif %} 
+{% if options.enableValidation %}
+{% include './requiredValidation.twig' %}
+{% endif %}
+            (req, res) => this.update(req,res))
+
+        this.router.delete('/{{ctl}}/delete/:{{schemaDef.pk}}?',
+{% if options.useAuthenticatedRouter %}
+            (req, res, next) => this.authenticateToken(req, res, next),
+{% endif %} 
+            (req, res) => this.delete(req,res))
+    }

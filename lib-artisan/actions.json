@@ -322,6 +322,16 @@
         }
       },
       "desc": "Automagically add import source Component to destination Component relatively"
+    },
+    "createModelApiRouteV4": {
+      "arguments": {
+        "table_name": {
+          "type": "string",
+          "required": true,
+          "desc": ""
+        }
+      },
+      "desc": "Create Model Api Route by using json config"
     }
   }
 }

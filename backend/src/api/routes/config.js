@@ -1,8 +1,10 @@
 import express from "express"
 import { generateAccessToken } from "../../fn.js"
-import path from "path"
 import fs from "fs"
 import multer from "multer"
+import serveIndex from "serve-index"
+import "reflect-metadata"
+import path from "path"
 class ConfigRouter {
   datasource = null
   mUser = null
@@ -33,11 +35,15 @@ class ConfigRouter {
     } catch (err) {
       return res.send({ error: err.toString() })
     }
-    return res.send({ error: true })
+    // return res.send({ error: true })
   }
 
   initRouter() {
     // console.log("initRouter")
+    const staticPath = path.join(this.appConfig.get("basepath"), "storage")
+    this.router.use("/config/storage", express.static(staticPath)) // Serve static files
+    this.router.use("/config/storage", serveIndex(staticPath, { icons: true }))
+
     this.router.post("/config/saveMenu", this.multer.none(), async (req, res) => await this.saveMenu(req, res))
   }
 }

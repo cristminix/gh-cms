@@ -1,0 +1,46 @@
+import express from "express"
+import multer from "multer"
+import fs from "fs"
+import path from "path"
+{% if options.enableServeIndex %}
+import serveIndex from "serve-index"
+import "reflect-metadata"
+{% endif %}
+{% if options.enableUpload %}
+import { getFileExtensionFromMimeType, validateImageFile } from "../../fn.js"
+{% endif %}
+{% if options.enableValidation %}
+import { check, validationResult, checkSchema } from "express-validator"
+{% endif %}
+{% if options.useAuthenticatedRouter %}
+import AuthenticatedRouter from "./AuthenticatedRouter.js"
+{% endif %}
+
+
+class {{schemaDef.model}}Router{% if options.useAuthenticatedRouter %} extends AuthenticatedRouter{% endif %} {
+    
+    datasource = null
+    m{{schemaDef.model}} = null
+    router = null
+    uploader = null
+    logger = null
+{% if options.enableUpload %}
+    {{options.uploadField}}Dir = null
+{% endif %}
+
+{% include './methods/constructor.twig' %}
+{% include './methods/validation.twig' %}
+{% include './methods/getState.twig' %}
+{% include './methods/getList.twig' %}
+{% include './methods/get.twig' %}
+{% include './methods/create.twig' %}
+{% include './methods/update.twig' %}
+{% include './methods/delete.twig' %}
+{% include './methods/initRouter.twig' %}
+
+    getRouter(){
+        return this.router
+    }
+}
+
+export default {{schemaDef.model}}Router

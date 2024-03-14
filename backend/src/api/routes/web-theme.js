@@ -51,7 +51,7 @@ class WebThemeRouter extends AuthenticatedRouter {
     // Route logic for handling GET '/web-theme/:id'
     let id = req.params.id
     const webtheme = await this.mWebTheme.getByPk(id)
-    return res.send({ data: webtheme })
+    return res.send({ row: webtheme })
   }
 
   async create(req, res) {

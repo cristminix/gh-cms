@@ -1,0 +1,7 @@
+{% if options.enableUpload %}
+    
+    validateImageFile(fieldname, files) {
+        let errors = validateImageFile(fieldname, files, this.logger, 4)
+        return errors
+    }
+{% endif %}

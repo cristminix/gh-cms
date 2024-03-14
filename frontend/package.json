@@ -11,16 +11,18 @@
   "author": "Putra Budiman <cristminix@gmail.com>",
   "license": "MIT",
   "dependencies": {
- 
+    "@codemirror/lang-javascript": "^6.2.2",
     "@popperjs/core": "^2.11.7",
     "@preline/accordion": "^2.0.1",
     "@preline/dropdown": "^2.0.1",
     "@preline/overlay": "^2.0.1",
+    "@uiw/react-codemirror": "^4.21.24",
     "bootstrap-icons": "^1.10.5",
     "cp-react-tree-table": "^1.1.2",
     "crc": "^4.3.2",
     "crypto-js": "^4.2.0",
     "fontawesome-4.7": "^4.7.0",
+    "formik": "^2.4.5",
     "jquery": "^3.7.1",
     "jsstore": "^4.7.3",
     "mime": "^4.0.1",
@@ -32,7 +34,8 @@
     "react18-json-view": "^0.2.6",
     "underscore": "^1.13.6",
     "uuid": "^9.0.1",
-    "video.js": "^8.6.1"
+    "video.js": "^8.6.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
