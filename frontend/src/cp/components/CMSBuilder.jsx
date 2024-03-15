@@ -20,17 +20,17 @@ const CMSBuilder = ({ store, config }) => {
   const { module, pageNumber, fk } = useLoaderData()
   const [markdown, setMarkdown] = useState("")
   // const loadMarkdown = async (module) => {
-  console.log(module)
+  // console.log(module, pageNumber, fk)
   if (module == "web-menu-manager") {
     return <WebMenuManager store={store} config={config} />
   } else if (module == "web-theme-manager") {
     return <WebThemeManager store={store} config={config} />
   } else if (module == "web-block-manager") {
-    return <WebBlockManager store={store} config={config} />
+    return <WebBlockManager store={store} config={config} pageNumber={pageNumber} />
   } else if (module == "web-template-manager") {
     return <WebTemplateManager store={store} config={config} />
   } else if (module == "web-page-manager") {
-    return <WebPageManager store={store} config={config} />
+    return <WebPageManager store={store} config={config} pageNumber={pageNumber} />
   }
   // }
   // useEffect(() => {

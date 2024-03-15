@@ -51,7 +51,7 @@ export class MWebBlock {
     }
 
     try {
-      const total_records = await this.manager.count(YtUpload)
+      const total_records = await this.manager.count(WebBlock)
 
       const total_pages = calculateTotalPages(total_records, limit)
       let records = []
@@ -68,6 +68,7 @@ export class MWebBlock {
       return { limit, total_pages, total_records, record_count: records.length }
     } catch (e) {
       // res.send(e)
+      console.error(e)
     }
     return { limit, total_pages: 0, total_records: 0, record_count: 0 }
   }

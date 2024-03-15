@@ -25,7 +25,7 @@ installer.isFreshIstall().then(async (freshInstall) => {
     store.ready(() => {
       ReactDOM.createRoot(document.getElementById("root")).render(
         // <React.StrictMode>
-        <Router store={store} config={config} />,
+        <Router store={store} config={config} />
         // </React.StrictMode>
       )
     })

@@ -197,7 +197,7 @@ class WebBlockRouter extends AuthenticatedRouter {
     )
 
     this.router.get(
-      "web-block/states",
+      "/web-block/states",
       (req, res, next) => this.authenticateToken(req, res, next),
       (req, res) => this.getState(req, res)
     )

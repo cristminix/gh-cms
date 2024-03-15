@@ -1,76 +1,73 @@
-const apiUrl = (path,qs=null) => {
-    let dst = path
-    if(Array.isArray(path)){
-        dst = path.join('/')
+const apiUrl = (path, qs = null) => {
+  let dst = path
+  if (Array.isArray(path)) {
+    dst = path.join("/")
+  }
+  if (qs) {
+    let querStrings = []
+    Object.keys(qs).map((k) => {
+      let v = qs[k]
+      if (typeof v != "undefined" && v != null) {
+        querStrings.push(`${k}=${v}`)
+      }
+    })
+    if (querStrings.length > 0) {
+      dst += `?${querStrings.join("&")}`
     }
-    if(qs){
-        let querStrings = []
-        Object.keys(qs).map((k)=>{
-            let v = qs[k]
-            querStrings.push(`${k}=${v}`)
-        })
-        if(querStrings.length>0){
-            dst += `?${querStrings.join('&')}`
-        }
-    }
-    return `http://ubuserver:7700/api/cms/${dst}`
+  }
+  return `http://ubuserver:7700/api/cms/${dst}`
 }
 // import Queue from "../developers/queue-man/Queue"
-class Queue{}
+class Queue {}
 class MessageQueue {
-    queue = null
-    running = false
-   constructor(){
+  queue = null
+  running = false
+  constructor() {
     this.queue = new Queue()
-   }
-   
-   run(){
-    if(!this.running){
-        this.running = true
-        this.runDelayed()
+  }
+
+  run() {
+    if (!this.running) {
+      this.running = true
+      this.runDelayed()
     }
-   }
+  }
 
-   async sendMessageAsync(eventName, data, target, callback){
+  async sendMessageAsync(eventName, data, target, callback) {
     return new Promise((resolve, reject) => {
-        try{
-            // console.log(eventName, data, target)
-            sendMessage(eventName, data, target, response=>{
-                if(typeof callback == 'function'){
-                    callback(response)
-                }
-                resolve(response)
-            })
-        }catch(e){
-            resolve(e)
-        }
-        
-
+      try {
+        // console.log(eventName, data, target)
+        sendMessage(eventName, data, target, (response) => {
+          if (typeof callback == "function") {
+            callback(response)
+          }
+          resolve(response)
+        })
+      } catch (e) {
+        resolve(e)
+      }
     })
-   }
-   async runDelayed(){
+  }
+  async runDelayed() {
     const emptyQueue = this.queue.isEmpty()
     console.log(emptyQueue)
-    while(!emptyQueue){
-        const message = this.queue.dequeue()
-        const {eventName, data, target, callback} = message
-        await this.sendMessageAsync(eventName, data, target, callback)
+    while (!emptyQueue) {
+      const message = this.queue.dequeue()
+      const { eventName, data, target, callback } = message
+      await this.sendMessageAsync(eventName, data, target, callback)
     }
     this.running = false
-   }
-   enqueue(queue){
+  }
+  enqueue(queue) {
     this.queue.enqueue(queue)
-    
-   }
-   sendMessage(eventName, data, target, callback) {
-        const messageId = (new Date).getTime().toString()
+  }
+  sendMessage(eventName, data, target, callback) {
+    const messageId = new Date().getTime().toString()
 
-        const queue = {messageId, eventName, data, target, callback}
-        this.enqueue(queue)
-        this.run()
-    }
+    const queue = { messageId, eventName, data, target, callback }
+    this.enqueue(queue)
+    this.run()
+  }
 }
 const messageQueue = new MessageQueue()
-export {
-    apiUrl
-}
+export { apiUrl }

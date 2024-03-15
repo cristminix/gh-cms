@@ -30,7 +30,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   const [formData, setFormData] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [requestToken, setRequestToken] = useState(null)
-
+  // const { page } = useLoaderData()
   const location = useLocation()
   const qs = location.search
   const qp = new URLSearchParams(qs)
@@ -44,6 +44,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   }
 
   useEffect(() => {
+    console.log(pageNumber)
     if (requestToken) {
       updateList()
     }
@@ -101,13 +102,10 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
     // }
     const defaultBlock = createUntitledBlock()
     defaultBlock.templateId = templateId
-    setFormData(null)
-    setTimeout(() => {
-      setFormData(defaultBlock)
-      setShowForm(true)
+    setFormData(defaultBlock)
+    setShowForm(true)
 
-      jQuery(`#${modalBtnId}`).trigger("click")
-    }, 512)
+    jQuery(`#${modalBtnId}`).trigger("click")
   }
   const editForm = async (item, index) => {
     setFormData(item)
@@ -155,7 +153,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       //   console.log(response)
     } catch (e) {
       toast(e.toString(), "error")
-      updateList()
+      // updateList()
     }
   }
   const goToPage = (pageNum) => {

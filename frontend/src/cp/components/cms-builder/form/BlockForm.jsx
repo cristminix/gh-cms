@@ -206,49 +206,53 @@ const BlockForm = ({
     }
   }
 
-  const getRemoteRowData = async () => {
-    const url = apiUrl(["web-block", pk])
+  const getRemoteRowData = async (pk_) => {
+    const url = apiUrl(["web-block", pk_])
 
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
       if (validJson) {
-        const { previewImage } = data.data
-        const previewImageUrl = apiUrl(["web-block/previews", previewImage])
-        setPreviewImageUrl(previewImageUrl)
+        // const { previewImage } = data.data
+        // const previewImageUrl = apiUrl(["web-block/previews", previewImage])
+        // setPreviewImageUrl(previewImageUrl)
+        setFormData(data.data)
         setFormChecksum(calculateFormChecksum(data.data))
       } else {
-        toast(`Failed to get record id:${pk} server sent http ${code} ${text}`, "error")
+        toast(`Failed to get record id:${pk_} server sent http ${code} ${text}`, "error")
       }
     } catch (e) {
       toast(e.toString(), "error")
     }
   }
+  const setFormData = (data) => {
+    const { id, templateId, name, slug, description, kind, previewImage, path } = data
+    setPk(id)
+
+    setTemplateId(templateId)
+    setName(name)
+    setSlug(slug)
+    setDescription(description)
+    setKind(kind)
+    setPath(path)
+    setPreviewImage(previewImage)
+    if (isEmpty(previewImage)) {
+      setPreviewImageValid(false)
+    } else {
+      setPreviewImageUrl(apiUrl(["web-block/previews", previewImage]))
+      setPreviewImageValid(true)
+    }
+  }
   const initFormData = (data) => {
     console.log(data)
     if (data) {
-      const { id, templateId, name, slug, description, kind, previewImage, path } = data
-      setPk(id)
-
-      setTemplateId(templateId)
-      setName(name)
-      setSlug(slug)
-      setDescription(description)
-      setKind(kind)
-      setPath(path)
-      setPreviewImage(previewImage)
-      if (isEmpty(previewImage)) {
-        setPreviewImageValid(false)
-      } else {
-        setPreviewImageUrl(apiUrl(["web-block/preview", previewImage]))
-        setPreviewImageValid(true)
-      }
+      setFormData(data)
       setTimeout(() => {
         const initialFormChecksum = calculateFormChecksum(data)
         setFormChecksum(initialFormChecksum)
         setValidationErrors({})
       }, 256)
       if (data.id) {
-        getRemoteRowData()
+        getRemoteRowData(data.id)
       }
     }
   }
