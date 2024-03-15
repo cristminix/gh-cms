@@ -8,7 +8,10 @@
 
 {% if options.enableValidation and options.enableUpload %}
         const validationErrors = validationResult(req)
-        let error_{{options.uploadField}}s = this.validateImageFile("{{options.uploadField}}", req.files)
+        let error_{{options.uploadField}}s = []
+        if(file){
+            error_{{options.uploadField}}s = this.validateImageFile("{{options.uploadField}}", req.files)
+        }
         let errorValidations = validationErrors.array()
         const errors = [...errorValidations, ...error_{{options.uploadField}}s]
         if (errors.length > 0) {
@@ -24,7 +27,10 @@
         }
     {% endif %}
     {% if options.enableUpload %}
-        let error_{{options.uploadField}}s = this.validateImageFile("{{options.uploadField}}", req.files)
+        let error_{{options.uploadField}}s = []
+        if(file){
+            error_{{options.uploadField}}s = this.validateImageFile("{{options.uploadField}}", req.files)
+        }
         const errors = [ ...error_{{options.uploadField}}s]
         if (errors.length > 0) {
             return res.status(422).json({ errors })
@@ -57,7 +63,7 @@
                     this.logger.info("Error renaming file:", err)
                 } else {
                     this.logger.info("File renamed successfully!")
-                    const old_{{options.uploadField}}Path = `${this{{options.uploadField}}Dir}/${old_{{options.uploadField}} }` 
+                    const old_{{options.uploadField}}Path = `${this.{{options.uploadField}}Dir}/${old_{{options.uploadField}} }` 
 
                     fs.unlink(old_{{options.uploadField}}Path, (err) => {
                     if (err) {

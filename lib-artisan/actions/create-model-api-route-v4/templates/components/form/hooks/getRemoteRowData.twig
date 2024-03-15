@@ -1,14 +1,12 @@
-  const getRemoteRowData = async () => {
-    const url = apiUrl(["{{ctl}}", pk])
+  const getRemoteRowData = async (pk_) => {
+    const url = apiUrl(["{{ctl}}", pk_])
 
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
       if (validJson) {
 {% if options.enableUpload %} 
 
-        const { {{options.uploadField}} } = data.data
-        const {{options.uploadField}}Url = apiUrl(["{{ctl}}/{{options.uploadServeRoute}}", {{options.uploadField}}])
-        set{{options.uploadField|capitalize}}Url({{options.uploadField}}Url)
+        setFormData(data.data)
 {% endif %}
         setFormChecksum(calculateFormChecksum(data.data))
       } else {

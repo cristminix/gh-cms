@@ -1,5 +1,6 @@
 {
   "previewImageDir": "${app.storageDir}/previews",
+  "coverImageDir": "${app.storageDir}/covers",
   "thumbnailDir": "${app.storageDir}/thumbnails",
   "thumbnailTTDir": "${app.storageDir}/thumbnails_tt",
   "manualDir": "${app.storageDir}/manuals"

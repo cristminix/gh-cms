@@ -1,29 +1,14 @@
 
   const initFormData = (data) => {
     if (data) {
-      const { {% for field in schemaDef.fields %}{{ field }},{% endfor %}  } = data
-      setPk({{schemaDef.pk}})
-      {% for field in schemaDef.fields %}
-{% if field != schemaDef.pk and field != options.uploadField %}
-
-      set{{field|capitalize}}({{field}}){% endif %}
-  {% endfor %}
-{% if options.enableUpload %}  
-      set{{options.uploadField|capitalize}}({{options.uploadField}})
-      if (isEmpty({{options.uploadField}})) {
-        set{{options.uploadField|capitalize}}Valid(false)
-      } else {
-        set{{options.uploadField|capitalize}}Url(apiUrl(["{{ctl}}/{{options.uploadServeRoute}}", {{options.uploadField}}]))
-        set{{options.uploadField|capitalize}}Valid(true)
-      }
-{% endif %}
+      setFormData(data)
       setTimeout(() => {
         const initialFormChecksum = calculateFormChecksum(data)
         setFormChecksum(initialFormChecksum)
         setValidationErrors({})
       }, 256)
       if (data.{{schemaDef.pk}}) {
-        getRemoteRowData()
+        getRemoteRowData(data.{{schemaDef.pk}})
       }
     }
   }

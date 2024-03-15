@@ -16,7 +16,7 @@ const FormRow = ({ label, onChange = (f) => f, value, readonly = false }) => {
   )
 }
 
-const FormRowSelect = ({ label, onChange = (f) => f, value, readonly = false }) => {
+const FormRowSelect = ({ label, data, onChange = (f) => f, value, readonly = false }) => {
   return (
     <div className="flex  items-center p-2 px-2">
       <div className="w-[70px]">
@@ -24,7 +24,7 @@ const FormRowSelect = ({ label, onChange = (f) => f, value, readonly = false }) 
       </div>
       <div className="flex-grow">
         {/* <input className={inputCls} value={value} onChange={onChange} readOnly={readonly} /> */}
-        <AdvancedSelect data={["block", "widget"]} onSelect={onChange} label={label} selected={value} />
+        <AdvancedSelect data={data} onSelect={onChange} label={label} selected={value} />
       </div>
     </div>
   )
@@ -81,18 +81,20 @@ const FormRowImageValidation = ({
   validationErrors,
   fieldname,
   className = "",
+  title,
   inputRef,
   imageUrl,
   validImage,
 }) => {
   return (
-    <div className="flex  p-2 px-2">
+    <div className={`flex  p-2 px-2 ${className}`}>
       <div className="w-[80px]">
         <label className="font-bold">{label}</label>
       </div>
       <div className="flex-grow relative pl-2">
         <div className="absolute flex flex-row justify-end w-full items-center px-2">
           <Button
+            title={title}
             icon="fa fa-upload"
             caption="Upload Image"
             className={`${fieldname}`}

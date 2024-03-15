@@ -1,9 +1,9 @@
 import { EntitySchema } from "typeorm"
-import WebPages from "../models/WebPages.js"
+import WebPage from "../models/WebPage.js"
 
-const WebPagesSchema = new EntitySchema({
-  name: "WebPages",
-  target: WebPages,
+const WebPageSchema = new EntitySchema({
+  name: "WebPage",
+  target: WebPage,
   columns: {
     id: {
       type: "int",
@@ -26,7 +26,12 @@ const WebPagesSchema = new EntitySchema({
     title: {
       type: "varchar",
       nullable: true,
-      length: 100,
+      length: 225,
+    },
+    slug: {
+      type: "varchar",
+      nullable: true,
+      length: 225,
     },
     description: {
       type: "varchar",
@@ -41,17 +46,16 @@ const WebPagesSchema = new EntitySchema({
       type: "varchar",
       nullable: true,
     },
-    thumbnail: {
+    coverImage: {
       length: 500,
       type: "varchar",
       nullable: true,
     },
     content: {
-      length: 500,
-      type: "varchar",
+      type: "text",
     },
     kind: {
-      length: 500,
+      length: 100,
       type: "varchar",
     },
     path: {
@@ -82,16 +86,14 @@ const WebPagesSchema = new EntitySchema({
       type: "datetime",
     },
     relatedPages: {
-      length: 500,
-      type: "varchar",
+      type: "text",
       nullable: true,
     },
     relatedPosts: {
-      length: 500,
-      type: "varchar",
+      type: "text",
       nullable: true,
     },
   },
 })
 
-export default WebPagesSchema
+export default WebPageSchema

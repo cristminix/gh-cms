@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { crc32 } from "crc"
-import { getFile64, isEmpty } from "@/cp/global/fn"
+import { getFile64, isEmpty, slugify } from "@/cp/global/fn"
 import jQuery from "jquery"
 
 import { apiUrl } from "../../apps/fn"
@@ -26,12 +26,12 @@ const createUntitled{{options.itemName}}= () => {
   {% for field in schemaDef.fields %}
 {% if field != schemaDef.pk and field != options.fieldItemName %}
 
-  const {{ field }} = ""{% endif %}
+  const {{ field }} = {% if field == options.slugItemName %} slugify({{options.fieldItemName}}) {% else %}""{% endif %}{% endif %}
   {% endfor %}
 
   return { 
     {% for field in schemaDef.fields %}
-{% if field != schemaDef.pk and field != options.fieldItemName %}
+{% if field != schemaDef.pk %}
 
     {{ field }},{% endif %}
   {% endfor %}
@@ -64,6 +64,7 @@ const {{options.itemName}}Form = ({
 {% include './components/form/hooks/saveForm.twig' %}
 {% include './components/form/hooks/setUploadFile.twig' %}
 {% include './components/form/hooks/getRemoteRowData.twig' %}
+{% include './components/form/hooks/setFormData.twig' %}
 {% include './components/form/hooks/initFormData.twig' %}
 {% include './components/form/hooks/onTab.twig' %}
 {% include './components/form/useEffect.twig' %} 

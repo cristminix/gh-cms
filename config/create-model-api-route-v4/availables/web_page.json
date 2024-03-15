@@ -7,8 +7,8 @@
 
   "enableUpload": true,
   "uploadPath": "",
-  "uploadField": "previewImage",
-  "uploadServeRoute": "preview",
+  "uploadField": "coverImage",
+  "uploadServeRoute": "covers",
 
   "***@2": "FORM VALIDATION OPTIONS ***",
 
@@ -17,13 +17,13 @@
   "***@3": "SERVE INDEX OPTIONS ***",
 
   "enableServeIndex": true,
-  "serveIndexStaticPath": "",
-  "serveIndexRoutePath": "",
+  "serveIndexStaticPath": "this.coverImageDir",
+  "serveIndexRoutePath": "/web-page/covers",
 
   "***@4": "CLIENT OPTIONS ***",
-  "enableGoToPage": false,
-  "enableGoToLastPage": false,
-  "enableListState": false,
+  "enableGoToPage": true,
+  "enableGoToLastPage": true,
+  "enableListState": true,
 
   "generateComponent": true,
   "generateFormComponent": true,
@@ -35,7 +35,8 @@
   "componentName": "WebPageManager",
   "formName": "PageForm",
   "itemName": "Page",
-  "fieldItemName": "name",
+  "fieldItemName": "title",
+  "slugItemName": "slug",
 
   "***@5": "PARENT MODULE MODE OPTIONS Add access to sub module ***",
   "enableParentModule": false,

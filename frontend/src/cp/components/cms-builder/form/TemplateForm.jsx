@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { crc32 } from "crc"
-import { getFile64, isEmpty } from "@/cp/global/fn"
+import { getFile64, isEmpty, slugify } from "@/cp/global/fn"
 import jQuery from "jquery"
 
 import { apiUrl } from "../../apps/fn"
@@ -21,7 +21,7 @@ const createUntitledTemplate = () => {
   const name = `Untitled-${idx}`
 
   const themeId = ""
-  const slug = ""
+  const slug = slugify(name)
   const description = ""
   const previewImage = ""
   const path = ""
@@ -31,6 +31,7 @@ const createUntitledTemplate = () => {
     description,
     previewImage,
     path,
+    name,
   }
 }
 
@@ -340,16 +341,6 @@ const TemplateForm = ({
               <form className={"className"} ref={formRef}>
                 <FormRowValidation
                   validationErrors={validationErrors}
-                  label="ThemeId"
-                  value={themeId}
-                  fieldname="themeId"
-                  onChange={(e) => {
-                    setThemeId(e.target.value)
-                  }}
-                />
-
-                <FormRowValidation
-                  validationErrors={validationErrors}
                   label="Name"
                   value={name}
                   fieldname="name"
@@ -398,6 +389,15 @@ const TemplateForm = ({
                   inputRef={previewImageRef}
                   imageUrl={previewImageUrl}
                   validImage={previewImageValid}
+                />
+                <FormRowValidation
+                  validationErrors={validationErrors}
+                  label="Theme"
+                  value={themeId}
+                  fieldname="themeId"
+                  onChange={(e) => {
+                    setThemeId(e.target.value)
+                  }}
                 />
               </form>
             </div>

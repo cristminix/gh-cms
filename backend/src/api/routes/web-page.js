@@ -8,61 +8,67 @@ import { getFileExtensionFromMimeType, validateImageFile } from "../../fn.js"
 import { check, validationResult, checkSchema } from "express-validator"
 import AuthenticatedRouter from "./AuthenticatedRouter.js"
 
-class WebPagesRouter extends AuthenticatedRouter {
+class WebPageRouter extends AuthenticatedRouter {
   datasource = null
-  mWebPages = null
+  mWebPage = null
   router = null
   uploader = null
   logger = null
-  previewImageDir = null
+  coverImageDir = null
 
   constructor(datasource, appConfig, logger) {
     super(datasource, appConfig, logger)
     this.appConfig = appConfig
     this.logger = logger
-    this.mWebPages = datasource.factory("MWebPages", true)
+    this.mWebPage = datasource.factory("MWebPage", true)
     this.router = express.Router()
-    this.previewImageDir = ""
+    this.coverImageDir = appConfig.get("module.coverImageDir")
     this.uploader = multer({
-      dest: this.previewImageDir,
+      dest: this.coverImageDir,
     })
 
     this.initRouter()
   }
+  /* uploadField is not required */
   validateImageFile(fieldname, files) {
-    let errors = validateImageFile(fieldname, files, this.logger, 4)
+    let errors = []
+    if (Array.isArray(files)) {
+      if (files.length > 0) {
+        errors = validateImageFile(fieldname, files, this.logger, 4)
+      }
+    }
     return errors
   }
 
   async getState(req, res) {
     let { limit, page } = req.query
     page = parseInt(page) || null
-    const results = await this.mWebPages.getState(limit, page)
+    const results = await this.mWebPage.getState(limit, page)
     return res.send(results)
   }
   async getList(req, res) {
     const { page, limit, order_by, order_dir } = req.query
-    const results = await this.mWebPages.getList(page, limit, order_by, order_dir)
+    const results = await this.mWebPage.getList(page, limit, order_by, order_dir)
     return res.send(results)
   }
 
-  /* Route logic for handling GET /web-pages/:id */
+  /* Route logic for handling GET /web-page/:id */
   async get(req, res) {
     let id = req.params.id
-    const webpages = await this.mWebPages.getByPk(id)
+    const webpage = await this.mWebPage.getByPk(id)
     return res.send({
-      row: webpages,
+      data: webpage,
     })
   }
-  /* Route logic for handling POST /web-pages/create */
+  /* Route logic for handling POST /web-page/create */
   async create(req, res) {
     const [file] = req.files
-    let previewImage = null
+    let coverImage = null
 
     const validationErrors = validationResult(req)
-    let error_previewImages = this.validateImageFile("previewImage", req.files)
+    let error_coverImages = this.validateImageFile("coverImage", req.files)
     let errorValidations = validationErrors.array()
-    const errors = [...errorValidations, ...error_previewImages]
+    const errors = [...errorValidations, ...error_coverImages]
     if (errors.length > 0) {
       return res.status(422).json({ errors })
     }
@@ -70,9 +76,9 @@ class WebPagesRouter extends AuthenticatedRouter {
     if (file) {
       const ext = getFileExtensionFromMimeType(file.mimetype)
       const baseName = path.basename(file.path)
-      previewImage = `${baseName}.${ext}`
+      coverImage = `${baseName}.${ext}`
       const oldFilePath = file.path
-      const newFilePath = `${this.previewImageDir}/${previewImage}`
+      const newFilePath = `${this.coverImageDir}/${coverImage}`
       fs.rename(oldFilePath, newFilePath, (err) => {
         if (err) {
           this.logger.info("Error renaming file:", err)
@@ -85,6 +91,7 @@ class WebPagesRouter extends AuthenticatedRouter {
     let {
       templateId,
       title,
+      slug,
       description,
       authors,
       content,
@@ -96,9 +103,10 @@ class WebPagesRouter extends AuthenticatedRouter {
       datePublished,
     } = req.body
     try {
-      const webpages = await this.mWebPages.create(
+      const webpage = await this.mWebPage.create(
         templateId,
         title,
+        slug,
         description,
         authors,
         content,
@@ -108,22 +116,25 @@ class WebPagesRouter extends AuthenticatedRouter {
         dateCreated,
         dateUpdated,
         datePublished,
-        previewImage
+        coverImage
       )
-      return res.send({ data: webpages })
+      return res.send({ data: webpage })
     } catch (e) {
       return res.send({ data: e.toString() })
     }
   }
-  /* Route logic for handling POST '/web-pages/update */
+  /* Route logic for handling POST '/web-page/update */
   async update(req, res) {
     const [file] = req.files
-    let previewImage = null
+    let coverImage = null
 
     const validationErrors = validationResult(req)
-    let error_previewImages = this.validateImageFile("previewImage", req.files)
+    let error_coverImages = []
+    if (file) {
+      error_coverImages = this.validateImageFile("coverImage", req.files)
+    }
     let errorValidations = validationErrors.array()
-    const errors = [...errorValidations, ...error_previewImages]
+    const errors = [...errorValidations, ...error_coverImages]
     if (errors.length > 0) {
       return res.status(422).json({ errors })
     }
@@ -135,26 +146,26 @@ class WebPagesRouter extends AuthenticatedRouter {
     if (!id) {
       id = req.params.id
     }
-    const existingRec = await this.mWebPages.getByPk(id)
+    const existingRec = await this.mWebPage.getByPk(id)
     if (existingRec) {
-      previewImage = existingRec.previewImage
+      coverImage = existingRec.coverImage
       let fileUpdated = false
       if (file) {
         fileUpdated = true
         const ext = getFileExtensionFromMimeType(file.mimetype)
         const baseName = path.basename(file.path)
-        const old_previewImage = existingRec.previewImage
-        previewImage = `${baseName}.${ext}`
+        const old_coverImage = existingRec.coverImage
+        coverImage = `${baseName}.${ext}`
         const oldFilePath = file.path
-        const newFilePath = `${this.previewImageDir}/${previewImage}`
+        const newFilePath = `${this.coverImageDir}/${coverImage}`
         fs.rename(oldFilePath, newFilePath, (err) => {
           if (err) {
             this.logger.info("Error renaming file:", err)
           } else {
             this.logger.info("File renamed successfully!")
-            const old_previewImagePath = `${thispreviewImageDir}/${old_previewImage}`
+            const old_coverImagePath = `${this.coverImageDir}/${old_coverImage}`
 
-            fs.unlink(old_previewImagePath, (err) => {
+            fs.unlink(old_coverImagePath, (err) => {
               if (err) {
                 this.logger.info("Error deleting file:", err)
               } else {
@@ -167,6 +178,7 @@ class WebPagesRouter extends AuthenticatedRouter {
       const {
         templateId,
         title,
+        slug,
         description,
         authors,
         content,
@@ -180,6 +192,7 @@ class WebPagesRouter extends AuthenticatedRouter {
       const updatedData = {
         templateId,
         title,
+        slug,
         description,
         authors,
         content,
@@ -191,15 +204,15 @@ class WebPagesRouter extends AuthenticatedRouter {
         datePublished,
       }
       if (fileUpdated) {
-        updatedData.previewImage = previewImage
+        updatedData.coverImage = coverImage
       }
-      const webpages = await this.mWebPages.update(id, updatedData)
-      return res.send({ data: webpages, message: "Record updated", success: true })
+      const webpage = await this.mWebPage.update(id, updatedData)
+      return res.send({ data: webpage, message: "Record updated", success: true })
     } else {
       return res.send({ success: false, message: "Record not found" })
     }
   }
-  /* Route logic for handling POST '/web-pages/delete */
+  /* Route logic for handling POST '/web-page/delete */
   async delete(req, res) {
     let id = null
     if (req.body.id) {
@@ -209,91 +222,93 @@ class WebPagesRouter extends AuthenticatedRouter {
       id = req.params.id
     }
 
-    const existingRec = await this.mWebPages.getByPk(id)
+    const existingRec = await this.mWebPage.getByPk(id)
 
     if (existingRec) {
-      const webpages = await this.mWebPages.delete(id)
+      const webpage = await this.mWebPage.delete(id)
 
-      const old_previewImage = `${this.previewImageDir}/${existingRec.previewImage}`
+      const old_coverImage = `${this.coverImageDir}/${existingRec.coverImage}`
 
-      fs.unlink(old_previewImage, (err) => {
+      fs.unlink(old_coverImage, (err) => {
         if (err) {
           this.logger.info("Error deleting file:", err)
         } else {
           this.logger.info("File deleted successfully!")
         }
       })
-      return res.send({ data: webpages, success: true, message: "Record deleted" })
+      return res.send({ data: webpage, success: true, message: "Record deleted" })
     } else {
       return res.send({ success: false, message: "Record not found" })
     }
   }
   initRouter() {
-    // const staticPath = path.join(this.appConfig.get("basepath"), '')
-    // this.router.use("/", express.static(staticPath))
-    // this.router.use("/", serveIndex(staticPath, { icons: true }) )
+    const staticPath = path.join(this.appConfig.get("basepath"), this.coverImageDir)
+    this.router.use("/web-page/covers", express.static(staticPath))
+    this.router.use("/web-page/covers", serveIndex(staticPath, { icons: true }))
 
     this.router.get(
-      "/web-pagess",
+      "/web-pages",
       (req, res, next) => this.authenticateToken(req, res, next),
       (req, res) => this.getList(req, res)
     )
 
     this.router.get(
-      "web-pages/states",
+      "/web-page/states",
       (req, res, next) => this.authenticateToken(req, res, next),
       (req, res) => this.getState(req, res)
     )
 
     this.router.get(
-      "/web-pages/:id",
+      "/web-page/:id",
       (req, res, next) => this.authenticateToken(req, res, next),
 
       (req, res) => this.get(req, res)
     )
 
     this.router.post(
-      "/web-pages/create",
+      "/web-page/create",
       (req, res, next) => this.authenticateToken(req, res, next),
 
-      this.uploader.array("previewImage"),
+      this.uploader.array("coverImage"),
 
-      check("templateId", "templateId is required").not().isEmpty(),
-      check("title", "title is required").not().isEmpty(),
-      check("description", "description is required").not().isEmpty(),
-      check("authors", "authors is required").not().isEmpty(),
-      check("content", "content is required").not().isEmpty(),
-      check("kind", "kind is required").not().isEmpty(),
-      check("status", "status is required").not().isEmpty(),
-      check("visibility", "visibility is required").not().isEmpty(),
-      check("dateCreated", "dateCreated is required").not().isEmpty(),
-      check("dateUpdated", "dateUpdated is required").not().isEmpty(),
-      check("datePublished", "datePublished is required").not().isEmpty(),
+      check("templateId", "Template is required").not().isEmpty(),
+      check("title", "Title is required").not().isEmpty(),
+      check("slug", "Slug is required").not().isEmpty(),
+      check("description", "Description is required").not().isEmpty(),
+      check("authors", "Authors is required").not().isEmpty(),
+      // check("content", "content is required").not().isEmpty(),
+      check("kind", "Kind is required").not().isEmpty(),
+      check("status", "Status is required").not().isEmpty(),
+      check("visibility", "Visibility is required").not().isEmpty(),
+      // check("dateCreated", "dateCreated is required").not().isEmpty(),
+      // check("dateUpdated", "dateUpdated is required").not().isEmpty(),
+      // check("datePublished", "datePublished is required").not().isEmpty(),
       (req, res) => this.create(req, res)
     )
 
     this.router.put(
-      "/web-pages/update/:id?",
+      "/web-page/update/:id?",
       (req, res, next) => this.authenticateToken(req, res, next),
 
-      this.uploader.array("previewImage"),
+      this.uploader.array("coverImage"),
 
-      check("templateId", "templateId is required").not().isEmpty(),
-      check("title", "title is required").not().isEmpty(),
-      check("description", "description is required").not().isEmpty(),
-      check("authors", "authors is required").not().isEmpty(),
-      check("content", "content is required").not().isEmpty(),
-      check("kind", "kind is required").not().isEmpty(),
-      check("status", "status is required").not().isEmpty(),
-      check("visibility", "visibility is required").not().isEmpty(),
-      check("dateCreated", "dateCreated is required").not().isEmpty(),
-      check("dateUpdated", "dateUpdated is required").not().isEmpty(),
-      check("datePublished", "datePublished is required").not().isEmpty(),
+      check("templateId", "Template is required").not().isEmpty(),
+      check("title", "Title is required").not().isEmpty(),
+      check("slug", "Slug is required").not().isEmpty(),
+      check("description", "Description is required").not().isEmpty(),
+      check("authors", "Authors is required").not().isEmpty(),
+      // check("content", "content is required").not().isEmpty(),
+      check("kind", "Kind is required").not().isEmpty(),
+      check("status", "Status is required").not().isEmpty(),
+      check("visibility", "Visibility is required").not().isEmpty(),
+      // check("dateCreated", "dateCreated is required").not().isEmpty(),
+      // check("dateUpdated", "dateUpdated is required").not().isEmpty(),
+      // check("datePublished", "datePublished is required").not().isEmpty(),
       (req, res) => this.update(req, res)
     )
 
     this.router.delete(
-      "/web-pages/delete/:id?",
+      "/web-page/delete/:id?",
       (req, res, next) => this.authenticateToken(req, res, next),
 
       (req, res) => this.delete(req, res)
@@ -304,4 +319,4 @@ class WebPagesRouter extends AuthenticatedRouter {
   }
 }
 
-export default WebPagesRouter
+export default WebPageRouter

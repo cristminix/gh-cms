@@ -84,7 +84,33 @@ export class MWebTheme {
     }
     return record
   }
+  async getState(limit = 5, page = null, filter = null) {
+    if (!limit) {
+      limit = 5
+    }
 
+    try {
+      const total_records = await this.manager.count(WebTheme)
+
+      const total_pages = calculateTotalPages(total_records, limit)
+      let records = []
+      if (page && page !== null) {
+        const offset = calculateOffset(page, limit)
+        records = await this.ds
+          .getRepository(WebTheme)
+          .createQueryBuilder("a")
+          .select(["a.id id"])
+          .limit(limit)
+          .offset(offset)
+          .getRawMany()
+      }
+      return { limit, total_pages, total_records, record_count: records.length }
+    } catch (e) {
+      // res.send(e)
+      // console.error(e)
+    }
+    return { limit, total_pages: 0, total_records: 0, record_count: 0 }
+  }
   async getList(page = 1, limit = 5, order_by = "id", order_dir = "asc", filter = null) {
     if (!limit) {
       limit = 5
@@ -103,6 +129,7 @@ export class MWebTheme {
     if (!["asc", "desc"].includes(order_dir)) {
       order_dir = "asc"
     }
+
     try {
       const total_records = await this.manager.count(WebTheme)
 

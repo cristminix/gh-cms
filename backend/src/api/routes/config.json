@@ -533,8 +533,8 @@
         }
       }
     },
-    "web-pages": {
-      "routePath": "/api/cms/web-pages",
+    "web-page": {
+      "routePath": "/api/cms/web-page",
       "routes": {
         "list": {
           "path": "{routePath}s",

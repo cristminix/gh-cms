@@ -350,16 +350,6 @@ const BlockForm = ({
               <form className={"className"} ref={formRef}>
                 <FormRowValidation
                   validationErrors={validationErrors}
-                  label="TemplateId"
-                  value={templateId}
-                  fieldname="templateId"
-                  onChange={(e) => {
-                    setTemplateId(e.target.value)
-                  }}
-                />
-
-                <FormRowValidation
-                  validationErrors={validationErrors}
                   label="Name"
                   value={name}
                   fieldname="name"
@@ -393,10 +383,11 @@ const BlockForm = ({
                 <FormRowSelect
                   validationErrors={validationErrors}
                   label="Kind"
+                  data={["block", "widget", "section"]}
                   value={kind}
                   fieldname="kind"
                   onChange={(e) => {
-                    setKind(e.target.value)
+                    setKind(e)
                   }}
                 />
 
@@ -418,6 +409,15 @@ const BlockForm = ({
                   inputRef={previewImageRef}
                   imageUrl={previewImageUrl}
                   validImage={previewImageValid}
+                />
+                <FormRowValidation
+                  validationErrors={validationErrors}
+                  label="Template"
+                  value={templateId}
+                  fieldname="templateId"
+                  onChange={(e) => {
+                    setTemplateId(e.target.value)
+                  }}
                 />
               </form>
             </div>

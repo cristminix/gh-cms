@@ -160,9 +160,9 @@
       "lengths": [null, null, 225, 100, 50, 200, null],
       "nullable": ["shortName", "enabled"]
     },
-    "web_pages": {
-      "schema": "WebPagesSchema",
-      "model": "WebPages",
+    "web_page": {
+      "schema": "WebPageSchema",
+      "model": "WebPage",
       "pk": "id",
       "fields": [
         "id",
@@ -170,10 +170,11 @@
         "categories",
         "tags",
         "title",
+        "slug",
         "description",
         "authors",
         "highlight",
-        "thumbnail",
+        "coverImage",
         "content",
         "kind",
         "path",
@@ -204,11 +205,13 @@
         "varchar",
         "varchar",
         "varchar",
+        "varchar",
         "varchar"
       ],
       "lengths": [
         null,
         null,
+        225,
         225,
         100,
         100,
@@ -228,7 +231,7 @@
         null,
         null
       ],
-      "nullable": ["path", "thumbnail", "highlight", "relatedPages", "relatedPosts", "categories", "tags"]
+      "nullable": ["path", "coverImage", "highlight", "relatedPages", "relatedPosts", "categories", "tags"]
     },
     "web_company": {
       "schema": "WebCompanySchema",

@@ -28,6 +28,12 @@ function getFileExtensionFromMimeType(mimeType) {
 function generateAccessToken(identity, TOKEN_SECRET) {
   return jwt.sign({ name: identity }, TOKEN_SECRET, { expiresIn: 60 * 60 })
 }
+function convertToTitleCase(str) {
+  let words = str.split(/(?=[A-Z])/).map((word) => word.toLowerCase())
+  let convertedStr = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ")
+  return convertedStr
+}
+
 function validateImageFile(fieldname, files, logger, maxFileSizeMb = 1) {
   let errors = []
   let filteredFiles = files.filter((item) => item.fieldname == fieldname)
@@ -35,7 +41,7 @@ function validateImageFile(fieldname, files, logger, maxFileSizeMb = 1) {
     errors.push({
       type: "field",
       path: fieldname,
-      msg: `${fieldname} is required`,
+      msg: `${convertToTitleCase(fieldname)} is required`,
     })
   } else {
     const [file] = filteredFiles
@@ -70,4 +76,10 @@ function validateImageFile(fieldname, files, logger, maxFileSizeMb = 1) {
   }
   return errors
 }
-export { sendMessageToChrome, controllerPrefixMatch, getFileExtensionFromMimeType, generateAccessToken, validateImageFile }
+export {
+  sendMessageToChrome,
+  controllerPrefixMatch,
+  getFileExtensionFromMimeType,
+  generateAccessToken,
+  validateImageFile,
+}

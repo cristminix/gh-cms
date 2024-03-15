@@ -130,7 +130,7 @@ class WebTemplateRouter extends AuthenticatedRouter {
             this.logger.info("Error renaming file:", err)
           } else {
             this.logger.info("File renamed successfully!")
-            const old_previewImagePath = `${thispreviewImageDir}/${old_previewImage}`
+            const old_previewImagePath = `${this.previewImageDir}/${old_previewImage}`
 
             fs.unlink(old_previewImagePath, (err) => {
               if (err) {
