@@ -1,3 +1,4 @@
+import AdvancedSelect from "./AdvancedSelect"
 import Button from "./Button"
 import CheckBox from "./CheckBox"
 import { ValidationErrIcon } from "./ValidationIcon"
@@ -15,17 +16,42 @@ const FormRow = ({ label, onChange = (f) => f, value, readonly = false }) => {
   )
 }
 
-const FormRowValidation = ({ label, onChange = (f) => f, value, validationErrors, fieldname, autofocus = false, useTextArea = false, className = "" }) => {
+const FormRowSelect = ({ label, onChange = (f) => f, value, readonly = false }) => {
   return (
     <div className="flex  items-center p-2 px-2">
       <div className="w-[70px]">
         <label className="font-bold">{label}</label>
       </div>
       <div className="flex-grow">
+        {/* <input className={inputCls} value={value} onChange={onChange} readOnly={readonly} /> */}
+        <AdvancedSelect data={["block", "widget"]} onSelect={onChange} label={label} selected={value} />
+      </div>
+    </div>
+  )
+}
+
+const FormRowValidation = ({
+  label,
+  onChange = (f) => f,
+  value,
+  validationErrors,
+  fieldname,
+  autofocus = false,
+  useTextArea = false,
+  className = "",
+}) => {
+  return (
+    <div className="flex items-center p-2 px-2">
+      <div className={`w-[70px] ${useTextArea ? "self-start py-4" : ""} `}>
+        <label className="font-bold ">{label}</label>
+      </div>
+      <div className="flex-grow">
         <div className="relative">
           {useTextArea ? (
             <textarea
-              className={`${validationErrors[fieldname] ? inputClsError : inputCls}  ${niceScrollbarCls} ${fieldname} ${className} min-h-[128px]`}
+              className={`${
+                validationErrors[fieldname] ? inputClsError : inputCls
+              }  ${niceScrollbarCls} ${fieldname} ${className} min-h-[128px]`}
               value={value}
               onChange={onChange}
               autofocus={autofocus} /*eslint-disable*/
@@ -41,13 +67,24 @@ const FormRowValidation = ({ label, onChange = (f) => f, value, validationErrors
           {validationErrors[fieldname] && <ValidationErrIcon absolute="yes" />}
         </div>
 
-        {validationErrors[fieldname] && <p className="text-sm text-red-600 mt-2">{validationErrors[fieldname].message}</p>}
+        {validationErrors[fieldname] && (
+          <p className="text-sm text-red-600 mt-2">{validationErrors[fieldname].message}</p>
+        )}
       </div>
     </div>
   )
 }
 
-const FormRowImageValidation = ({ label, onChange, validationErrors, fieldname, className = "", inputRef, imageUrl, validImage }) => {
+const FormRowImageValidation = ({
+  label,
+  onChange,
+  validationErrors,
+  fieldname,
+  className = "",
+  inputRef,
+  imageUrl,
+  validImage,
+}) => {
   return (
     <div className="flex  p-2 px-2">
       <div className="w-[80px]">
@@ -77,7 +114,9 @@ const FormRowImageValidation = ({ label, onChange, validationErrors, fieldname, 
         </div>
         <div className="flex">
           {validationErrors[fieldname] && <ValidationErrIcon absolute="no" />}
-          {validationErrors[fieldname] && <p className="text-sm text-red-600 mt-0">{validationErrors[fieldname].message}</p>}
+          {validationErrors[fieldname] && (
+            <p className="text-sm text-red-600 mt-0">{validationErrors[fieldname].message}</p>
+          )}
         </div>
       </div>
     </div>
@@ -96,4 +135,4 @@ const FormRowCheckbox = ({ label, onChange = (f) => f, value }) => {
     </div>
   )
 }
-export { FormRowCheckbox, FormRow, FormRowValidation, FormRowImageValidation }
+export { FormRowCheckbox, FormRow, FormRowValidation, FormRowImageValidation, FormRowSelect }

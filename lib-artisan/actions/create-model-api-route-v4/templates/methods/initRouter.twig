@@ -13,7 +13,7 @@
             (req, res) => this.getList(req, res))
 
 {% if options.enableStateRoute %}
-        this.router.get("{{ctl}}/states",
+        this.router.get("/{{ctl}}/states",
     {% if options.useAuthenticatedRouter %}
             (req, res, next) => this.authenticateToken(req, res, next),
     {% endif %}

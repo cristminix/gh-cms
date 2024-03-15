@@ -22,11 +22,10 @@ class WebTemplateRouter extends AuthenticatedRouter {
     this.logger = logger
     this.mWebTemplate = datasource.factory("MWebTemplate", true)
     this.router = express.Router()
-    this.previewImageDir = ""
+    this.previewImageDir = appConfig.get("module.previewImageDir")
     this.uploader = multer({
       dest: this.previewImageDir,
     })
-
     this.initRouter()
   }
   validateImageFile(fieldname, files) {
@@ -51,7 +50,7 @@ class WebTemplateRouter extends AuthenticatedRouter {
     let id = req.params.id
     const webtemplate = await this.mWebTemplate.getByPk(id)
     return res.send({
-      row: webtemplate,
+      data: webtemplate,
     })
   }
   /* Route logic for handling POST /web-template/create */
@@ -82,9 +81,10 @@ class WebTemplateRouter extends AuthenticatedRouter {
       })
     }
 
-    let { themeId, name, slug, path } = req.body
+    let { themeId, name, slug, description } = req.body
+    const path_ = req.body.path
     try {
-      const webtemplate = await this.mWebTemplate.create(themeId, name, slug, path, previewImage)
+      const webtemplate = await this.mWebTemplate.create(themeId, name, description, slug, path_, previewImage)
       return res.send({ data: webtemplate })
     } catch (e) {
       return res.send({ data: e.toString() })
@@ -96,7 +96,10 @@ class WebTemplateRouter extends AuthenticatedRouter {
     let previewImage = null
 
     const validationErrors = validationResult(req)
-    let error_previewImages = this.validateImageFile("previewImage", req.files)
+    let error_previewImages = []
+    if (file) {
+      error_previewImages = this.validateImageFile("previewImage", req.files)
+    }
     let errorValidations = validationErrors.array()
     const errors = [...errorValidations, ...error_previewImages]
     if (errors.length > 0) {
@@ -139,8 +142,12 @@ class WebTemplateRouter extends AuthenticatedRouter {
           }
         })
       }
-      const { themeId, name, slug, path } = req.body
-      const updatedData = { themeId, name, slug, path }
+      const { themeId, name, slug, description } = req.body
+      const path_ = req.body.path
+      const updatedData = { themeId, name, slug, description }
+      if (path_) {
+        updatedData.path = path_
+      }
       if (fileUpdated) {
         updatedData.previewImage = previewImage
       }
@@ -180,9 +187,9 @@ class WebTemplateRouter extends AuthenticatedRouter {
     }
   }
   initRouter() {
-    // const staticPath = path.join(this.appConfig.get("basepath"), '')
-    // this.router.use("/", express.static(staticPath))
-    // this.router.use("/", serveIndex(staticPath, { icons: true }) )
+    const staticPath = path.join(this.appConfig.get("basepath"), this.previewImageDir)
+    this.router.use("/web-template/previews", express.static(staticPath))
+    this.router.use("/web-template/previews", serveIndex(staticPath, { icons: true }))
 
     this.router.get(
       "/web-templates",
@@ -191,7 +198,7 @@ class WebTemplateRouter extends AuthenticatedRouter {
     )
 
     this.router.get(
-      "web-template/states",
+      "/web-template/states",
       (req, res, next) => this.authenticateToken(req, res, next),
       (req, res) => this.getState(req, res)
     )

@@ -13,7 +13,7 @@ import {
 } from "@/cp/components/shared/ux/cls"
 import CryptoJS from "crypto-js"
 
-import { FormRow, FormRowImageValidation, FormRowValidation } from "@/cp/components/shared/ux/Form"
+import { FormRow, FormRowImageValidation, FormRowSelect, FormRowValidation } from "@/cp/components/shared/ux/Form"
 import { Prx } from "@/cp/global/fn"
 
 const createUntitledBlock = () => {
@@ -382,6 +382,7 @@ const BlockForm = ({
                 <FormRowValidation
                   validationErrors={validationErrors}
                   label="Description"
+                  useTextArea={true}
                   value={description}
                   fieldname="description"
                   onChange={(e) => {
@@ -389,7 +390,7 @@ const BlockForm = ({
                   }}
                 />
 
-                <FormRowValidation
+                <FormRowSelect
                   validationErrors={validationErrors}
                   label="Kind"
                   value={kind}
@@ -411,7 +412,7 @@ const BlockForm = ({
 
                 <FormRowImageValidation
                   validationErrors={validationErrors}
-                  label="PreviewImage"
+                  label="Preview"
                   onChange={(e) => setPreviewImageFile(e.target)}
                   fieldname="previewImage"
                   inputRef={previewImageRef}

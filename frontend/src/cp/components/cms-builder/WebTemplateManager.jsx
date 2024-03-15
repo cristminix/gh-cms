@@ -10,9 +10,7 @@ import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import Toast from "@/cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@/cp/global/fn"
 
-
-const WebTemplateManager = ({ store, config, pageNumber  }) => {
-
+const WebTemplateManager = ({ store, config, pageNumber }) => {
   const toastRef = useRef(null)
   const [grid, setGrid] = useState({
     records: [],
@@ -31,13 +29,13 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
   const [formData, setFormData] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [requestToken, setRequestToken] = useState(null)
-  
+
   const toast = (message, t) => {
     if (toastRef.current) {
       toastRef.current.add(message, t)
     }
   }
-  
+
   useEffect(() => {
     if (requestToken) {
       updateList()
@@ -48,7 +46,6 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
     retrieveIdentityToken()
   }, [])
 
-
   const retrieveIdentityToken = async () => {
     const appId = config.getAppId()
     const url = apiUrl("auth/generateToken")
@@ -57,16 +54,34 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
       setRequestToken(token)
     }
   }
+  const getListState = async (limit = null, page = null) => {
+    let response = {}
+    const url = apiUrl("web-template/states", { limit, page })
+    try {
+      const { data, validJson, code, text } = await Prx.get(url, requestToken)
+      if (validJson) {
+        response = data
+      } else {
+        toast(`Failed to get states server sent http ${code} ${text}`, "error")
+      }
+    } catch (e) {
+      toast(e.toString(), "error")
+    }
+    return response
+  }
 
   const onRefresh = (f) => updateList()
-  
+
   const updateList = async () => {
     const page = parseInt(pageNumber) || 1
 
     const { limit, order_by, order_dir } = grid
-    const url = apiUrl("web-templates", { 
-            limit, 
-      page, order_by, order_dir })
+    const url = apiUrl("web-templates", {
+      limit,
+      page,
+      order_by,
+      order_dir,
+    })
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
       if (validJson) {
@@ -85,7 +100,7 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
       toast(e.toString(), "error")
     }
   }
-    
+
   const addForm = async (item, index) => {
     const defaultTemplate = createUntitledTemplate()
 
@@ -104,10 +119,7 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
     if (confirm(`Are you sure want to delete this upload "${item.name}"`)) {
       const url = apiUrl(["web-template/delete", item.id])
       try {
-        const { data, validJson, code, text } = await Prx.delete(
-          url,
-          requestToken,
-        )
+        const { data, validJson, code, text } = await Prx.delete(url, requestToken)
         if (validJson) {
           const { success, message } = data
           toast(message, success ? "success" : "error")
@@ -122,10 +134,7 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
             }
           }
         } else {
-          toast(
-            `Failed to delete id:${item.id} server sent http ${code} ${text}`,
-            "error",
-          )
+          toast(`Failed to delete id:${item.id} server sent http ${code} ${text}`, "error")
         }
       } catch (e) {
         console.log(e)
@@ -134,7 +143,6 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
     }
   }
 
-  
   const goToLastPage = async () => {
     try {
       const response = await getListState(grid.limit)
@@ -155,36 +163,48 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
       updateList()
     }
   }
-  
-  
+
   const goToTT = (item) => {
     document.location.hash = `/${item.id}?parentPage=${grid.page}`
   }
-
 
   const gridOptions = {
     numberWidthCls: "w-[10px]",
     actionWidthCls: "w-[50px]",
     widthCls: [""],
-    headers: ["id","themeId","name","slug","description","previewImage","path"],
-    fields: ["id","themeId","name","slug","description","previewImage","path"],
+    headers: ["Template"], //["id", "themeId", "name", "slug", "description", "previewImage", "path"],
+    fields: ["name"], //["id", "themeId", "name", "slug", "description", "previewImage", "path"],
     enableEdit: true,
     callbackFields: {
+      name: (field, value, item, index) => {
+        const previewImageUrl = `${apiUrl(["web-template", "previews", item.previewImage])}`
+        return (
+          <>
+            <div className="flex text-left gap-2">
+              <div className="w-1/4">
+                <img src={previewImageUrl} />
+              </div>
+              <div className="w-3/4">
+                <h1 className="mb-2">{item.name}</h1>
+                <p className="font-normal line-clamp-4" title={item.description}>
+                  {item.description}
+                </p>
+                <span className="pr-2">{item.slug}</span>
+                <span className="pr-2">{item.path}</span>
+                <span className="pr-2">{item.kind}</span>
+                <span className="pr-2">tid:{item.themeId}</span>
+              </div>
+            </div>
+          </>
+        )
+      },
     },
-    callbackHeaders: {
-    },
+    callbackHeaders: {},
     callbackActions: {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
-            
-            <Button
-              title="Edit"
-              loading={false}
-              icon="fa fa-edit"
-              caption=""
-              onClick={(e) => editForm(item, index)}
-            />
+            <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />
             <Button
               title="Delete"
               loading={false}
@@ -197,8 +217,7 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
       },
     },
   }
-  const containerCls =
-    "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
+  const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
   return (
     <div className="min-h-screen">
       <Toast ref={toastRef} />
@@ -221,30 +240,15 @@ const WebTemplateManager = ({ store, config, pageNumber  }) => {
       <div className={`user-manager ${containerCls}`}>
         <div className="grid-toolbar pb-4">
           <div className="flex justify-end gap-2">
-            {!showForm ? (
-              <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" />
-            ) : null}
-            <Button
-              onClick={(e) => goToLastPage()}
-              caption="Go to last page"
-              icon="fa fa-next"
-            />
+            {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" /> : null}
+            <Button onClick={(e) => goToLastPage()} caption="Go to last page" icon="fa fa-next" />
           </div>
         </div>
         <div className="flex flex-col ">
           <div className={`-m-1.5 overflow-x-auto ${niceScrollbarCls}`}>
             <div className="p-1.5 ">
               <div className="">
-                {grid ? (
-                  <Grid
-                    options={gridOptions}
-                    records={grid.records}
-                    page={grid.page}
-                    limit={grid.limit}
-                  />
-                ) : (
-                  ""
-                )}
+                {grid ? <Grid options={gridOptions} records={grid.records} page={grid.page} limit={grid.limit} /> : ""}
               </div>
             </div>
           </div>
