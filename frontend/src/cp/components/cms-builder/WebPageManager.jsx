@@ -2,8 +2,7 @@ import { useEffect, useState, useRef } from "react"
 import Pager from "@/cp/components/shared/Pager"
 import Grid from "@/cp/components/shared/Grid"
 import Button from "@/cp/components/shared/ux/Button"
-import { useLocation } from "react-router-dom"
-import BlockForm, { createUntitledBlock } from "./form/BlockForm"
+import PageForm, { createUntitledPage } from "./form/PageForm"
 import { apiUrl } from "../apps/fn"
 
 import jQuery from "jquery"
@@ -11,7 +10,9 @@ import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import Toast from "@/cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@/cp/global/fn"
 
-const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
+
+const WebPageManager = ({ store, config, pageNumber  }) => {
+
   const toastRef = useRef(null)
   const [grid, setGrid] = useState({
     records: [],
@@ -23,26 +24,20 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
     order_dir: "asc",
   })
 
-  const formId = "basic-modal-web-block"
+  const formId = "basic-modal-web-pages"
   const modalBtnId = `${formId}-clicker`
   const modalCloseBtnId = `${formId}-clicker-closer-x`
 
   const [formData, setFormData] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [requestToken, setRequestToken] = useState(null)
-
-  const location = useLocation()
-  const qs = location.search
-  const qp = new URLSearchParams(qs)
-  const [parentPage, setParentPage] = useState(parseInt(qp.get("parentPage")))
-  const [lastParentPage, setLastParentPage] = useState(1)
-
+  
   const toast = (message, t) => {
     if (toastRef.current) {
       toastRef.current.add(message, t)
     }
   }
-
+  
   useEffect(() => {
     if (requestToken) {
       updateList()
@@ -52,6 +47,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   useEffect(() => {
     retrieveIdentityToken()
   }, [])
+
 
   const retrieveIdentityToken = async () => {
     const appId = config.getAppId()
@@ -63,18 +59,14 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   }
 
   const onRefresh = (f) => updateList()
-
+  
   const updateList = async () => {
     const page = parseInt(pageNumber) || 1
 
     const { limit, order_by, order_dir } = grid
-    const url = apiUrl("web-blocks", {
-      templateId,
-      limit,
-      page,
-      order_by,
-      order_dir,
-    })
+    const url = apiUrl("web-pagess", { 
+            limit, 
+      page, order_by, order_dir })
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
       if (validJson) {
@@ -93,21 +85,14 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       toast(e.toString(), "error")
     }
   }
-
+    
   const addForm = async (item, index) => {
-    let templateId = 0
-    // if (item) {
-    //   templateId = item.templateId
-    // }
-    const defaultBlock = createUntitledBlock()
-    defaultBlock.templateId = templateId
-    setFormData(null)
-    setTimeout(() => {
-      setFormData(defaultBlock)
-      setShowForm(true)
+    const defaultPage = createUntitledPage()
 
-      jQuery(`#${modalBtnId}`).trigger("click")
-    }, 512)
+    setFormData(defaultPage)
+    setShowForm(true)
+
+    jQuery(`#${modalBtnId}`).trigger("click")
   }
   const editForm = async (item, index) => {
     setFormData(item)
@@ -117,9 +102,12 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   const deleteForm = async (item, index) => {
     // console.log(item)
     if (confirm(`Are you sure want to delete this upload "${item.name}"`)) {
-      const url = apiUrl(["web-block/delete", item.id])
+      const url = apiUrl(["web-pages/delete", item.id])
       try {
-        const { data, validJson, code, text } = await Prx.delete(url, requestToken)
+        const { data, validJson, code, text } = await Prx.delete(
+          url,
+          requestToken,
+        )
         if (validJson) {
           const { success, message } = data
           toast(message, success ? "success" : "error")
@@ -134,7 +122,10 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
             }
           }
         } else {
-          toast(`Failed to delete id:${item.id} server sent http ${code} ${text}`, "error")
+          toast(
+            `Failed to delete id:${item.id} server sent http ${code} ${text}`,
+            "error",
+          )
         }
       } catch (e) {
         console.log(e)
@@ -143,85 +134,53 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
     }
   }
 
+  
   const goToLastPage = async () => {
     try {
       const response = await getListState(grid.limit)
       const { total_pages } = response
       if (total_pages > 0) {
         goToPage(total_pages)
-      } else {
-        updateList()
       }
       //   console.log(response)
     } catch (e) {
       toast(e.toString(), "error")
-      updateList()
     }
   }
   const goToPage = (pageNum) => {
     pageNum = parseInt(pageNum) || 1
 
-    document.location.hash = `/builder/web-block-manager/page/${pageNum}`
+    document.location.hash = `/builder/web-page-manager/page/${pageNum}`
     if (pageNum == grid.page) {
       updateList()
     }
   }
-  const getListState = async (limit = null, page = null) => {
-    let response = {}
-    const url = apiUrl("web-block/states", { limit, page })
-    try {
-      const { data, validJson, code, text } = await Prx.get(url, requestToken)
-      if (validJson) {
-        response = data
-      } else {
-        toast(`Failed to get states server sent http ${code} ${text}`, "error")
-      }
-    } catch (e) {
-      toast(e.toString(), "error")
-    }
-    return response
-  }
-  const backToTemplate = (item) => {
-    document.location.hash = `/builder/web-block-manager/template/page/${lastParentPage}`
-  }
+  
+
 
   const gridOptions = {
     numberWidthCls: "w-[10px]",
     actionWidthCls: "w-[50px]",
     widthCls: [""],
-    headers: ["Block / Widget"], //["id","templateId","name","slug","description","kind","previewImage","path"],
-    fields: ["name"], //["id","templateId","name","slug","description","kind","previewImage","path"],
+    headers: ["id","templateId","categories","tags","title","description","authors","highlight","thumbnail","content","kind","path","status","visibility","dateCreated","dateUpdated","datePublished","relatedPages","relatedPosts"],
+    fields: ["id","templateId","categories","tags","title","description","authors","highlight","thumbnail","content","kind","path","status","visibility","dateCreated","dateUpdated","datePublished","relatedPages","relatedPosts"],
     enableEdit: true,
     callbackFields: {
-      name: (field, value, item, index) => {
-        const previewImageUrl = `${apiUrl(["web-block", "previews", item.previewImage])}`
-        return (
-          <>
-            <div className="flex text-left gap-2">
-              <div className="w-1/4">
-                <img src={previewImageUrl} />
-              </div>
-              <div className="w-3/4">
-                <h1 className="mb-2">{item.name}</h1>
-                <p className="font-normal line-clamp-4" title={item.description}>
-                  {item.description}
-                </p>
-                <span className="pr-2">{item.slug}</span>
-                <span className="pr-2">{item.path}</span>
-                <span className="pr-2">{item.kind}</span>
-                <span className="pr-2">tid:{item.templateId}</span>
-              </div>
-            </div>
-          </>
-        )
-      },
     },
-    callbackHeaders: {},
+    callbackHeaders: {
+    },
     callbackActions: {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
-            <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />
+            
+            <Button
+              title="Edit"
+              loading={false}
+              icon="fa fa-edit"
+              caption=""
+              onClick={(e) => editForm(item, index)}
+            />
             <Button
               title="Delete"
               loading={false}
@@ -234,11 +193,12 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       },
     },
   }
-  const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
+  const containerCls =
+    "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
   return (
     <div className="min-h-screen">
       <Toast ref={toastRef} />
-      <BlockForm
+      <PageForm
         requestToken={requestToken}
         setRequestToken={setRequestToken}
         getRequestToken={retrieveIdentityToken}
@@ -257,22 +217,37 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       <div className={`user-manager ${containerCls}`}>
         <div className="grid-toolbar pb-4">
           <div className="flex justify-end gap-2">
-            {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" /> : null}
-            <Button onClick={(e) => goToLastPage()} caption="Go to last page" icon="fa fa-next" />
+            {!showForm ? (
+              <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" />
+            ) : null}
+            <Button
+              onClick={(e) => goToLastPage()}
+              caption="Go to last page"
+              icon="fa fa-next"
+            />
           </div>
         </div>
         <div className="flex flex-col ">
           <div className={`-m-1.5 overflow-x-auto ${niceScrollbarCls}`}>
             <div className="p-1.5 ">
               <div className="">
-                {grid ? <Grid options={gridOptions} records={grid.records} page={grid.page} limit={grid.limit} /> : ""}
+                {grid ? (
+                  <Grid
+                    options={gridOptions}
+                    records={grid.records}
+                    page={grid.page}
+                    limit={grid.limit}
+                  />
+                ) : (
+                  ""
+                )}
               </div>
             </div>
           </div>
           <div className="pager-container mt-3">
             {grid ? (
               <Pager
-                path="/builder/web-block-manager"
+                path="/builder/web-page-manager"
                 page={grid.page}
                 total_pages={grid.total_pages}
                 limit={grid.limit}
@@ -288,4 +263,4 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   )
 }
 
-export default WebBlockManager
+export default WebPageManager

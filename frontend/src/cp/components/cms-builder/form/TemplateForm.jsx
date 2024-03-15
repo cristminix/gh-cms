@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { crc32 } from "crc"
-import { getFile64, isEmpty, slugify } from "@/cp/global/fn"
+import { getFile64, isEmpty } from "@/cp/global/fn"
 import jQuery from "jquery"
 
 import { apiUrl } from "../../apps/fn"
@@ -13,32 +13,32 @@ import {
 } from "@/cp/components/shared/ux/cls"
 import CryptoJS from "crypto-js"
 
-import { FormRow, FormRowImageValidation, FormRowValidation } from "@/cp/components/shared/ux/Form"
+import {
+  FormRow,
+  FormRowImageValidation,
+  FormRowValidation,
+} from "@/cp/components/shared/ux/Form"
 import { Prx } from "@/cp/global/fn"
 
-const createUntitledBlock = () => {
+const createUntitledTemplate= () => {
   const idx = crc32(new Date().getTime().toString()).toString(16)
   const name = `Untitled-${idx}`
-
-  const templateId = ""
-  const slug = slugify(name)
-  const description = ""
-  const kind = ""
-  const previewImage = ""
-  const path = ""
-  return {
-    templateId,
-    slug,
-    description,
-    kind,
-    previewImage,
-    path,
-    name,
-  }
+    
+  const themeId = ""    
+  const slug = ""  
+  const description = ""  
+  const previewImage = ""  
+  const path = ""  
+  return { 
+      
+    themeId,    
+    slug,  
+    description,  
+    previewImage,  
+    path,     }
 }
 
-const BlockForm = ({
-  templateIdSet,
+const TemplateForm = ({
   requestToken,
   getRequestToken,
   setRequestToken,
@@ -52,19 +52,20 @@ const BlockForm = ({
   goToLastPage,
   toast,
 }) => {
+
   const [pk, setPk] = useState("")
+     
+  const [themeId,setThemeId] = useState("")  
+  const [name,setName] = useState("")  
+  const [slug,setSlug] = useState("")  
+  const [description,setDescription] = useState("")    
+  const [path,setPath] = useState("")    
 
-  const [templateId, setTemplateId] = useState(templateIdSet)
-  const [name, setName] = useState("")
-  const [slug, setSlug] = useState("")
-  const [description, setDescription] = useState("")
-  const [kind, setKind] = useState("")
-  const [path, setPath] = useState("")
-
+  
   const [previewImage, setPreviewImage] = useState("")
   const [previewImageValid, setPreviewImageValid] = useState(false)
   const [previewImageUrl, setPreviewImageUrl] = useState("")
-
+  
   const previewImageRef = useRef(null)
   const formRef = useRef(null)
   const onTabExecutedRef = useRef(false)
@@ -76,10 +77,10 @@ const BlockForm = ({
   const calculateFormChecksum = (data = null) => {
     let formDataItem = null
     if (data) {
-      const { id, templateId, name, slug, description, kind, previewImage, path } = data
-      formDataItem = { id, templateId, name, slug, description, kind, previewImage, path }
+      const { id, themeId, name, slug, description, previewImage, path,  } = data
+      formDataItem = { id,themeId,name,slug,description,previewImage,path, }
     } else {
-      formDataItem = { id: pk, templateId, name, slug, description, kind, previewImage, path }
+      formDataItem = { id:pk,themeId,name,slug,description,previewImage,path, }
     }
     if (!formDataItem.id) {
       formDataItem.id = null
@@ -94,17 +95,19 @@ const BlockForm = ({
     return CryptoJS.SHA256(formString).toString()
   }
 
+  
   const updateFormChecksum = (data = null) => {
     const newFormChecksum = calculateFormChecksum(data)
     setFormChecksum(newFormChecksum)
   }
-
+  
   const isFormDirty = () => {
     const currentFormChecksum = calculateFormChecksum(null)
     return currentFormChecksum !== formChecksum
   }
 
   const hideModalForm = (e) => {
+    
     previewImageRef.current.value = ""
     const modalIdSelector = `#${formId}`
     HSOverlay.close(modalIdSelector)
@@ -126,15 +129,15 @@ const BlockForm = ({
       return e.preventDefault()
     }
   }
-
+  
   const saveForm = async (f) => {
     let pk = null
     if (data.id) {
       pk = data.id
     }
-    const formDataItem = { id: pk, templateId, name, slug, description, kind, path }
+    const formDataItem = { id:pk,  themeId,name,slug,description,path, }
     const formData = new FormData()
-
+    
     const [file] = previewImageRef.current.files
     if (file) {
       formData.append("previewImage", file)
@@ -142,10 +145,14 @@ const BlockForm = ({
     Object.keys(formDataItem).map((key) => {
       formData.append(key, formDataItem[key])
     })
-    const url = apiUrl(["web-block", pk ? `update/${pk}` : "create"])
+    const url = apiUrl(["web-template", pk ? `update/${pk}` : "create"])
     const method = pk ? "put" : "post"
     try {
-      const { data, validJson, code, text } = await Prx[method](url, requestToken, formData)
+      const { data, validJson, code, text } = await Prx[method](
+        url,
+        requestToken,
+        formData,
+      )
       if (validJson) {
         let hasErrors = false
         if (data.errors) {
@@ -182,13 +189,16 @@ const BlockForm = ({
           }
         }
       } else {
-        toast(`Failed to create record server sent http ${code} ${text}`, "error")
+        toast(
+          `Failed to create record server sent http ${code} ${text}`,
+          "error",
+        )
       }
     } catch (e) {
       toast(e.toString(), "error")
     }
   }
-
+ 
   const setPreviewImageFile = async (target) => {
     const file64 = await getFile64(target.files[0])
     const [file] = target.files
@@ -207,39 +217,42 @@ const BlockForm = ({
   }
 
   const getRemoteRowData = async () => {
-    const url = apiUrl(["web-block", pk])
+    const url = apiUrl(["web-template", pk])
 
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
       if (validJson) {
+ 
+
         const { previewImage } = data.data
-        const previewImageUrl = apiUrl(["web-block/previews", previewImage])
+        const previewImageUrl = apiUrl(["web-template/preview", previewImage])
         setPreviewImageUrl(previewImageUrl)
         setFormChecksum(calculateFormChecksum(data.data))
       } else {
-        toast(`Failed to get record id:${pk} server sent http ${code} ${text}`, "error")
+        toast(
+          `Failed to get record id:${pk} server sent http ${code} ${text}`,
+          "error",
+        )
       }
     } catch (e) {
       toast(e.toString(), "error")
     }
   }
   const initFormData = (data) => {
-    console.log(data)
     if (data) {
-      const { id, templateId, name, slug, description, kind, previewImage, path } = data
+      const { id,themeId,name,slug,description,previewImage,path,  } = data
       setPk(id)
-
-      setTemplateId(templateId)
-      setName(name)
-      setSlug(slug)
-      setDescription(description)
-      setKind(kind)
-      setPath(path)
+        
+      setThemeId(themeId)  
+      setName(name)  
+      setSlug(slug)  
+      setDescription(description)    
+      setPath(path)    
       setPreviewImage(previewImage)
       if (isEmpty(previewImage)) {
         setPreviewImageValid(false)
       } else {
-        setPreviewImageUrl(apiUrl(["web-block/preview", previewImage]))
+        setPreviewImageUrl(apiUrl(["web-template/preview", previewImage]))
         setPreviewImageValid(true)
       }
       setTimeout(() => {
@@ -287,13 +300,13 @@ const BlockForm = ({
   useEffect(() => {
     initFormData(data)
   }, [data])
-
+  
   useEffect(() => {
     onTabExecutedRef.current = false
     HSOverlay.onTabOverride = (t, e) => {
       onTab(t, e)
     }
-
+   
     const $el = jQuery(`#${modalBtnId}`)
     if (!$el.prop("hasOverlay")) {
       $el.prop("hasOverlay", "yes")
@@ -303,21 +316,30 @@ const BlockForm = ({
       onTabExecutedRef.current = false
 
       try {
-        document.querySelector("div[data-hs-overlay-backdrop-template]").remove()
+        document
+          .querySelector("div[data-hs-overlay-backdrop-template]")
+          .remove()
       } catch (e) {}
     }
-  }, [])
+  }, []) 
 
   return (
     <>
-      <button id={`${modalBtnId}`} type="button" className={btnCls} data-hs-overlay={`#${formId}`}>
+      <button
+        id={`${modalBtnId}`}
+        type="button"
+        className={btnCls}
+        data-hs-overlay={`#${formId}`}
+      >
         Open modal
       </button>
       <div id={formId} className={`${modalCls} text-xs`}>
         <div className="hs-overlay-open:opacity-100 hs-overlay-open:duration-500 opacity-0 transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto ]">
           <div className="flex w-[700px] flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
             <div className="flex justify-between items-center py-3 px-4 border-b dark:border-gray-700">
-              <h3 className="font-bold text-gray-800 dark:text-white">{name}</h3>
+              <h3 className="font-bold text-gray-800 dark:text-white">
+                { name }
+              </h3>
               <button
                 type="button"
                 id={`${modalCloseBtnId}`}
@@ -344,83 +366,93 @@ const BlockForm = ({
             </div>
             <div className="p-4 overflow-y-auto">
               <form className={"className"} ref={formRef}>
+
+
                 <FormRowValidation
                   validationErrors={validationErrors}
-                  label="TemplateId"
-                  value={templateId}
-                  fieldname="templateId"
+                  label="ThemeId"
+                  value={ themeId }
+                  fieldname="themeId"
                   onChange={(e) => {
-                    setTemplateId(e.target.value)
+                    setThemeId(e.target.value)
                   }}
-                />
+                                  />
+
 
                 <FormRowValidation
                   validationErrors={validationErrors}
                   label="Name"
-                  value={name}
+                  value={ name }
                   fieldname="name"
                   onChange={(e) => {
                     setName(e.target.value)
                   }}
-                  autofocus="yes"
-                />
+                                    autofocus="yes"
+                                  />
+
 
                 <FormRowValidation
                   validationErrors={validationErrors}
                   label="Slug"
-                  value={slug}
+                  value={ slug }
                   fieldname="slug"
                   onChange={(e) => {
                     setSlug(e.target.value)
                   }}
-                />
+                                  />
+
 
                 <FormRowValidation
                   validationErrors={validationErrors}
                   label="Description"
-                  value={description}
+                  value={ description }
                   fieldname="description"
                   onChange={(e) => {
                     setDescription(e.target.value)
                   }}
-                />
+                                  />
 
-                <FormRowValidation
-                  validationErrors={validationErrors}
-                  label="Kind"
-                  value={kind}
-                  fieldname="kind"
-                  onChange={(e) => {
-                    setKind(e.target.value)
-                  }}
-                />
+
 
                 <FormRowValidation
                   validationErrors={validationErrors}
                   label="Path"
-                  value={path}
+                  value={ path }
                   fieldname="path"
                   onChange={(e) => {
                     setPath(e.target.value)
                   }}
-                />
+                                  />
+
+              
+
+                
 
                 <FormRowImageValidation
                   validationErrors={validationErrors}
                   label="PreviewImage"
                   onChange={(e) => setPreviewImageFile(e.target)}
                   fieldname="previewImage"
-                  inputRef={previewImageRef}
-                  imageUrl={previewImageUrl}
-                  validImage={previewImageValid}
+                  inputRef={ previewImageRef}
+                  imageUrl={ previewImageUrl}
+                  validImage={ previewImageValid}
                 />
               </form>
             </div>
             <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
-              <button onClick={(e) => onCancelForm(e)} type="button" className={modalBtnFrmCloseCls}>
+              <button
+                onClick={(e) => onCancelForm(e)}
+                type="button"
+                className={modalBtnFrmCloseCls}
+              >
                 Cancel
               </button>
-              <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
+              <button
+                tabIndex={10}
+                onClick={(e) => saveForm(e)}
+                type="button"
+                className={modalBtnFrmSaveCls}
+              >
                 Save changes
               </button>
             </div>
@@ -428,8 +460,9 @@ const BlockForm = ({
         </div>
       </div>
     </>
-  )
+  ) 
+
 }
 
-export default BlockForm
-export { createUntitledBlock }
+export default TemplateForm
+export {createUntitledTemplate}

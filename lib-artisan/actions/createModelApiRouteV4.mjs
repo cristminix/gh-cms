@@ -20,9 +20,20 @@ const createModelApiRouteV4 = async (table_name) => {
 
   if (!schemaDef) {
     console.error(`schema def not found for table name ${table_name} on ${dataSourceConfig}`)
+    console.log(`Available tables: \n  ${Object.keys(dataSourceConfigData.schema).join("\n  ")}`)
     return
   }
-  console.log(schemaDef)
+  // console.log(schemaDef)
+  if (typeof availables[table_name] === "undefined") {
+    // try to find in table_name.json file
+    const configTablePath = `config/create-model-api-route-v4/availables/${table_name}.json`
+    if (fs.existsSync(configTablePath)) {
+      const configTable = await jsonParseFile(configTablePath, null, "", null, true)
+      availables[table_name] = configTable
+      // console.log(configTable)
+      // return
+    }
+  }
   if (typeof availables[table_name] === "undefined") {
     console.error(`invalid table name ${table_name} on ${configPath}`)
     return

@@ -1,0 +1,54 @@
+{
+  "overwrite": true,
+  "useAuthenticatedRouter": true,
+  "enableStateRoute": true,
+
+  "***@1": "UPLOAD OPTIONS ***",
+
+  "enableUpload": true,
+  "uploadPath": "",
+  "uploadField": "previewImage",
+  "uploadServeRoute": "preview",
+
+  "***@2": "FORM VALIDATION OPTIONS ***",
+
+  "enableValidation": true,
+
+  "***@3": "SERVE INDEX OPTIONS ***",
+
+  "enableServeIndex": true,
+  "serveIndexStaticPath": "",
+  "serveIndexRoutePath": "",
+
+  "***@4": "CLIENT OPTIONS ***",
+  "enableGoToPage": false,
+  "enableGoToLastPage": false,
+  "enableListState": false,
+
+  "generateComponent": true,
+  "generateFormComponent": true,
+  "componentOutDir": "frontend/src/cp/components/cms-builder",
+  "componentFormOutDir": "frontend/src/cp/components/cms-builder/form",
+  "gridOptions": {},
+  "pagerOptions": {},
+  "routePath": "/builder/web-template-manager",
+  "componentName": "WebTemplateManager",
+  "formName": "TemplateForm",
+  "itemName": "Template",
+  "fieldItemName": "name",
+
+  "***@5": "PARENT MODULE MODE OPTIONS Add access to sub module ***",
+  "enableParentModule": true,
+  "subModuleFk": "templateId",
+  "subModuleRoutePath": "",
+  "subModuleItemName": "Block",
+
+  "***@6": "SUB MODULE MODE OPTIONS Add access with parent module ***",
+  "enableSubModule": false,
+  "parentModuleRoutePath": "/builder/web-template-manager/template",
+  "parentModuleFk": "",
+  "parentModuleItemName": "",
+
+  "***@7": "FORM RELATED ",
+  "formFieldTypes": {}
+}

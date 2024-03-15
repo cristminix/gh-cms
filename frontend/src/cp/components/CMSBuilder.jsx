@@ -8,6 +8,8 @@ import "@/cp/global/styles/markdown-viewer.css"
 import WebMenuManager from "./cms-builder/WebMenuManager"
 import WebThemeManager from "./cms-builder/WebThemeManager"
 import WebBlockManager from "./cms-builder/WebBlockManager"
+import WebTemplateManager from "./cms-builder/WebTemplateManager"
+import WebPageManager from "./cms-builder/WebPageManager"
 
 export async function loader({ params }) {
   const { module, fk, pageNumber } = params
@@ -25,6 +27,10 @@ const CMSBuilder = ({ store, config }) => {
     return <WebThemeManager store={store} config={config} />
   } else if (module == "web-block-manager") {
     return <WebBlockManager store={store} config={config} />
+  } else if (module == "web-template-manager") {
+    return <WebTemplateManager store={store} config={config} />
+  } else if (module == "web-page-manager") {
+    return <WebPageManager store={store} config={config} />
   }
   // }
   // useEffect(() => {

@@ -51,13 +51,13 @@
         "order": 0,
         "hasChild": false,
         "useModel": false,
-        "id": 25,
         "model": "",
         "modelListMethod": "",
         "slugField": "",
         "displayField": "",
         "childRoutePath": "",
-        "childIconCls": ""
+        "childIconCls": "",
+        "id": 3
       },
       {
         "title": "Web Menu",
@@ -77,7 +77,27 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 3
+        "id": 4
+      },
+      {
+        "title": "Templates",
+        "slug": "web-template-manager",
+        "parent": 2,
+        "path": "/builder/web-template-manager",
+        "iconCls": "bi bi-menu-app",
+        "hidden": false,
+        "dev": false,
+        "level": 0,
+        "order": 1,
+        "hasChild": false,
+        "useModel": false,
+        "model": "",
+        "modelListMethod": "",
+        "slugField": "",
+        "displayField": "",
+        "childRoutePath": "",
+        "childIconCls": "",
+        "id": 27
       },
       {
         "title": "Blok dan Widget",
@@ -97,13 +117,13 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 4
+        "id": 5
       },
       {
         "title": "Halaman",
-        "slug": "page-manager",
+        "slug": "web-page-manager",
         "parent": 2,
-        "path": "/builder/page-manager",
+        "path": "/builder/web-page-manager",
         "iconCls": "bi bi-file-fill",
         "hidden": false,
         "dev": false,
@@ -117,7 +137,7 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 5
+        "id": 6
       },
       {
         "title": "Postingan",
@@ -137,7 +157,7 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 6
+        "id": 7
       },
       {
         "title": "Publish",
@@ -157,7 +177,7 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 7
+        "id": 8
       }
     ],
     "id": 2
@@ -189,7 +209,7 @@
         "path": "/developer/menu-manager",
         "title": "Menu Manager",
         "iconCls": "bi bi-menu-button-wide",
-        "parent": 8,
+        "parent": 9,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -199,12 +219,12 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 9
+        "id": 10
       },
       {
         "title": "Code Generator",
         "slug": "codegen-1",
-        "parent": 8,
+        "parent": 9,
         "path": "/developer/code-generator",
         "iconCls": "fa fa-code",
         "hidden": false,
@@ -213,16 +233,16 @@
         "order": 0,
         "hasChild": false,
         "useModel": false,
-        "id": 26,
         "model": "",
         "modelListMethod": "",
         "slugField": "",
         "displayField": "",
         "childRoutePath": "",
-        "childIconCls": ""
+        "childIconCls": "",
+        "id": 11
       }
     ],
-    "id": 8
+    "id": 9
   },
   {
     "slug": "native-clients",
@@ -251,7 +271,7 @@
         "path": "/apps/yt-upload",
         "title": "YT Upload PV",
         "iconCls": "fa fa-youtube",
-        "parent": 10,
+        "parent": 12,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -261,7 +281,7 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 11
+        "id": 13
       },
       {
         "dev": false,
@@ -271,7 +291,7 @@
         "path": "/apps/yt-upload-tt",
         "title": "YT Upload T&T",
         "iconCls": "fa fa-youtube",
-        "parent": 10,
+        "parent": 12,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -281,10 +301,10 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 12
+        "id": 14
       }
     ],
-    "id": 10
+    "id": 12
   },
   {
     "slug": "database",
@@ -313,7 +333,7 @@
         "path": "/database/table-manager",
         "title": "Table Manager",
         "iconCls": "bi bi-table",
-        "parent": 13,
+        "parent": 15,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -323,10 +343,10 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 14
+        "id": 16
       }
     ],
-    "id": 13
+    "id": 15
   },
   {
     "slug": "manuals",
@@ -355,7 +375,7 @@
         "path": "/manuals/dev-notes",
         "title": "Dev Notes",
         "iconCls": "fa fa-cog",
-        "parent": 15,
+        "parent": 17,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -365,7 +385,7 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 16
+        "id": 18
       },
       {
         "dev": false,
@@ -375,7 +395,7 @@
         "path": "/manuals/js-store",
         "title": "JsStore",
         "iconCls": "fa fa-cog",
-        "parent": 15,
+        "parent": 17,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -385,7 +405,7 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 17
+        "id": 19
       },
       {
         "dev": false,
@@ -395,7 +415,7 @@
         "path": "/manuals/artisan",
         "title": "Artisan",
         "iconCls": "fa fa-cog",
-        "parent": 15,
+        "parent": 17,
         "level": 1,
         "hasChild": false,
         "useModel": false,
@@ -405,10 +425,10 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 24
+        "id": 20
       }
     ],
-    "id": 15
+    "id": 17
   },
   {
     "title": "CMS Module",
@@ -429,7 +449,7 @@
     "childRoutePath": "",
     "childIconCls": "",
     "children": [],
-    "id": 18
+    "id": 21
   },
   {
     "slug": "settings",
@@ -453,7 +473,7 @@
       {
         "title": "Konfigurasi Server",
         "slug": "server-config",
-        "parent": 19,
+        "parent": 22,
         "path": "/settings/server-config",
         "iconCls": "fa fa-cogs",
         "hidden": false,
@@ -468,12 +488,12 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 20
+        "id": 23
       },
       {
         "title": "Pengguna",
         "slug": "user-manager",
-        "parent": 19,
+        "parent": 22,
         "path": "/settings/user-manager",
         "iconCls": "fa fa-user",
         "hidden": false,
@@ -488,12 +508,12 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 21
+        "id": 24
       },
       {
         "title": "Grup Pengguna",
         "slug": "user-group",
-        "parent": 19,
+        "parent": 22,
         "path": "/settings/user-group",
         "iconCls": "fa fa-users",
         "hidden": false,
@@ -508,12 +528,12 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 22
+        "id": 25
       },
       {
         "title": "Log Aktifitas",
         "slug": "activity-log",
-        "parent": 19,
+        "parent": 22,
         "path": "/settings/activity-log",
         "iconCls": "fa fa-cog",
         "hidden": false,
@@ -528,9 +548,9 @@
         "displayField": "",
         "childRoutePath": "",
         "childIconCls": "",
-        "id": 23
+        "id": 26
       }
     ],
-    "id": 19
+    "id": 22
   }
 ]
