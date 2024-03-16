@@ -9,8 +9,9 @@ import jQuery from "jquery"
 import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import Toast from "@/cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@/cp/global/fn"
+import { useLocation } from "react-router-dom"
 
-const WebTemplateManager = ({ store, config, pageNumber }) => {
+const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
   const toastRef = useRef(null)
   const [grid, setGrid] = useState({
     records: [],
@@ -29,6 +30,12 @@ const WebTemplateManager = ({ store, config, pageNumber }) => {
   const [formData, setFormData] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [requestToken, setRequestToken] = useState(null)
+
+  const location = useLocation()
+  const qs = location.search
+  const qp = new URLSearchParams(qs)
+  const [parentPage, setParentPage] = useState(parseInt(qp.get("parentPage")))
+  const [lastParentPage, setLastParentPage] = useState(1)
 
   const toast = (message, t) => {
     if (toastRef.current) {
@@ -56,7 +63,7 @@ const WebTemplateManager = ({ store, config, pageNumber }) => {
   }
   const getListState = async (limit = null, page = null) => {
     let response = {}
-    const url = apiUrl("web-template/states", { limit, page })
+    const url = apiUrl(["web-template/states", themeId], { limit, page })
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
       if (validJson) {
@@ -77,6 +84,7 @@ const WebTemplateManager = ({ store, config, pageNumber }) => {
 
     const { limit, order_by, order_dir } = grid
     const url = apiUrl("web-templates", {
+      themeId,
       limit,
       page,
       order_by,
@@ -142,6 +150,9 @@ const WebTemplateManager = ({ store, config, pageNumber }) => {
       }
     }
   }
+  const backToThemes = () => {
+    document.location.hash = `/builder/web-theme-manager/page/${lastParentPage}`
+  }
 
   const goToLastPage = async () => {
     try {
@@ -158,14 +169,10 @@ const WebTemplateManager = ({ store, config, pageNumber }) => {
   const goToPage = (pageNum) => {
     pageNum = parseInt(pageNum) || 1
 
-    document.location.hash = `/builder/web-template-manager/page/${pageNum}`
+    document.location.hash = `/builder/web-template-manager/${themeId}/page/${pageNum}`
     if (pageNum == grid.page) {
       updateList()
     }
-  }
-
-  const goToTT = (item) => {
-    document.location.hash = `/${item.id}?parentPage=${grid.page}`
   }
 
   const gridOptions = {
@@ -204,6 +211,20 @@ const WebTemplateManager = ({ store, config, pageNumber }) => {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
+            <Button
+              title="Lihat Section"
+              loading={false}
+              icon="fa fa-th-large"
+              caption=""
+              onClick={(e) => viewSections(item, index)}
+            />
+            <Button
+              title="Lihat Blok"
+              loading={false}
+              icon="fa fa-square"
+              caption=""
+              onClick={(e) => viewBlocks(item, index)}
+            />
             <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />
             <Button
               title="Delete"
@@ -237,11 +258,20 @@ const WebTemplateManager = ({ store, config, pageNumber }) => {
         modalCloseBtnId={modalCloseBtnId}
       />
 
-      <div className={`user-manager ${containerCls}`}>
+      <div className={`web-template-manager ${containerCls} ${themeId ? "opacity-100" : "opacity-50"}`}>
         <div className="grid-toolbar pb-4">
-          <div className="flex justify-end gap-2">
-            {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" /> : null}
-            <Button onClick={(e) => goToLastPage()} caption="Go to last page" icon="fa fa-next" />
+          <div className="flex justify-between gap-2">
+            <Button onClick={(e) => backToThemes()} icon="fa fa-chevron-left" caption="Kembali ke Tema" />
+            <div className="flex gap-2">
+              {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="Tambah Template" /> : null}
+
+              <Button
+                onClick={(e) => goToLastPage()}
+                caption="Ke Halaman Terakhir"
+                icon="fa fa-step-forward"
+                iconPos="right"
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col ">
@@ -255,7 +285,7 @@ const WebTemplateManager = ({ store, config, pageNumber }) => {
           <div className="pager-container mt-3">
             {grid ? (
               <Pager
-                path="/builder/web-template-manager"
+                path={`/builder/web-template-manager/${themeId}`}
                 page={grid.page}
                 total_pages={grid.total_pages}
                 limit={grid.limit}

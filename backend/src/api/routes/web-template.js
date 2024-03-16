@@ -35,13 +35,15 @@ class WebTemplateRouter extends AuthenticatedRouter {
 
   async getState(req, res) {
     let { limit, page } = req.query
+    let { themeId } = req.params
+
     page = parseInt(page) || null
-    const results = await this.mWebTemplate.getState(limit, page)
+    const results = await this.mWebTemplate.getState(themeId, limit, page)
     return res.send(results)
   }
   async getList(req, res) {
-    const { page, limit, order_by, order_dir } = req.query
-    const results = await this.mWebTemplate.getList(page, limit, order_by, order_dir)
+    const { themeId, page, limit, order_by, order_dir } = req.query
+    const results = await this.mWebTemplate.getList(themeId, page, limit, order_by, order_dir)
     return res.send(results)
   }
 
@@ -198,7 +200,7 @@ class WebTemplateRouter extends AuthenticatedRouter {
     )
 
     this.router.get(
-      "/web-template/states",
+      "/web-template/states/:themeId",
       (req, res, next) => this.authenticateToken(req, res, next),
       (req, res) => this.getState(req, res)
     )

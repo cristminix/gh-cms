@@ -35,6 +35,9 @@ const WebThemeManager = ({ store, config, pageNumber }) => {
       toastRef.current.add(message, t)
     }
   }
+  const viewTemplates = (item, index) => {
+    document.location.hash = `/builder/web-template-manager/${item.id}/?parentPage=${grid.page}`
+  }
   const addForm = async (item, index) => {
     let parent = null
     if (item) {
@@ -154,15 +157,24 @@ const WebThemeManager = ({ store, config, pageNumber }) => {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
-            <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />
             <Button
-              title="Delete"
-              disabled={item.ttCount > 0}
+              title="Lihat Template"
               loading={false}
-              icon="fa fa-trash"
-              caption=""
-              onClick={(e) => deleteForm(item, index)}
+              icon="fa fa-th-list"
+              caption={`${item.templateCount}`}
+              onClick={(e) => viewTemplates(item, index)}
             />
+            <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />
+            {item.templateCount == 0 && (
+              <Button
+                title="Delete"
+                disabled={item.ttCount > 0}
+                loading={false}
+                icon="fa fa-trash"
+                caption=""
+                onClick={(e) => deleteForm(item, index)}
+              />
+            )}
           </>
         )
       },
@@ -233,11 +245,16 @@ const WebThemeManager = ({ store, config, pageNumber }) => {
         modalCloseBtnId={modalCloseBtnId}
       />
 
-      <div className={`user-manager ${containerCls}`}>
+      <div className={`web-the-manager ${containerCls}`}>
         <div className="grid-toolbar pb-4">
           <div className="flex justify-end gap-2">
-            {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" /> : null}
-            <Button onClick={(e) => goToLastPage()} caption="Go to last page" icon="fa fa-next" />
+            {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="Tambah Tema" /> : null}
+            <Button
+              onClick={(e) => goToLastPage()}
+              caption="Ke Halaman Terakhir"
+              icon="fa fa-step-forward"
+              iconPos="right"
+            />
           </div>
         </div>
         <div className="flex flex-col ">
@@ -251,7 +268,7 @@ const WebThemeManager = ({ store, config, pageNumber }) => {
           <div className="pager-container mt-3">
             {grid ? (
               <Pager
-                path="/apps/web-theme"
+                path="/builder/web-theme-manager"
                 page={grid.page}
                 total_pages={grid.total_pages}
                 limit={grid.limit}

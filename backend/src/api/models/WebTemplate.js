@@ -88,14 +88,20 @@ export class MWebTemplate {
     }
     return record
   }
-  async getState(limit = 5, page = null, filter = null) {
+  async getState(themeId, limit = 5, page = null, filter = null) {
     if (!limit) {
       limit = 5
     }
 
     try {
-      const total_records = await this.manager.count(WebTemplate)
-
+      // const total_records = await this.manager.count(WebTemplate)
+      const record = await this.ds
+        .createQueryBuilder(WebTemplate, "a")
+        .select(["COUNT(a.id) count"])
+        .where("a.themeId = :themeId", { themeId })
+        .getRawOne()
+      //   console.log(record)
+      const total_records = record.count
       const total_pages = calculateTotalPages(total_records, limit)
       let records = []
       if (page && page !== null) {
@@ -104,6 +110,8 @@ export class MWebTemplate {
           .getRepository(WebTemplate)
           .createQueryBuilder("a")
           .select(["a.id id"])
+          .where("a.themeId = :themeId", { themeId })
+
           .limit(limit)
           .offset(offset)
           .getRawMany()
@@ -115,7 +123,7 @@ export class MWebTemplate {
     }
     return { limit, total_pages: 0, total_records: 0, record_count: 0 }
   }
-  async getList(page = 1, limit = 5, order_by = "id", order_dir = "asc", filter = null) {
+  async getList(themeId = null, page = 1, limit = 5, order_by = "id", order_dir = "asc", filter = null) {
     if (!limit) {
       limit = 5
     }
@@ -134,27 +142,30 @@ export class MWebTemplate {
       order_dir = "asc"
     }
     try {
-      const total_records = await this.manager.count(WebTemplate)
-
+      const record = await this.ds
+        .createQueryBuilder(WebTemplate, "a")
+        .select(["COUNT(a.id) count"])
+        .orderBy(`a.${order_by}`, order_dir.toUpperCase())
+        .where("a.themeId = :themeId", { themeId })
+        .getRawOne()
+      const total_records = record.count
       const total_pages = calculateTotalPages(total_records, limit)
       const offset = calculateOffset(page, limit)
 
-      let option = {
-        skip: offset,
-        take: limit,
-        order: {},
-      }
-      option.order[order_by] = order_dir
-      if (typeof filter == "object") {
-        option = Object.assign(option, filter)
-      }
-
-      const webtemplates = await this.manager.find(WebTemplate, option)
-      const records = webtemplates
+      const records = await this.ds
+        .createQueryBuilder(WebTemplate, "a")
+        // .select(["a.id",
+        // "a.title",
+        //  "a.description",
+        // "a.thumbnail"])
+        .orderBy(`a.${order_by}`, order_dir.toUpperCase())
+        .where("a.themeId = :themeId", { themeId })
+        .skip(offset)
+        .take(limit)
+        .getMany()
 
       return { page, limit, order_by, order_dir, records, total_pages, total_records }
     } catch (e) {
-      console.error(e)
       // res.send(e)
     }
     return { page, limit, order_by, order_dir, records: [], total_pages: 0, total_records: 0 }

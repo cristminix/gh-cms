@@ -10,6 +10,10 @@ const WebBlockSchema = new EntitySchema({
       primary: true,
       generated: true,
     },
+    parent: {
+      type: "int",
+      nullable: true,
+    },
     templateId: {
       type: "int",
     },

@@ -1,7 +1,7 @@
 import { calculateOffset, calculateTotalPages } from "../libs/utils.js"
 
 class WebBlock {
-  constructor(id, templateId, name, slug, description, kind, previewImage, path_) {
+  constructor(id, templateId, name, slug, description, kind, previewImage, path_, parent) {
     this.id = id
     this.templateId = templateId
     this.name = name
@@ -10,6 +10,7 @@ class WebBlock {
     this.kind = kind
     this.previewImage = previewImage
     this.path = path_
+    this.parent = parent
   }
 }
 export class WebBlockValidation {

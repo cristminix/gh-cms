@@ -1,4 +1,5 @@
 import { calculateOffset, calculateTotalPages } from "../libs/utils.js"
+import WebTemplate from "./WebTemplate.js"
 
 class WebTheme {
   constructor(id, name, slug, description, previewImage) {
@@ -112,6 +113,48 @@ export class MWebTheme {
     return { limit, total_pages: 0, total_records: 0, record_count: 0 }
   }
   async getList(page = 1, limit = 5, order_by = "id", order_dir = "asc", filter = null) {
+    if (!limit) {
+      limit = 5
+    }
+
+    if (!page) {
+      page = 1
+    }
+
+    if (!order_by) {
+      order_by = "id"
+    }
+    if (order_dir) {
+      order_dir = order_dir.toLowerCase()
+    }
+    if (!["asc", "desc"].includes(order_dir)) {
+      order_dir = "asc"
+    }
+    try {
+      const total_records = await this.manager.count(WebTheme)
+
+      const total_pages = calculateTotalPages(total_records, limit)
+      const offset = calculateOffset(page, limit)
+
+      const records = await this.ds
+        .getRepository(WebTheme)
+        .createQueryBuilder("a") //createQueryBuilder(WebTheme,"a")
+        .leftJoin(WebTemplate, "tt", "tt.themeId = a.id")
+        .select(["a.id id", "a.name name", "a.slug slug", "a.description description", "a.previewImage previewImage"])
+        .addSelect("COUNT(tt.id)", "templateCount")
+        .groupBy("a.id")
+        .offset(offset)
+        .orderBy(`a.${order_by}`, order_dir.toUpperCase())
+        .limit(limit)
+        .getRawMany()
+
+      return { offset, page, limit, order_by, order_dir, records, total_pages, total_records }
+    } catch (e) {
+      // res.send(e)
+    }
+    return { offset, page, limit, order_by, order_dir, records: [], total_pages: 0, total_records: 0 }
+  }
+  async getList_old(page = 1, limit = 5, order_by = "id", order_dir = "asc", filter = null) {
     if (!limit) {
       limit = 5
     }
