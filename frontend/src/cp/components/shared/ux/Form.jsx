@@ -5,6 +5,7 @@ import CheckBox from "./CheckBox"
 import { ValidationErrIcon } from "./ValidationIcon"
 import { inputCls, niceScrollbarCls, inputClsError } from "./cls"
 import { HSSelect } from "preline"
+import { uuid } from "uuidv4"
 const FormRow = ({ label, onChange = (f) => f, value, readonly = false }) => {
   return (
     <div className="flex  items-center p-2 px-2">
@@ -22,7 +23,14 @@ const FormRowSelect = ({ label, url = null, data = [], onChange = (f) => f, valu
   const [selectData, setSelectData] = useState(data)
   const getDataUrl = async () => {
     if (!url) {
-      HSSelect.autoInit()
+      // HSSelect.autoInit()
+      // return
+      const oldData = Object.assign([], selectData)
+      setSelectData([])
+      // const
+      setTimeout(() => {
+        setSelectData([...selectData])
+      }, 512)
       return
     }
     fetch(url)
@@ -40,7 +48,7 @@ const FormRowSelect = ({ label, url = null, data = [], onChange = (f) => f, valu
       getDataUrl()
     }
     return () => {
-      setSelectData([])
+      // setSelectData([])
     }
   }, [url])
   return (
@@ -51,7 +59,7 @@ const FormRowSelect = ({ label, url = null, data = [], onChange = (f) => f, valu
       <div className="flex-grow flex gap-2">
         {/* <input className={inputCls} value={value} onChange={onChange} readOnly={readonly} /> */}
         {selectData.length > 0 ? (
-          <AdvancedSelect data={selectData} onSelect={onChange} label={label} selected={value} />
+          <AdvancedSelect salt={uuid()} data={selectData} onSelect={onChange} label={label} selected={value} />
         ) : (
           "LOADING...."
         )}

@@ -248,7 +248,7 @@ const BlockForm = ({
     }
   }
   const initFormData = (data) => {
-    console.log(data)
+    // console.log(data)
     if (data) {
       setFormData(data)
       setTimeout(() => {

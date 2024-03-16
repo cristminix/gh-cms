@@ -47,7 +47,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   }
 
   useEffect(() => {
-    console.log(pageNumber)
+    // console.log(pageNumber)
     if (requestToken) {
       updateList()
     }
@@ -166,7 +166,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   const goToPage = (pageNum) => {
     pageNum = parseInt(pageNum) || 1
 
-    document.location.hash = `/builder/web-block-manager/${templateId}/page/${pageNum}`
+    document.location.hash = `/builder/web-block-manager/${templateId}/page/${pageNum}?parentPage=${lastParentPage}&themeId=${themeId}&kind=${kind}&parent=${parent}`
     if (pageNum == grid.page) {
       updateList()
     }

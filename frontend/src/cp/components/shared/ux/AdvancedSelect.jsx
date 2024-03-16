@@ -3,6 +3,7 @@ import jQuery from "jquery"
 import { slugify } from "../../../global/fn"
 import { HSSelect } from "preline"
 const AdvancedSelect = ({
+  salt = "",
   data,
   captionSuffix = "",
   label = "",
@@ -11,7 +12,7 @@ const AdvancedSelect = ({
   disableSuffixPattern = null,
 }) => {
   const styles = {}
-  const instanceId = `${slugify(label)}-${new Date().getTime()}`
+  const instanceId = `${slugify(label)}-${salt}`
 
   const cls0 = "cls-0 relative  w-full"
   const cls1 = "cls-1 hidden" + ` ${instanceId}`
@@ -23,7 +24,7 @@ const AdvancedSelect = ({
   }
 
   useEffect(() => {
-    console.log(data)
+    // console.log(salt, data)
     if (data) {
       setTimeout(() => {
         HSSelect.autoInit()
@@ -32,12 +33,12 @@ const AdvancedSelect = ({
           try {
             HSSelect.getInstance(`#dd_${instanceId}`).on("change", onSelectChange)
           } catch (e) {
-            console.log(e)
+            // console.log(e)
           }
         }, 512)
       }, 512)
     }
-  }, [data])
+  }, [data, salt])
 
   let dspRegex = null
   if (disableSuffixPattern) {

@@ -153,7 +153,7 @@ export class MWebTemplate {
       const total_pages = calculateTotalPages(total_records, limit)
       const offset = calculateOffset(page, limit)
 
-      let records = await this.ds
+      const builder = this.ds
         .createQueryBuilder(WebTemplate, "a")
         .leftJoin(WebBlock, "s", "s.templateId = a.id AND s.kind=:kind", { kind: "section" })
         .leftJoin(WebBlock, "b", "b.templateId = a.id AND b.kind=:kind2", { kind2: "block" })
@@ -167,15 +167,36 @@ export class MWebTemplate {
           "a.previewImage previewImage",
           "a.path path",
         ])
-        .addSelect("COUNT(s.id)", "sectionCount")
-        .addSelect("COUNT(b.id)", "blockCount")
+        .addSelect("COUNT(DISTINCT s.id)", "sectionCount")
+        .addSelect("COUNT(DISTINCT b.id)", "blockCount")
         .where("a.themeId = :themeId", { themeId })
 
         .groupBy("a.id")
         .offset(offset)
         .orderBy(`a.${order_by}`, order_dir.toUpperCase())
         .limit(limit)
-        .getRawMany()
+      let [sql, params] = builder.getQueryAndParameters()
+      params.forEach((value) => {
+        if (typeof value === "string") {
+          sql = sql.replace("?", `"${value}"`)
+        }
+        if (typeof value === "object") {
+          if (Array.isArray(value)) {
+            sql = sql.replace(
+              "?",
+              value.map((element) => (typeof element === "string" ? `"${element}"` : element)).join(",")
+            )
+          } else {
+            sql = sql.replace("?", value)
+          }
+        }
+        if (["number", "boolean"].includes(typeof value)) {
+          sql = sql.replace("?", value.toString())
+        }
+      })
+
+      console.log(sql)
+      const records = await builder.getRawMany()
 
       // console.log(records.getQuery())
       // records = records.getRawMany()

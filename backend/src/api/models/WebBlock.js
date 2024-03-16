@@ -53,8 +53,14 @@ export class MWebBlock {
     }
 
     try {
-      const total_records = await this.manager.count(WebBlock)
+      const record = await this.ds
+        .createQueryBuilder(WebBlock, "a")
+        .select(["COUNT(a.id) count"])
+        .where("a.templateId = :templateId", { templateId })
+        .where("a.kind = :kind", { kind })
 
+        .getRawOne()
+      const total_records = record.count
       const total_pages = calculateTotalPages(total_records, limit)
       let records = []
       if (page && page !== null) {

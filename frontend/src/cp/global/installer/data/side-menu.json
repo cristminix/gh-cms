@@ -64,7 +64,7 @@
         "slug": "web-template-manager",
         "parent": 2,
         "path": "/builder/web-template-manager",
-        "iconCls": "bi bi-puzzle",
+        "iconCls": "fa fa-th-list",
         "hidden": false,
         "dev": false,
         "level": 0,
