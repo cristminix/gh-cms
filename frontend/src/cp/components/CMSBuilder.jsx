@@ -26,7 +26,7 @@ const CMSBuilder = ({ store, config }) => {
   } else if (module == "web-theme-manager") {
     return <WebThemeManager store={store} config={config} pageNumber={pageNumber} />
   } else if (module == "web-block-manager") {
-    return <WebBlockManager store={store} config={config} pageNumber={pageNumber} />
+    return <WebBlockManager store={store} config={config} pageNumber={pageNumber} templateId={fk} />
   } else if (module == "web-template-manager") {
     return <WebTemplateManager store={store} config={config} pageNumber={pageNumber} themeId={fk} />
   } else if (module == "web-page-manager") {

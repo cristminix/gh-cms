@@ -153,7 +153,12 @@ const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
   const backToThemes = () => {
     document.location.hash = `/builder/web-theme-manager/page/${lastParentPage}`
   }
-
+  const viewSections = (item, index) => {
+    document.location.hash = `/builder/web-block-manager/${item.id}/page/1?parentPage=${grid.page}&kind=section&themeId=${item.themeId}`
+  }
+  const viewBlocks = (item, index) => {
+    document.location.hash = `/builder/web-block-manager/${item.id}/page/1?parentPage=${grid.page}&kind=block&themeId=${item.themeId}`
+  }
   const goToLastPage = async () => {
     try {
       const response = await getListState(grid.limit)
@@ -215,14 +220,14 @@ const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
               title="Lihat Section"
               loading={false}
               icon="fa fa-th-large"
-              caption=""
+              caption={`${item.sectionCount}`}
               onClick={(e) => viewSections(item, index)}
             />
             <Button
               title="Lihat Blok"
               loading={false}
               icon="fa fa-square"
-              caption=""
+              caption={`${item.blockCount}`}
               onClick={(e) => viewBlocks(item, index)}
             />
             <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />

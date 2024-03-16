@@ -34,7 +34,10 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   const location = useLocation()
   const qs = location.search
   const qp = new URLSearchParams(qs)
-  const [parentPage, setParentPage] = useState(parseInt(qp.get("parentPage")))
+  const [parentPage, setParentPage] = useState(parseInt(qp.get("parentPage")) || 1)
+  const [themeId, setThemeId] = useState(parseInt(qp.get("themeId")) || null)
+  const [kind, setKind] = useState(qp.get("kind") || null)
+  const [parent, setParent] = useState(parseInt(qp.get("parent")) || null)
   const [lastParentPage, setLastParentPage] = useState(1)
 
   const toast = (message, t) => {
@@ -75,6 +78,8 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       page,
       order_by,
       order_dir,
+      kind,
+      parent,
     })
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
@@ -159,14 +164,14 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   const goToPage = (pageNum) => {
     pageNum = parseInt(pageNum) || 1
 
-    document.location.hash = `/builder/web-block-manager/page/${pageNum}`
+    document.location.hash = `/builder/web-block-manager/${templateId}/page/${pageNum}`
     if (pageNum == grid.page) {
       updateList()
     }
   }
   const getListState = async (limit = null, page = null) => {
     let response = {}
-    const url = apiUrl("web-block/states", { limit, page })
+    const url = apiUrl(["web-block/states", templateId], { limit, page, kind, parent })
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
       if (validJson) {
@@ -179,8 +184,8 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
     }
     return response
   }
-  const backToTemplate = (item) => {
-    document.location.hash = `/builder/web-block-manager/template/page/${lastParentPage}`
+  const backToTemplates = (item) => {
+    document.location.hash = `/builder/web-template-manager/${themeId}/page/${lastParentPage}`
   }
 
   const gridOptions = {
@@ -254,9 +259,18 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
 
       <div className={`user-manager ${containerCls}`}>
         <div className="grid-toolbar pb-4">
-          <div className="flex justify-end gap-2">
-            {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" /> : null}
-            <Button onClick={(e) => goToLastPage()} caption="Go to last page" icon="fa fa-next" />
+          <div className="flex justify-between gap-2">
+            <Button onClick={(e) => backToTemplates()} icon="fa fa-chevron-left" caption="Kembali ke Template" />
+            <div className="flex gap-2">
+              {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption={`Tambah Blok`} /> : null}
+
+              <Button
+                onClick={(e) => goToLastPage()}
+                caption="Ke Halaman Terakhir"
+                icon="fa fa-step-forward"
+                iconPos="right"
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col ">
@@ -270,7 +284,8 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
           <div className="pager-container mt-3">
             {grid ? (
               <Pager
-                path="/builder/web-block-manager"
+                path={`/builder/web-block-manager/${templateId}`}
+                pathQueryString={`?kind=${kind}&parent=${parent}&themeId=${themeId}`}
                 page={grid.page}
                 total_pages={grid.total_pages}
                 limit={grid.limit}

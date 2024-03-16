@@ -1,4 +1,5 @@
 import { calculateOffset, calculateTotalPages } from "../libs/utils.js"
+import WebBlock from "./WebBlock.js"
 
 class WebTemplate {
   constructor(id, themeId, name, slug, description, previewImage, path_) {
@@ -152,17 +153,32 @@ export class MWebTemplate {
       const total_pages = calculateTotalPages(total_records, limit)
       const offset = calculateOffset(page, limit)
 
-      const records = await this.ds
+      let records = await this.ds
         .createQueryBuilder(WebTemplate, "a")
-        // .select(["a.id",
-        // "a.title",
-        //  "a.description",
-        // "a.thumbnail"])
-        .orderBy(`a.${order_by}`, order_dir.toUpperCase())
+        .leftJoin(WebBlock, "s", "s.templateId = a.id AND s.kind=:kind", { kind: "section" })
+        .leftJoin(WebBlock, "b", "b.templateId = a.id AND b.kind=:kind2", { kind2: "block" })
+
+        .select([
+          "a.id id",
+          "a.themeId themeId",
+          "a.name name",
+          "a.slug slug",
+          "a.description description",
+          "a.previewImage previewImage",
+          "a.path path",
+        ])
+        .addSelect("COUNT(s.id)", "sectionCount")
+        .addSelect("COUNT(b.id)", "blockCount")
         .where("a.themeId = :themeId", { themeId })
-        .skip(offset)
-        .take(limit)
-        .getMany()
+
+        .groupBy("a.id")
+        .offset(offset)
+        .orderBy(`a.${order_by}`, order_dir.toUpperCase())
+        .limit(limit)
+        .getRawMany()
+
+      // console.log(records.getQuery())
+      // records = records.getRawMany()
 
       return { page, limit, order_by, order_dir, records, total_pages, total_records }
     } catch (e) {

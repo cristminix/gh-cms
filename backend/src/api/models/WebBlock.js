@@ -28,7 +28,7 @@ export class MWebBlock {
     this.manager = ds.manager
   }
 
-  async create(templateId, name, description, slug, kind, path_, previewImage) {
+  async create(templateId, name, description, slug, kind, path_, previewImage, parent) {
     const webblock = new WebBlock()
     webblock.templateId = templateId
     webblock.name = name
@@ -37,6 +37,7 @@ export class MWebBlock {
     webblock.path = path_
     webblock.previewImage = previewImage
     webblock.description = description
+    webblock.parent = parent
     let record = null
 
     try {
@@ -46,7 +47,7 @@ export class MWebBlock {
     }
     return record
   }
-  async getState(limit = 5, page = null, filter = null) {
+  async getState(templateId, limit = 5, page = null, kind = null, parent = null) {
     if (!limit) {
       limit = 5
     }
@@ -117,7 +118,7 @@ export class MWebBlock {
     return record
   }
 
-  async getList(page = 1, limit = 5, order_by = "id", order_dir = "asc", filter = null) {
+  async getList(templateId, page = 1, limit = 5, order_by = "id", order_dir = "asc", kind = null, parent = null) {
     if (!limit) {
       limit = 5
     }
@@ -136,23 +137,47 @@ export class MWebBlock {
       order_dir = "asc"
     }
     try {
-      const total_records = await this.manager.count(WebBlock)
+      const record = await this.ds
+        .createQueryBuilder(WebBlock, "a")
+        .select(["COUNT(a.id) count"])
+        .orderBy(`a.${order_by}`, order_dir.toUpperCase())
+        .where("a.templateId = :templateId", { templateId })
+        .where("a.kind = :kind", { kind })
 
+        .getRawOne()
+      const total_records = record.count
       const total_pages = calculateTotalPages(total_records, limit)
       const offset = calculateOffset(page, limit)
 
-      let option = {
-        skip: offset,
-        take: limit,
-        order: {},
-      }
-      option.order[order_by] = order_dir
-      if (typeof filter == "object") {
-        option = Object.assign(option, filter)
-      }
+      let records = await this.ds
+        .createQueryBuilder(WebBlock, "a")
+        // .leftJoin(WebBlock, "s", "s.templateId = a.id AND s.kind=:kind", { kind: "section" })
+        // .leftJoin(WebBlock, "b", "b.templateId = a.id AND b.kind=:kind2", { kind2: "block" })
 
-      const webblocks = await this.manager.find(WebBlock, option)
-      const records = webblocks
+        .select([
+          "a.id id",
+          "a.templateId templateId",
+          "a.name name",
+          "a.slug slug",
+          "a.description description",
+          "a.previewImage previewImage",
+          "a.path path",
+          "a.kind kind",
+          "a.parent parent",
+        ])
+        // .addSelect("COUNT(s.id)", "sectionCount")
+        // .addSelect("COUNT(b.id)", "blockCount")
+        .where("a.templateId = :templateId", { templateId })
+        .where("a.kind = :kind", { kind })
+
+        .groupBy("a.id")
+        .offset(offset)
+        .orderBy(`a.${order_by}`, order_dir.toUpperCase())
+        .limit(limit)
+        .getRawMany()
+
+      // console.log(records.getQuery())
+      // records = records.getRawMany()
 
       return { page, limit, order_by, order_dir, records, total_pages, total_records }
     } catch (e) {

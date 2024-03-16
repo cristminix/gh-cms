@@ -35,14 +35,15 @@ class WebBlockRouter extends AuthenticatedRouter {
   }
 
   async getState(req, res) {
-    let { limit, page } = req.query
+    let { limit, page, kind, parent } = req.query
+    let { templateId } = req.params
     page = parseInt(page) || null
-    const results = await this.mWebBlock.getState(limit, page)
+    const results = await this.mWebBlock.getState(templateId, limit, page, kind, parent)
     return res.send(results)
   }
   async getList(req, res) {
-    const { page, limit, order_by, order_dir } = req.query
-    const results = await this.mWebBlock.getList(page, limit, order_by, order_dir)
+    const { templateId, kind, parent, page, limit, order_by, order_dir } = req.query
+    const results = await this.mWebBlock.getList(templateId, page, limit, order_by, order_dir, kind, parent)
     return res.send(results)
   }
 
@@ -197,7 +198,7 @@ class WebBlockRouter extends AuthenticatedRouter {
     )
 
     this.router.get(
-      "/web-block/states",
+      "/web-block/states/:templateId",
       (req, res, next) => this.authenticateToken(req, res, next),
       (req, res) => this.getState(req, res)
     )

@@ -68,7 +68,7 @@ export class ArrayPager {
     return this.totalRecords
   }
 }
-export default function Pager({ limit, total_pages, page, gotoPage, path = "", onRefresh }) {
+export default function Pager({ pathQueryString = "", limit, total_pages, page, gotoPage, path = "", onRefresh }) {
   const name = "pager"
   const [isLoading, setLoading] = useState(false)
   page = parseInt(page)
@@ -94,7 +94,11 @@ export default function Pager({ limit, total_pages, page, gotoPage, path = "", o
   return (
     <nav className="flex items-center place-content-center space-x-2" key={name}>
       {hasPrev(page) ? (
-        <Link key={`${name}-min-1`} className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md" to={`${path}/page/${page - 1}`}>
+        <Link
+          key={`${name}-min-1`}
+          className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"
+          to={`${path}/page/${page - 1}${pathQueryString}`}
+        >
           <span aria-hidden="true">«</span>
           <span>Sebelum</span>
         </Link>
@@ -108,14 +112,14 @@ export default function Pager({ limit, total_pages, page, gotoPage, path = "", o
             key={`${name}-num-${index}`}
             className="w-10 h-10 bg-blue-500 text-white p-4 inline-flex items-center text-sm font-medium rounded-full"
             aria-current="page"
-            to={`${path}/page/${page_number}`}
+            to={`${path}/page/${page_number}${pathQueryString}`}
           >
             {page_number}
           </Link>
         ) : (
           <Link
             key={`${name}-num-${index}`}
-            to={`${path}/page/${page_number}`}
+            to={`${path}/page/${page_number}${pathQueryString}`}
             className="w-10 h-10 text-gray-500 hover:text-blue-600 p-4 inline-flex items-center text-sm font-medium rounded-full"
           >
             {page_number}
@@ -126,7 +130,7 @@ export default function Pager({ limit, total_pages, page, gotoPage, path = "", o
         <Link
           key={`${name}-plus-1`}
           className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"
-          to={`${path}/page/${page + 1}`}
+          to={`${path}/page/${page + 1}${pathQueryString}`}
         >
           <span>Berikutnya</span>
           <span aria-hidden="true">»</span>
