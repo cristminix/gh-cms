@@ -161,7 +161,7 @@ const WebThemeManager = ({ store, config, pageNumber }) => {
               title="Lihat Template"
               loading={false}
               icon="fa fa-th-list"
-              caption={`${item.templateCount}`}
+              caption={`Template (${item.templateCount})`}
               onClick={(e) => viewTemplates(item, index)}
             />
             <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />

@@ -13,7 +13,7 @@ import {
 } from "@/cp/components/shared/ux/cls"
 import CryptoJS from "crypto-js"
 
-import { FormRow, FormRowImageValidation, FormRowValidation } from "@/cp/components/shared/ux/Form"
+import { FormRow, FormRowImageValidation, FormRowSelect, FormRowValidation } from "@/cp/components/shared/ux/Form"
 import { Prx } from "@/cp/global/fn"
 
 const createUntitledTemplate = () => {
@@ -382,6 +382,7 @@ const TemplateForm = ({
                 />
 
                 <FormRowImageValidation
+                  className="mb-4"
                   validationErrors={validationErrors}
                   label="Preview"
                   onChange={(e) => setPreviewImageFile(e.target)}
@@ -390,13 +391,14 @@ const TemplateForm = ({
                   imageUrl={previewImageUrl}
                   validImage={previewImageValid}
                 />
-                <FormRowValidation
-                  validationErrors={validationErrors}
+                <FormRowSelect
+                  // validationErrors={validationErrors}
                   label="Theme"
+                  url={apiUrl(["web-theme", "dropdown"])}
                   value={themeId}
                   fieldname="themeId"
                   onChange={(e) => {
-                    setThemeId(e.target.value)
+                    setThemeId(e)
                   }}
                 />
               </form>

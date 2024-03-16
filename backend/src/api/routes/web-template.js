@@ -46,7 +46,21 @@ class WebTemplateRouter extends AuthenticatedRouter {
     const results = await this.mWebTemplate.getList(themeId, page, limit, order_by, order_dir)
     return res.send(results)
   }
-
+  async getDropdown(req, res) {
+    const { themeId } = req.params
+    const results = await this.mWebTemplate.getList(themeId, 1, 100, "name", "asc")
+    // console.log(results)
+    if (Array.isArray(results.records)) {
+      const data = results.records.map((item) => {
+        return {
+          text: item.name,
+          value: item.id,
+        }
+      })
+      return res.send({ data })
+    }
+    return res.send({ data: [] })
+  }
   /* Route logic for handling GET /web-template/:id */
   async get(req, res) {
     let id = req.params.id
@@ -198,6 +212,7 @@ class WebTemplateRouter extends AuthenticatedRouter {
       (req, res, next) => this.authenticateToken(req, res, next),
       (req, res) => this.getList(req, res)
     )
+    this.router.get("/web-template/dropdown/:themeId", (req, res) => this.getDropdown(req, res))
 
     this.router.get(
       "/web-template/states/:themeId",

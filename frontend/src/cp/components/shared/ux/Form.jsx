@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react"
 import AdvancedSelect from "./AdvancedSelect"
 import Button from "./Button"
 import CheckBox from "./CheckBox"
 import { ValidationErrIcon } from "./ValidationIcon"
 import { inputCls, niceScrollbarCls, inputClsError } from "./cls"
+import { HSSelect } from "preline"
 const FormRow = ({ label, onChange = (f) => f, value, readonly = false }) => {
   return (
     <div className="flex  items-center p-2 px-2">
@@ -16,15 +18,44 @@ const FormRow = ({ label, onChange = (f) => f, value, readonly = false }) => {
   )
 }
 
-const FormRowSelect = ({ label, data, onChange = (f) => f, value, readonly = false }) => {
+const FormRowSelect = ({ label, url = null, data = [], onChange = (f) => f, value, readonly = false }) => {
+  const [selectData, setSelectData] = useState(data)
+  const getDataUrl = async () => {
+    if (!url) {
+      HSSelect.autoInit()
+      return
+    }
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          setSelectData(res.data)
+        } else {
+          console.log(res)
+        }
+      })
+  }
+  useEffect(() => {
+    if (url) {
+      getDataUrl()
+    }
+    return () => {
+      setSelectData([])
+    }
+  }, [url])
   return (
     <div className="flex  items-center p-2 px-2">
       <div className="w-[70px]">
         <label className="font-bold">{label}</label>
       </div>
-      <div className="flex-grow">
+      <div className="flex-grow flex gap-2">
         {/* <input className={inputCls} value={value} onChange={onChange} readOnly={readonly} /> */}
-        <AdvancedSelect data={data} onSelect={onChange} label={label} selected={value} />
+        {selectData.length > 0 ? (
+          <AdvancedSelect data={selectData} onSelect={onChange} label={label} selected={value} />
+        ) : (
+          "LOADING...."
+        )}
+        {true && <Button onClick={(e) => getDataUrl()} icon="fa fa-refresh" />}
       </div>
     </div>
   )

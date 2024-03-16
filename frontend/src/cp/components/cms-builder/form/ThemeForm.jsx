@@ -364,6 +364,7 @@ const ThemeForm = ({
                 />
 
                 <FormRowImageValidation
+                  className="mb-4"
                   validationErrors={validationErrors}
                   label="Preview Image"
                   onChange={(e) => setPreviewImageFile(e.target)}

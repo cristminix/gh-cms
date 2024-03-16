@@ -220,14 +220,14 @@ const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
               title="Lihat Section"
               loading={false}
               icon="fa fa-th-large"
-              caption={`${item.sectionCount}`}
+              caption={`Section (${item.sectionCount})`}
               onClick={(e) => viewSections(item, index)}
             />
             <Button
               title="Lihat Blok"
               loading={false}
               icon="fa fa-square"
-              caption={`${item.blockCount}`}
+              caption={`Blok (${item.blockCount})`}
               onClick={(e) => viewBlocks(item, index)}
             />
             <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />

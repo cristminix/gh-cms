@@ -101,12 +101,14 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   }
 
   const addForm = async (item, index) => {
-    let templateId = 0
+    // let templateId = 0
     // if (item) {
     //   templateId = item.templateId
     // }
     const defaultBlock = createUntitledBlock()
     defaultBlock.templateId = templateId
+    defaultBlock.parent = parent
+    defaultBlock.kind = kind
     setFormData(defaultBlock)
     setShowForm(true)
 
@@ -242,6 +244,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
     <div className="min-h-screen">
       <Toast ref={toastRef} />
       <BlockForm
+        themeId={themeId}
         requestToken={requestToken}
         setRequestToken={setRequestToken}
         getRequestToken={retrieveIdentityToken}

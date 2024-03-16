@@ -11,26 +11,34 @@ const AdvancedSelect = ({
   disableSuffixPattern = null,
 }) => {
   const styles = {}
+  const instanceId = `${slugify(label)}-${new Date().getTime()}`
+
   const cls0 = "cls-0 relative  w-full"
-  const cls1 = "cls-1 hidden" + ` ${slugify(label)}`
+  const cls1 = "cls-1 hidden" + ` ${instanceId}`
   const cls2 = "cls-2 absolute top-1/2 end-3 -translate-y-1/2"
   const cls3 = "cls-3 flex-shrink-0 w-3.5 h-3.5 text-gray-500 dark:text-gray-500"
-
   // const selectRef = useRef(null)
   const onSelectChange = (selected) => {
     onSelect(selected)
   }
 
   useEffect(() => {
-    HSSelect.autoInit()
-    setTimeout(() => {
+    console.log(data)
+    if (data) {
       setTimeout(() => {
-        try {
-          HSSelect.getInstance(`#dd_${slugify(label)}`).on("change", onSelectChange)
-        } catch (e) {}
+        HSSelect.autoInit()
+
+        setTimeout(() => {
+          try {
+            HSSelect.getInstance(`#dd_${instanceId}`).on("change", onSelectChange)
+          } catch (e) {
+            console.log(e)
+          }
+        }, 512)
       }, 512)
-    }, 512)
+    }
   }, [data])
+
   let dspRegex = null
   if (disableSuffixPattern) {
     dspRegex = new RegExp(disableSuffixPattern)
@@ -38,9 +46,9 @@ const AdvancedSelect = ({
   return (
     <>
       {/*<!-- Select -->*/}
-      <div className={cls0}>
+      <div className={cls0} key={instanceId}>
         <select
-          id={`dd_${slugify(label)}`}
+          id={`dd_${instanceId}`}
           defaultValue={selected}
           data-hs-select='{
       "placeholder": "Select option...",

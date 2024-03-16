@@ -26,6 +26,7 @@ const createUntitledBlock = () => {
   const kind = ""
   const previewImage = ""
   const path = ""
+  const parent = -1
   return {
     templateId,
     slug,
@@ -34,11 +35,13 @@ const createUntitledBlock = () => {
     previewImage,
     path,
     name,
+    parent,
   }
 }
 
 const BlockForm = ({
   templateIdSet,
+  themeId,
   requestToken,
   getRequestToken,
   setRequestToken,
@@ -60,6 +63,7 @@ const BlockForm = ({
   const [description, setDescription] = useState("")
   const [kind, setKind] = useState("")
   const [path, setPath] = useState("")
+  const [parent, setParent] = useState(-1)
 
   const [previewImage, setPreviewImage] = useState("")
   const [previewImageValid, setPreviewImageValid] = useState(false)
@@ -76,10 +80,10 @@ const BlockForm = ({
   const calculateFormChecksum = (data = null) => {
     let formDataItem = null
     if (data) {
-      const { id, templateId, name, slug, description, kind, previewImage, path } = data
-      formDataItem = { id, templateId, name, slug, description, kind, previewImage, path }
+      const { id, templateId, name, slug, description, kind, previewImage, path, parent } = data
+      formDataItem = { id, templateId, name, slug, description, kind, previewImage, path, parent }
     } else {
-      formDataItem = { id: pk, templateId, name, slug, description, kind, previewImage, path }
+      formDataItem = { id: pk, templateId, name, slug, description, kind, previewImage, path, parent }
     }
     if (!formDataItem.id) {
       formDataItem.id = null
@@ -132,7 +136,7 @@ const BlockForm = ({
     if (data.id) {
       pk = data.id
     }
-    const formDataItem = { id: pk, templateId, name, slug, description, kind, path }
+    const formDataItem = { id: pk, templateId, name, slug, description, kind, path, parent }
     const formData = new FormData()
 
     const [file] = previewImageRef.current.files
@@ -225,8 +229,9 @@ const BlockForm = ({
     }
   }
   const setFormData = (data) => {
-    const { id, templateId, name, slug, description, kind, previewImage, path } = data
+    const { id, templateId, name, slug, description, kind, previewImage, path, parent } = data
     setPk(id)
+    setParent(parent)
 
     setTemplateId(templateId)
     setName(name)
@@ -402,6 +407,7 @@ const BlockForm = ({
                 />
 
                 <FormRowImageValidation
+                  className="mb-4"
                   validationErrors={validationErrors}
                   label="Preview"
                   onChange={(e) => setPreviewImageFile(e.target)}
@@ -410,13 +416,32 @@ const BlockForm = ({
                   imageUrl={previewImageUrl}
                   validImage={previewImageValid}
                 />
-                <FormRowValidation
+                {/* <FormRowValidation
                   validationErrors={validationErrors}
                   label="Template"
                   value={templateId}
                   fieldname="templateId"
                   onChange={(e) => {
                     setTemplateId(e.target.value)
+                  }}
+                /> */}
+                <FormRowSelect
+                  // validationErrors={validationErrors}
+                  url={apiUrl(["web-template", "dropdown", themeId], { pk })}
+                  label="Template"
+                  value={templateId}
+                  fieldname="templateId"
+                  onChange={(e) => {
+                    setTemplateId(e)
+                  }}
+                />
+                <FormRow
+                  validationErrors={validationErrors}
+                  label="Parent"
+                  value={parent}
+                  fieldname="parent"
+                  onChange={(e) => {
+                    setParent(e.target.value)
                   }}
                 />
               </form>

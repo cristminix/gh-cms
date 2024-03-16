@@ -1,0 +1,4 @@
+.advanced-select .advanced-select-opt:first {
+  background-color: bisque !important;
+  color: red !important;
+}

@@ -1,14 +1,5 @@
 import { useEffect } from "react"
-import {
-  cls14,
-  cls22,
-  cls24,
-  cls25,
-  cls17,
-  cls18,
-  cls19,
-  cls20,
-} from "@/cp/components/shared/ux/cls"
+import { cls14, cls22, cls24, cls25, cls17, cls18, cls19, cls20 } from "@/cp/components/shared/ux/cls"
 import { useLocation, NavLink } from "react-router-dom"
 import jQuery from "jquery"
 import { makeDelay } from "@/cp/global/fn"
@@ -17,28 +8,17 @@ const delay = makeDelay(1000)
 const MenuItem = ({ hasChild, title, path, icon, name, childrens, index }) => {
   const activeTabCls =
     "flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm text-slate-700 rounded-md dark:bg-gray-900 dark:text-white"
-  const activeMenuCls =
-    "bg-gray-100 text-sm text-slate-700 rounded-md dark:bg-gray-900 dark:text-white"
-  const inactiveTabCls =
-    cls24 + " hover:bg-gray-100  hover:bg-gray-100 dark:hover:bg-gray-700"
-  const linkCls = ({ isActive, isPending }) =>
-    isActive ? activeTabCls : inactiveTabCls
+  const activeMenuCls = "bg-gray-100 text-sm text-slate-700 rounded-md dark:bg-gray-900 dark:text-white"
+  const inactiveTabCls = cls24 + " hover:bg-gray-100  hover:bg-gray-100 dark:hover:bg-gray-700"
+  const linkCls = ({ isActive, isPending }) => (isActive ? activeTabCls : inactiveTabCls)
   const { pathname } = useLocation()
   useEffect(() => {}, [])
   return (
     <>
       {hasChild ? (
         <>
-          <li
-            id={`${name}-accordion`}
-            className={`${cls17} `}
-            key={name}
-            path={path.replace(/^\//, "")}
-          >
-            <button
-              type="button"
-              className={`${cls18} ${pathname.match(path) ? activeMenuCls : ""}`}
-            >
+          <li id={`${name}-accordion`} className={`${cls17} `} key={name} path={path.replace(/^\//, "")}>
+            <button type="button" className={`${cls18} ${pathname.match(path) ? activeMenuCls : ""}`}>
               <i className={icon}></i>
               {title}
 
@@ -76,9 +56,7 @@ const MenuItem = ({ hasChild, title, path, icon, name, childrens, index }) => {
             </button>
             <div
               id={`${name}-accordion-sub`}
-              data-hs-accordion-always-open={
-                pathname.match(path) ? "true" : "false"
-              }
+              data-hs-accordion-always-open={pathname.match(path) ? "true" : "false"}
               className={`${cls25} ${pathname.match(path) ? "hidden" : "hidden"}`}
             >
               <ul className={cls22}>
@@ -146,7 +124,7 @@ const Menu = ({ data, store, config }) => {
               })
             }
           } catch (e) {
-            console.error(e)
+            // console.error(e)
           }
         }
       }
@@ -157,7 +135,7 @@ const Menu = ({ data, store, config }) => {
   const activateActiveAccordion = () => {
     data.map((item) => {
       // const item = data[key]
-      console.log(item)
+      // console.log(item)
       const activeAccordionMenuMatch = pathname.match(item.path)
       if (activeAccordionMenuMatch) {
         let [path] = activeAccordionMenuMatch
