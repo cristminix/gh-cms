@@ -1,5 +1,7 @@
 import { calculateOffset, calculateTotalPages } from "../libs/utils.js"
 import WebBlock from "./WebBlock.js"
+import WebSectionBlock from "./WebSectionBlock.js"
+import WebTemplateBlock from "./WebTemplateBlock.js"
 
 class WebTemplate {
   constructor(id, themeId, name, slug, description, previewImage, path_) {
@@ -155,8 +157,8 @@ export class MWebTemplate {
 
       const builder = this.ds
         .createQueryBuilder(WebTemplate, "a")
-        .leftJoin(WebBlock, "s", "s.templateId = a.id AND s.kind=:kind", { kind: "section" })
-        .leftJoin(WebBlock, "b", "b.templateId = a.id AND b.kind=:kind2", { kind2: "block" })
+        .leftJoin(WebTemplateBlock, "wtb", "wtb.templateId = a.id")
+        .leftJoin(WebBlock, "block", "block.parent = wtb.id")
 
         .select([
           "a.id id",
@@ -167,35 +169,15 @@ export class MWebTemplate {
           "a.previewImage previewImage",
           "a.path path",
         ])
-        .addSelect("COUNT(DISTINCT s.id)", "sectionCount")
-        .addSelect("COUNT(DISTINCT b.id)", "blockCount")
+        .addSelect("COUNT(DISTINCT wtb.id)", "sectionCount")
+        .addSelect("COUNT(DISTINCT block.id)", "blockCount")
         .where("a.themeId = :themeId", { themeId })
 
         .groupBy("a.id")
         .offset(offset)
         .orderBy(`a.${order_by}`, order_dir.toUpperCase())
         .limit(limit)
-      let [sql, params] = builder.getQueryAndParameters()
-      params.forEach((value) => {
-        if (typeof value === "string") {
-          sql = sql.replace("?", `"${value}"`)
-        }
-        if (typeof value === "object") {
-          if (Array.isArray(value)) {
-            sql = sql.replace(
-              "?",
-              value.map((element) => (typeof element === "string" ? `"${element}"` : element)).join(",")
-            )
-          } else {
-            sql = sql.replace("?", value)
-          }
-        }
-        if (["number", "boolean"].includes(typeof value)) {
-          sql = sql.replace("?", value.toString())
-        }
-      })
 
-      console.log(sql)
       const records = await builder.getRawMany()
 
       // console.log(records.getQuery())

@@ -5,6 +5,7 @@ import multer from "multer"
 import serveIndex from "serve-index"
 import "reflect-metadata"
 import path from "path"
+
 class ConfigRouter {
   datasource = null
   mUser = null
@@ -24,6 +25,10 @@ class ConfigRouter {
     return this.router
   }
 
+  async test(req, res) {
+    let data = "Hello"
+    res.send({ data })
+  }
   async saveMenu(req, res) {
     let { menus } = req.body
     const menuPath = path.resolve("../frontend/src/cp/global/installer/data/side-menu.json")
@@ -45,6 +50,7 @@ class ConfigRouter {
     this.router.use("/config/storage", serveIndex(staticPath, { icons: true }))
 
     this.router.post("/config/saveMenu", this.multer.none(), async (req, res) => await this.saveMenu(req, res))
+    this.router.post("/config/test", this.multer.none(), async (req, res) => await this.test(req, res))
   }
 }
 

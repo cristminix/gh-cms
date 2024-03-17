@@ -1,4 +1,7 @@
-import { calculateOffset, calculateTotalPages } from "../libs/utils.js"
+import { query } from "express"
+import { calculateOffset, calculateTotalPages, getCompiledSql } from "../libs/utils.js"
+import WebTemplateBlock from "./WebTemplateBlock.js"
+import WebSectionBlock from "./WebSectionBlock.js"
 
 class WebBlock {
   constructor(id, templateId, name, slug, description, kind, previewImage, path_, parent) {
@@ -30,7 +33,7 @@ export class MWebBlock {
 
   async create(templateId, name, description, slug, kind, path_, previewImage, parent) {
     const webblock = new WebBlock()
-    webblock.templateId = templateId
+    // webblock.templateId = templateId
     webblock.name = name
     webblock.slug = slug
     webblock.kind = kind
@@ -47,33 +50,20 @@ export class MWebBlock {
     }
     return record
   }
-  async getState(templateId, limit = 5, page = null, kind = null, parent = null) {
+
+  async getState(templateId = null, limit = 5, page = null, kind = null, parent = null) {
     if (!limit) {
       limit = 5
     }
-
     try {
-      const record = await this.ds
-        .createQueryBuilder(WebBlock, "a")
-        .select(["COUNT(a.id) count"])
-        .where("a.templateId = :templateId", { templateId })
-        .where("a.kind = :kind", { kind })
-
-        .getRawOne()
-      const total_records = record.count
+      const total_records = await this.getListCount(templateId, kind, parent)
       const total_pages = calculateTotalPages(total_records, limit)
-      let records = []
+      let record_count = 0
       if (page && page !== null) {
         const offset = calculateOffset(page, limit)
-        records = await this.ds
-          .getRepository(WebBlock)
-          .createQueryBuilder("a")
-          .select(["a.id id"])
-          .limit(limit)
-          .offset(offset)
-          .getRawMany()
+        record_count = await this.getListCount(templateId, kind, parent, limit, offset)
       }
-      return { limit, total_pages, total_records, record_count: records.length }
+      return { limit, total_pages, total_records, record_count }
     } catch (e) {
       // res.send(e)
       console.error(e)
@@ -123,8 +113,54 @@ export class MWebBlock {
     }
     return record
   }
+  async getListCount(templateId, kind, parent, limit = null, offset = null) {
+    let query = null
+    if (kind === "section") {
+      if (templateId) {
+        query = this.ds
+          // GET many to many block kind of section <==> template
+          .createQueryBuilder(WebTemplateBlock, "wtb")
+          .select(["COUNT(wtb.id) count"])
+          .where("wtb.templateId = :templateId", { templateId })
+      }
+    } else if (kind === "block") {
+      if (parent) {
+        query = this.ds
+          .createQueryBuilder(WebSectionBlock, "wsb")
+          .select(["COUNT(wsb.id) count"])
+          // .leftJoin(WebBlock, "wb", "wsb.blockId=wb.id")
+          .where("wsb.sectionId = :parent", { parent })
+      } else {
+        if (templateId) {
+          query = this.ds
+            // GET many to many block kind of section <==> template
+            .createQueryBuilder(WebTemplateBlock, "wtb")
+            .leftJoin(WebSectionBlock, "wsb", "wsb.sectionId=wtb.blockId")
+            .select(["COUNT(wsb.id) count"])
+            .where("wtb.templateId = :templateId", { templateId })
+        }
+      }
+    }
 
-  async getList(templateId, page = 1, limit = 5, order_by = "id", order_dir = "asc", kind = null, parent = null) {
+    if (limit) {
+      query.limit(limit)
+    }
+    if (offset) {
+      query.offset(offset)
+    }
+    console.log(getCompiledSql(query))
+    let record = await query.getRawOne()
+    return record.count
+  }
+  async getList(
+    templateId = null,
+    page = 1,
+    limit = 5,
+    order_by = "id",
+    order_dir = "asc",
+    kind = null,
+    parent = null
+  ) {
     if (!limit) {
       limit = 5
     }
@@ -143,44 +179,56 @@ export class MWebBlock {
       order_dir = "asc"
     }
     try {
-      const record = await this.ds
-        .createQueryBuilder(WebBlock, "a")
-        .select(["COUNT(a.id) count"])
-        .orderBy(`a.${order_by}`, order_dir.toUpperCase())
-        .where("a.templateId = :templateId", { templateId })
-        .where("a.kind = :kind", { kind })
-
-        .getRawOne()
-      const total_records = record.count
+      const total_records = await this.getListCount(templateId, kind, parent)
       const total_pages = calculateTotalPages(total_records, limit)
       const offset = calculateOffset(page, limit)
-
-      let records = await this.ds
-        .createQueryBuilder(WebBlock, "a")
-        // .leftJoin(WebBlock, "s", "s.templateId = a.id AND s.kind=:kind", { kind: "section" })
-        // .leftJoin(WebBlock, "b", "b.templateId = a.id AND b.kind=:kind2", { kind2: "block" })
-
+      let query = null
+      if (kind === "section") {
+        if (templateId) {
+          query = this.ds
+            // GET many to many block kind of section <==> template
+            .createQueryBuilder(WebTemplateBlock, "wtb")
+            .leftJoin(WebBlock, "wb", "wtb.blockId=wb.id")
+            .where("wtb.templateId = :templateId", { templateId })
+        }
+      } else if (kind === "block") {
+        if (parent) {
+          query = this.ds
+            .createQueryBuilder(WebSectionBlock, "wsb")
+            // .select(["COUNT(wsb.id) count"])
+            .leftJoin(WebBlock, "wb", "wsb.blockId=wb.id")
+            .where("wsb.sectionId = :parent", { parent })
+        } else {
+          if (templateId) {
+            query = this.ds
+              // GET many to many block kind of section <==> template
+              .createQueryBuilder(WebTemplateBlock, "wtb")
+              .leftJoin(WebSectionBlock, "wsb", "wsb.sectionId=wtb.blockId")
+              .leftJoin(WebBlock, "wb", "wsb.blockId=wb.id")
+              .where("wtb.templateId = :templateId", { templateId })
+          }
+        }
+      }
+      query
         .select([
-          "a.id id",
-          "a.templateId templateId",
-          "a.name name",
-          "a.slug slug",
-          "a.description description",
-          "a.previewImage previewImage",
-          "a.path path",
-          "a.kind kind",
-          "a.parent parent",
+          "wb.id id",
+          // "wtb.templateId templateId",
+          "wb.name name",
+          "wb.slug slug",
+          "wb.description description",
+          "wb.previewImage previewImage",
+          "wb.path path",
+          "wb.kind kind",
+          "wb.parent parent",
         ])
-        // .addSelect("COUNT(s.id)", "sectionCount")
-        // .addSelect("COUNT(b.id)", "blockCount")
-        .where("a.templateId = :templateId", { templateId })
-        .where("a.kind = :kind", { kind })
+        // .where("wb.kind = :kind", { kind })
 
-        .groupBy("a.id")
-        .offset(offset)
-        .orderBy(`a.${order_by}`, order_dir.toUpperCase())
+        // .groupBy("b.id")
+        .orderBy(`wb.${order_by}`, order_dir.toUpperCase())
         .limit(limit)
-        .getRawMany()
+        .offset(offset)
+      console.log(getCompiledSql(query))
+      const records = await query.getRawMany()
 
       // console.log(records.getQuery())
       // records = records.getRawMany()

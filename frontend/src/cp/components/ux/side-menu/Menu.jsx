@@ -190,7 +190,7 @@ const Menu = ({ data, store, config }) => {
           }
           // item.hasChild = childrens.length > 0
 
-          console.log(item.hasChild)
+          // console.log(item.hasChild)
           return (
             <MenuItem
               key={index}

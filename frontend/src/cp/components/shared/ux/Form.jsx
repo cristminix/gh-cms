@@ -4,7 +4,6 @@ import Button from "./Button"
 import CheckBox from "./CheckBox"
 import { ValidationErrIcon } from "./ValidationIcon"
 import { inputCls, niceScrollbarCls, inputClsError } from "./cls"
-import { HSSelect } from "preline"
 import { uuid } from "uuidv4"
 const FormRow = ({ label, onChange = (f) => f, value, readonly = false }) => {
   return (

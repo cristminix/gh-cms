@@ -263,6 +263,7 @@ const BlockForm = ({
   }
   const onTab = (target, focusableElements) => {
     console.log(onTabExecutedRef.current)
+    return
     if (!onTabExecutedRef.current) {
       onTabExecutedRef.current = true
       // Your code here (will run only once)

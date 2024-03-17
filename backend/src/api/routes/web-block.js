@@ -36,6 +36,7 @@ class WebBlockRouter extends AuthenticatedRouter {
 
   async getState(req, res) {
     let { limit, page, kind, parent } = req.query
+    // console.log({ limit, page, kind, parent })
     let { templateId } = req.params
     page = parseInt(page) || null
     const results = await this.mWebBlock.getState(templateId, limit, page, kind, parent)

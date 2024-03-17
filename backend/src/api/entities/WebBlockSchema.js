@@ -14,9 +14,7 @@ const WebBlockSchema = new EntitySchema({
       type: "int",
       nullable: true,
     },
-    templateId: {
-      type: "int",
-    },
+
     name: {
       type: "varchar",
       length: 225,
@@ -45,6 +43,13 @@ const WebBlockSchema = new EntitySchema({
       nullable: true,
     },
   },
+  // relations: {
+  //   templates: {
+  //     type: "many-to-many",
+  //     inverseSide: "templates",
+  //     target: "WebTemplate", //<--- This needs to match the `inverseSide` of the challenges relation in the User EntitySchema
+  //   },
+  // },
 })
 
 export default WebBlockSchema

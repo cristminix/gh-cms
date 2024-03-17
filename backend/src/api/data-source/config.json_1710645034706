@@ -326,20 +326,6 @@
         "shortName",
         "enabled"
       ]
-    },
-    "templates_blocks": {
-      "schema": "WebTemplateBlockSchema",
-      "model": "WebTemplateBlock",
-      "pk": "id",
-      "fields": ["id", "templateId", "blockId"],
-      "types": ["int", "int", "int"]
-    },
-    "sections_blocks": {
-      "schema": "WebSectionBlockSchema",
-      "model": "WebSectionBlock",
-      "pk": "id",
-      "fields": ["id", "sectionId", "blockId"],
-      "types": ["int", "int", "int"]
     }
   }
 }
