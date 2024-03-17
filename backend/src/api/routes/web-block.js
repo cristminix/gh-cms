@@ -21,6 +21,8 @@ class WebBlockRouter extends AuthenticatedRouter {
     this.appConfig = appConfig
     this.logger = logger
     this.mWebBlock = datasource.factory("MWebBlock", true)
+    this.mWebTemplateBlock = datasource.factory("MWebTemplateBlock", true)
+    this.mWebSectionBlock = datasource.factory("MWebSectionBlock", true)
     this.router = express.Router()
     this.previewImageDir = appConfig.get("module.previewImageDir")
     this.uploader = multer({
@@ -33,7 +35,13 @@ class WebBlockRouter extends AuthenticatedRouter {
     let errors = validateImageFile(fieldname, files, this.logger, 4)
     return errors
   }
-
+  async getPickerData(req, res) {
+    let { kind } = req.params
+    let { page, limit } = req.query
+    page = parseInt(page) || null
+    const results = await this.mWebBlock.getPickerData(5, 1, kind, null)
+    res.send({ data: results })
+  }
   async getState(req, res) {
     let { limit, page, kind, parent } = req.query
     // console.log({ limit, page, kind, parent })
@@ -54,6 +62,21 @@ class WebBlockRouter extends AuthenticatedRouter {
     const webblock = await this.mWebBlock.getByPk(id)
     return res.send({
       data: webblock,
+    })
+  }
+  async createFromExisting(req, res) {
+    const { pk, kind, templateId, parent } = req.body
+    console.log({ pk, kind, templateId, parent })
+    const record = await this.mWebBlock.getByPk(pk)
+    console.log(record)
+    let newRecord = null
+    if (record) {
+      if (kind === "section") {
+        newRecord = await this.mWebTemplateBlock.create(templateId, record.id)
+      }
+    }
+    return res.send({
+      data: newRecord,
     })
   }
   /* Route logic for handling POST /web-block/create */
@@ -203,6 +226,11 @@ class WebBlockRouter extends AuthenticatedRouter {
       (req, res, next) => this.authenticateToken(req, res, next),
       (req, res) => this.getState(req, res)
     )
+    this.router.get(
+      "/web-block/picker/:kind",
+      (req, res, next) => this.authenticateToken(req, res, next),
+      (req, res) => this.getPickerData(req, res)
+    )
 
     this.router.get(
       "/web-block/:id",
@@ -223,6 +251,14 @@ class WebBlockRouter extends AuthenticatedRouter {
       check("kind", "kind is required").not().isEmpty(),
       check("path", "path is required").not().isEmpty(),
       (req, res) => this.create(req, res)
+    )
+    this.router.post(
+      "/web-block/createFromExisting/:kind",
+      (req, res, next) => this.authenticateToken(req, res, next),
+      this.uploader.none(),
+
+      check("pk", "pk is required").not().isEmpty(),
+      (req, res) => this.createFromExisting(req, res)
     )
 
     this.router.put(

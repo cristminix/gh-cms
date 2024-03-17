@@ -152,6 +152,25 @@ export class MWebBlock {
     let record = await query.getRawOne()
     return record.count
   }
+
+  async getPickerData(limit, page, kind, parent = null) {
+    const query = this.ds
+      .createQueryBuilder(WebBlock, "wb")
+      .select([
+        "wb.id id",
+        // "wtb.templateId templateId",
+        "wb.name name",
+        "wb.slug slug",
+        "wb.description description",
+        "wb.previewImage previewImage",
+        "wb.path path",
+        "wb.kind kind",
+        "wb.parent parent",
+      ])
+      .where("wb.kind = :kind", { kind })
+    const records = await query.getRawMany()
+    return records
+  }
   async getList(
     templateId = null,
     page = 1,

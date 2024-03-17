@@ -15,6 +15,7 @@ import CryptoJS from "crypto-js"
 
 import { FormRow, FormRowImageValidation, FormRowSelect, FormRowValidation } from "@/cp/components/shared/ux/Form"
 import { Prx } from "@/cp/global/fn"
+import BlockPicker from "./BlockPicker"
 
 const createUntitledBlock = () => {
   const idx = crc32(new Date().getTime().toString()).toString(16)
@@ -68,7 +69,7 @@ const BlockForm = ({
   const [previewImage, setPreviewImage] = useState("")
   const [previewImageValid, setPreviewImageValid] = useState(false)
   const [previewImageUrl, setPreviewImageUrl] = useState("")
-
+  const [tabMode, setTabMode] = useState("new")
   const previewImageRef = useRef(null)
   const formRef = useRef(null)
   const onTabExecutedRef = useRef(false)
@@ -317,7 +318,18 @@ const BlockForm = ({
       } catch (e) {}
     }
   }, [])
-
+  const cls0 = "cls-0 relative z-0 flex border rounded-xl overflow-hidden dark:border-gray-700"
+  const cls1 =
+    "cls-1 hs-tab-active:border-b-blue-600 hs-tab-active:text-gray-900 dark:hs-tab-active:text-white dark:hs-tab-active:border-b-blue-600 relative min-w-0 flex-1 bg-white first:border-s-0 border-s border-b-2 py-4 px-4 text-gray-500 hover:text-gray-700 text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:z-10 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-l-gray-700 dark:border-b-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-400 active"
+  const cls2 =
+    "cls-2 hs-tab-active:border-b-blue-600 hs-tab-active:text-gray-900 dark:hs-tab-active:text-white dark:hs-tab-active:border-b-blue-600 relative min-w-0 flex-1 bg-white first:border-s-0 border-s border-b-2 py-4 px-4 text-gray-500 hover:text-gray-700 text-sm font-medium text-center overflow-hidden hover:bg-gray-50 focus:z-10 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-800 dark:border-l-gray-700 dark:border-b-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-400"
+  const cls3 = "cls-3 mt-3"
+  const cls4 = "cls-4 text-gray-500 dark:text-gray-400"
+  const cls5 = "cls-5 font-semibold text-gray-800 dark:text-gray-200"
+  const cls6 = "cls-6 hidden"
+  useEffect(() => {
+    HSTabs.autoInit()
+  }, [])
   return (
     <>
       <button id={`${modalBtnId}`} type="button" className={btnCls} data-hs-overlay={`#${formId}`}>
@@ -352,72 +364,102 @@ const BlockForm = ({
                 </svg>
               </button>
             </div>
-            <div className="p-4 overflow-y-auto">
-              <form className={"className"} ref={formRef}>
-                <FormRowValidation
-                  validationErrors={validationErrors}
-                  label="Name"
-                  value={name}
-                  fieldname="name"
-                  onChange={(e) => {
-                    setName(e.target.value)
-                  }}
-                  autofocus="yes"
-                />
+            <nav aria-label="Tabs" role="tablist" className={cls0}>
+              <button
+                type="button"
+                id="bar-with-underline-item-1"
+                data-hs-tab="#bar-with-underline-1"
+                aria-controls="bar-with-underline-1"
+                role="tab"
+                className={cls1}
+                onClick={(e) => {
+                  setTabMode("new")
+                }}
+              >
+                Cereate New
+              </button>
+              <button
+                type="button"
+                id="bar-with-underline-item-2"
+                data-hs-tab="#bar-with-underline-2"
+                aria-controls="bar-with-underline-2"
+                role="tab"
+                className={cls2}
+                onClick={(e) => setTabMode("existing")}
+              >
+                Use Existing
+              </button>
+            </nav>
 
-                <FormRowValidation
-                  validationErrors={validationErrors}
-                  label="Slug"
-                  value={slug}
-                  fieldname="slug"
-                  onChange={(e) => {
-                    setSlug(e.target.value)
-                  }}
-                />
+            <div className={cls3}>
+              <div id="bar-with-underline-1" role="tabpanel" aria-labelledby="bar-with-underline-item-1">
+                {/* START FORM */}
+                <div className="p-4 overflow-y-auto">
+                  <form className={"className"} ref={formRef}>
+                    <FormRowValidation
+                      validationErrors={validationErrors}
+                      label="Name"
+                      value={name}
+                      fieldname="name"
+                      onChange={(e) => {
+                        setName(e.target.value)
+                      }}
+                      autofocus="yes"
+                    />
 
-                <FormRowValidation
-                  validationErrors={validationErrors}
-                  label="Description"
-                  useTextArea={true}
-                  value={description}
-                  fieldname="description"
-                  onChange={(e) => {
-                    setDescription(e.target.value)
-                  }}
-                />
+                    <FormRowValidation
+                      validationErrors={validationErrors}
+                      label="Slug"
+                      value={slug}
+                      fieldname="slug"
+                      onChange={(e) => {
+                        setSlug(e.target.value)
+                      }}
+                    />
 
-                <FormRowSelect
-                  validationErrors={validationErrors}
-                  label="Kind"
-                  data={["block", "widget", "section"]}
-                  value={kind}
-                  fieldname="kind"
-                  onChange={(e) => {
-                    setKind(e)
-                  }}
-                />
+                    <FormRowValidation
+                      validationErrors={validationErrors}
+                      label="Description"
+                      useTextArea={true}
+                      value={description}
+                      fieldname="description"
+                      onChange={(e) => {
+                        setDescription(e.target.value)
+                      }}
+                    />
 
-                <FormRowValidation
-                  validationErrors={validationErrors}
-                  label="Path"
-                  value={path}
-                  fieldname="path"
-                  onChange={(e) => {
-                    setPath(e.target.value)
-                  }}
-                />
+                    <FormRowSelect
+                      validationErrors={validationErrors}
+                      label="Kind"
+                      data={["block", "widget", "section"]}
+                      value={kind}
+                      fieldname="kind"
+                      onChange={(e) => {
+                        setKind(e)
+                      }}
+                    />
 
-                <FormRowImageValidation
-                  className="mb-4"
-                  validationErrors={validationErrors}
-                  label="Preview"
-                  onChange={(e) => setPreviewImageFile(e.target)}
-                  fieldname="previewImage"
-                  inputRef={previewImageRef}
-                  imageUrl={previewImageUrl}
-                  validImage={previewImageValid}
-                />
-                {/* <FormRowValidation
+                    <FormRowValidation
+                      validationErrors={validationErrors}
+                      label="Path"
+                      value={path}
+                      fieldname="path"
+                      onChange={(e) => {
+                        setPath(e.target.value)
+                      }}
+                    />
+
+                    <FormRowImageValidation
+                      className="mb-4"
+                      validationErrors={validationErrors}
+                      label="Preview"
+                      onChange={(e) => setPreviewImageFile(e.target)}
+                      fieldname="previewImage"
+                      inputRef={previewImageRef}
+                      imageUrl={previewImageUrl}
+                      validImage={previewImageValid}
+                    />
+                    {/* <FormRowValidation
                   validationErrors={validationErrors}
                   label="Template"
                   value={templateId}
@@ -426,33 +468,58 @@ const BlockForm = ({
                     setTemplateId(e.target.value)
                   }}
                 /> */}
-                <FormRowSelect
-                  // validationErrors={validationErrors}
-                  url={apiUrl(["web-template", "dropdown", themeId], { pk })}
-                  label="Template"
-                  value={templateId}
-                  fieldname="templateId"
-                  onChange={(e) => {
-                    setTemplateId(e)
-                  }}
+                    <FormRowSelect
+                      // validationErrors={validationErrors}
+                      url={apiUrl(["web-template", "dropdown", themeId], { pk })}
+                      label="Template"
+                      value={templateId}
+                      fieldname="templateId"
+                      onChange={(e) => {
+                        setTemplateId(e)
+                      }}
+                    />
+                    <FormRow
+                      validationErrors={validationErrors}
+                      label="Parent"
+                      value={parent}
+                      fieldname="parent"
+                      onChange={(e) => {
+                        setParent(e.target.value)
+                      }}
+                    />
+                  </form>
+                </div>
+              </div>
+              <div
+                id="bar-with-underline-2"
+                role="tabpanel"
+                aria-labelledby="bar-with-underline-item-2"
+                className={`${cls6} p-2`}
+              >
+                <p className={`${cls4} text-center`}>
+                  Please select existing <em className={cls5}> {kind} </em> in the list.
+                </p>
+                <BlockPicker
+                  kind={kind}
+                  requestToken={requestToken}
+                  toast={toast}
+                  templateId={templateId}
+                  parent={parent}
+                  hideModalForm={hideModalForm}
+                  updateList={updateList}
+                  goToLastPage={goToLastPage}
                 />
-                <FormRow
-                  validationErrors={validationErrors}
-                  label="Parent"
-                  value={parent}
-                  fieldname="parent"
-                  onChange={(e) => {
-                    setParent(e.target.value)
-                  }}
-                />
-              </form>
+              </div>
             </div>
+
             <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
+              {tabMode == "new" && (
+                <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
+                  Simpan
+                </button>
+              )}
               <button onClick={(e) => onCancelForm(e)} type="button" className={modalBtnFrmCloseCls}>
                 Cancel
-              </button>
-              <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
-                Save changes
               </button>
             </div>
           </div>
