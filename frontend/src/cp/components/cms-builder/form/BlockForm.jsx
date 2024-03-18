@@ -376,7 +376,7 @@ const BlockForm = ({
                   setTabMode("new")
                 }}
               >
-                Cereate New
+                Buat Baru
               </button>
               <button
                 type="button"
@@ -387,7 +387,7 @@ const BlockForm = ({
                 className={cls2}
                 onClick={(e) => setTabMode("existing")}
               >
-                Use Existing
+                Ambil yang ada
               </button>
             </nav>
 
@@ -497,7 +497,7 @@ const BlockForm = ({
                 className={`${cls6} p-2`}
               >
                 <p className={`${cls4} text-center`}>
-                  Please select existing <em className={cls5}> {kind} </em> in the list.
+                  Silahkan pilih <em className={cls5}> {kind} </em> berikut.
                 </p>
                 <BlockPicker
                   kind={kind}

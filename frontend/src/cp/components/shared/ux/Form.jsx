@@ -18,7 +18,15 @@ const FormRow = ({ label, onChange = (f) => f, value, readonly = false }) => {
   )
 }
 
-const FormRowSelect = ({ label, url = null, data = [], onChange = (f) => f, value, readonly = false }) => {
+const FormRowSelect = ({
+  className = "",
+  label,
+  url = null,
+  data = [],
+  onChange = (f) => f,
+  value,
+  readonly = false,
+}) => {
   const [selectData, setSelectData] = useState(data)
   const getDataUrl = async () => {
     if (!url) {
@@ -51,7 +59,7 @@ const FormRowSelect = ({ label, url = null, data = [], onChange = (f) => f, valu
     }
   }, [url])
   return (
-    <div className="flex  items-center p-2 px-2">
+    <div className={`h-[100px] flex items-center p-2 px-2 ${className}`}>
       <div className="w-[70px]">
         <label className="font-bold">{label}</label>
       </div>

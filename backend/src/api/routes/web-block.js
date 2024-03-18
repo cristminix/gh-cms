@@ -110,8 +110,14 @@ class WebBlockRouter extends AuthenticatedRouter {
     let { templateId, name, slug, kind, description } = req.body
     const path_ = req.body.path
     try {
+      let templateBlock = null
       const webblock = await this.mWebBlock.create(templateId, name, description, slug, kind, path_, previewImage)
-      return res.send({ data: webblock })
+      if (webblock) {
+        if (kind === "section") {
+          templateBlock = await this.mWebTemplateBlock.create(templateId, webblock.id)
+        }
+      }
+      return res.send({ data: webblock, templateBlock })
     } catch (e) {
       return res.send({ data: e.toString() })
     }

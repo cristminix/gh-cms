@@ -38,7 +38,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   const [themeId, setThemeId] = useState(parseInt(qp.get("themeId")) || null)
   const [kind, setKind] = useState(qp.get("kind") || null)
   const [parent, setParent] = useState(parseInt(qp.get("parent")) || null)
-  const [lastParentPage, setLastParentPage] = useState(1)
+  const [lastParentPage, setLastParentPage] = useState(parentPage)
 
   const toast = (message, t) => {
     if (toastRef.current) {
@@ -214,7 +214,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
                 <span className="pr-2">{item.slug}</span>
                 <span className="pr-2">{item.path}</span>
                 <span className="pr-2">{item.kind}</span>
-                <span className="pr-2">tid:{item.templateId}</span>
+                {/* <span className="pr-2">tid:{item.templateId}</span> */}
               </div>
             </div>
           </>
