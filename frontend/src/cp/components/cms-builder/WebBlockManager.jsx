@@ -9,7 +9,7 @@ import { apiUrl } from "../apps/fn"
 import jQuery from "jquery"
 import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import Toast from "@/cp/components/shared/ux/Toast"
-import { Prx, requestIdentityToken } from "@/cp/global/fn"
+import { Prx, requestIdentityToken, titleCase } from "@/cp/global/fn"
 
 const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   const toastRef = useRef(null)
@@ -39,13 +39,28 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   const [kind, setKind] = useState(qp.get("kind") || null)
   const [parent, setParent] = useState(parseInt(qp.get("parent")) || null)
   const [lastParentPage, setLastParentPage] = useState(parentPage)
-
+  const [hashItem, setHashItem] = useState(null)
   const toast = (message, t) => {
     if (toastRef.current) {
       toastRef.current.add(message, t)
     }
   }
+  const onhashChanged = () => {
+    // const qsn = location.hash.split("?")[1]
+    // const qpn = new URLSearchParams(qs)
+    // setParentPage(parseInt(qpn.get("parentPage")) || 1)
+    // setThemeId(parseInt(qpn.get("themeId")) || null)
+    if (!hashItem) return
+    setKind(hashItem.kind)
+    setParent(hashItem.parent)
+    // setLastParentPage(parentPage)
 
+    if (hashItem.kind == "block" && hashItem.parent != null) {
+      // setTimeout(() => {
+      updateList(hashItem.kind, hashItem.parent)
+      // }, 3000)
+    }
+  }
   useEffect(() => {
     // console.log(pageNumber)
     if (requestToken) {
@@ -56,6 +71,9 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   useEffect(() => {
     retrieveIdentityToken()
   }, [])
+  useEffect(() => {
+    onhashChanged()
+  }, [hashItem])
 
   const retrieveIdentityToken = async () => {
     const appId = config.getAppId()
@@ -68,7 +86,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
 
   const onRefresh = (f) => updateList()
 
-  const updateList = async () => {
+  const updateList = async (kind_ = null, parent_ = null) => {
     const page = parseInt(pageNumber) || 1
 
     const { limit, order_by, order_dir } = grid
@@ -78,8 +96,8 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       page,
       order_by,
       order_dir,
-      kind,
-      parent,
+      kind: kind_ ? kind_ : kind,
+      parent: parent_ ? parent_ : parent,
     })
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
@@ -118,6 +136,15 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
     setFormData(item)
     setShowForm(true)
     jQuery(`#${modalBtnId}`).trigger("click")
+  }
+  const viewBlocks = async (item, index) => {
+    setHashItem({
+      kind: "block",
+      parent: item.id,
+    })
+    document.location.hash = `/builder/web-block-manager/${templateId}/page/1?parentPage=${lastParentPage}&kind=block&parent=${item.id}&themeId=${themeId}`
+
+    console.log(item)
   }
   const deleteForm = async (item, index) => {
     // console.log(item)
@@ -194,7 +221,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
     numberWidthCls: "w-[10px]",
     actionWidthCls: "w-[50px]",
     widthCls: [""],
-    headers: ["Block / Widget"], //["id","templateId","name","slug","description","kind","previewImage","path"],
+    headers: [`${kind ? kind : "Block/Section/Widget"}`], //["id","templateId","name","slug","description","kind","previewImage","path"],
     fields: ["name"], //["id","templateId","name","slug","description","kind","previewImage","path"],
     enableEdit: true,
     callbackFields: {
@@ -214,7 +241,7 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
                 <span className="pr-2">{item.slug}</span>
                 <span className="pr-2">{item.path}</span>
                 <span className="pr-2">{item.kind}</span>
-                {/* <span className="pr-2">tid:{item.templateId}</span> */}
+                {1 && <span className="pr-2">pk:{item.id}</span>}
               </div>
             </div>
           </>
@@ -226,6 +253,15 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
+            {kind === "section" && (
+              <Button
+                title="Lihat Blok"
+                loading={false}
+                icon="fa fa-square"
+                caption={`Blok (${item.blockCount})`}
+                onClick={(e) => viewBlocks(item, index)}
+              />
+            )}
             <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />
             <Button
               title="Delete"
@@ -265,7 +301,13 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
           <div className="flex justify-between gap-2">
             <Button onClick={(e) => backToTemplates()} icon="fa fa-chevron-left" caption="Kembali ke Template" />
             <div className="flex gap-2">
-              {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption={`Tambah Blok`} /> : null}
+              {!showForm ? (
+                <Button
+                  onClick={(e) => addForm()}
+                  icon="fa fa-plus"
+                  caption={`Add ${kind ? titleCase(kind) : "Item"}`}
+                />
+              ) : null}
 
               <Button
                 onClick={(e) => goToLastPage()}

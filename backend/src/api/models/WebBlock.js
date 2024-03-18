@@ -140,6 +140,8 @@ export class MWebBlock {
             .where("wtb.templateId = :templateId", { templateId })
         }
       }
+    } else {
+      query = this.ds.createQueryBuilder(WebBlock, "wb").select(["COUNT(wb.id) count"])
     }
 
     if (limit) {
@@ -198,6 +200,7 @@ export class MWebBlock {
       order_dir = "asc"
     }
     try {
+      const addSelect = []
       const total_records = await this.getListCount(templateId, kind, parent)
       const total_pages = calculateTotalPages(total_records, limit)
       const offset = calculateOffset(page, limit)
@@ -208,7 +211,11 @@ export class MWebBlock {
             // GET many to many block kind of section <==> template
             .createQueryBuilder(WebTemplateBlock, "wtb")
             .leftJoin(WebBlock, "wb", "wtb.blockId=wb.id")
+            .leftJoin(WebSectionBlock, "wsb", "wsb.sectionId=wtb.blockId")
+            .groupBy("wb.id")
             .where("wtb.templateId = :templateId", { templateId })
+
+          addSelect.push("COUNT(wsb.id) blockCount")
         }
       } else if (kind === "block") {
         if (parent) {
@@ -219,33 +226,38 @@ export class MWebBlock {
             .where("wsb.sectionId = :parent", { parent })
         } else {
           if (templateId) {
+            console.log(`TemplateId ${templateId} and kind ${kind}`)
             query = this.ds
               // GET many to many block kind of section <==> template
               .createQueryBuilder(WebTemplateBlock, "wtb")
               .leftJoin(WebSectionBlock, "wsb", "wsb.sectionId=wtb.blockId")
               .leftJoin(WebBlock, "wb", "wsb.blockId=wb.id")
-              .where("wtb.templateId = :templateId", { templateId })
+              .groupBy("wb.id")
+
+              .where("wtb.templateId = :templateId AND wb.kind = :kind", { templateId, kind })
           }
         }
+      } else {
+        console.log("kind is not valid")
+        query = this.ds.createQueryBuilder(WebBlock, "wb")
       }
-      query
-        .select([
-          "wb.id id",
-          // "wtb.templateId templateId",
-          "wb.name name",
-          "wb.slug slug",
-          "wb.description description",
-          "wb.previewImage previewImage",
-          "wb.path path",
-          "wb.kind kind",
-          "wb.parent parent",
-        ])
-        // .where("wb.kind = :kind", { kind })
+      query.select([
+        "wb.id id",
+        // "wtb.templateId templateId",
+        "wb.name name",
+        "wb.slug slug",
+        "wb.description description",
+        "wb.previewImage previewImage",
+        "wb.path path",
+        "wb.kind kind",
+        "wb.parent parent",
+      ])
 
-        // .groupBy("b.id")
-        .orderBy(`wb.${order_by}`, order_dir.toUpperCase())
-        .limit(limit)
-        .offset(offset)
+      addSelect.forEach((select) => query.addSelect(select))
+      // .where("wb.kind = :kind", { kind })
+
+      // .groupBy("b.id")
+      query.orderBy(`wb.${order_by}`, order_dir.toUpperCase()).limit(limit).offset(offset)
       console.log(getCompiledSql(query))
       const records = await query.getRawMany()
 

@@ -203,8 +203,8 @@ const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
                 </p>
                 <span className="pr-2">{item.slug}</span>
                 <span className="pr-2">{item.path}</span>
-                <span className="pr-2">{item.kind}</span>
-                <span className="pr-2">tid:{item.themeId}</span>
+                {/* <span className="pr-2">{item.kind}</span> */}
+                {/* <span className="pr-2">tid:{item.themeId}</span> */}
               </div>
             </div>
           </>

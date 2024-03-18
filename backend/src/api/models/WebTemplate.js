@@ -1,4 +1,4 @@
-import { calculateOffset, calculateTotalPages } from "../libs/utils.js"
+import { calculateOffset, calculateTotalPages, getCompiledSql } from "../libs/utils.js"
 import WebBlock from "./WebBlock.js"
 import WebSectionBlock from "./WebSectionBlock.js"
 import WebTemplateBlock from "./WebTemplateBlock.js"
@@ -126,6 +126,13 @@ export class MWebTemplate {
     }
     return { limit, total_pages: 0, total_records: 0, record_count: 0 }
   }
+  // async addBlockCountBySection(records) {
+  //   records.forEach(async(record) => {
+  //     const templateId = record.id
+  //     let sections = await this.ds.createQueryBuilder(WebTemplateBlock, "wtb").select(["wtb.id"]).getRawMany()
+  //     record.blockCount = 0
+  //   })
+  // }
   async getList(themeId = null, page = 1, limit = 5, order_by = "id", order_dir = "asc", filter = null) {
     if (!limit) {
       limit = 5
@@ -158,6 +165,7 @@ export class MWebTemplate {
       const builder = this.ds
         .createQueryBuilder(WebTemplate, "a")
         .leftJoin(WebTemplateBlock, "wtb", "wtb.templateId = a.id")
+        .leftJoin(WebSectionBlock, "wsb", "wsb.sectionId = wtb.blockId")
         .leftJoin(WebBlock, "block", "block.parent = wtb.id")
 
         .select([
@@ -170,7 +178,7 @@ export class MWebTemplate {
           "a.path path",
         ])
         .addSelect("COUNT(DISTINCT wtb.id)", "sectionCount")
-        .addSelect("COUNT(DISTINCT block.id)", "blockCount")
+        .addSelect("COUNT(DISTINCT wsb.id)", "blockCount")
         .where("a.themeId = :themeId", { themeId })
 
         .groupBy("a.id")
@@ -178,13 +186,19 @@ export class MWebTemplate {
         .orderBy(`a.${order_by}`, order_dir.toUpperCase())
         .limit(limit)
 
+      console.log(getCompiledSql(builder))
+
       const records = await builder.getRawMany()
 
       // console.log(records.getQuery())
       // records = records.getRawMany()
+      // if (kind == "section") {
+      // this.addBlockCountBySection(records)
+      // }
 
       return { page, limit, order_by, order_dir, records, total_pages, total_records }
     } catch (e) {
+      console.error(e)
       // res.send(e)
     }
     return { page, limit, order_by, order_dir, records: [], total_pages: 0, total_records: 0 }
