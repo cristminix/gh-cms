@@ -6,11 +6,12 @@ import base64 from "base-64"
 import Toast from "@/cp/components/shared/ux/Toast"
 import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import { apiUrl } from "../apps/fn"
-import { Prx, requestIdentityToken } from "@/cp/global/fn"
+import { Prx, requestIdentityToken, titleCase } from "@/cp/global/fn"
 import Button from "@/cp/components/shared/ux/Button"
 import JsonView from "react18-json-view"
 const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
 import "react18-json-view/src/style.css"
+import { FormRow } from "../shared/ux/Form"
 const WebCodeEditor = ({ store, config, mode, pk }) => {
   const toastRef = useRef(null)
   const [kind, setKind] = useState(mode)
@@ -19,7 +20,22 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
   const [editorBuffer, setEditorBuffer] = useState("")
   const [content, setContent] = useState("")
   const [logOutput, setLogOutput] = useState("")
-
+  const [fullPath, setFullPath] = useState("")
+  const [vH, setVh] = useState(260)
+  const setAutoViewPortHeight = () => {
+    config.getUiConfig().applyResizeEvent((rootSize, windowSize, $root) => {
+      const { height } = windowSize
+      if (height >= 260) {
+        setVh(height - 30)
+      }
+    }, "WebCodeEditor")
+  }
+  useEffect(() => {
+    setAutoViewPortHeight()
+    return () => {
+      config.getUiConfig().unsetResizeEvent("WebCodeEditor")
+    }
+  }, [])
   const save = async () => {
     let path = null
     if (kind == "template") {
@@ -47,25 +63,27 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
     }
   }
   const generate = async () => {
-    let path = null
-    if (kind == "template") {
-      const { templatePath } = editorOptions
-      path = templatePath
-    }
-    const url = apiUrl(["code-editor/generate", kind, pk])
-    try {
-      const formData = new FormData()
-      //   formData.append("content", content)
-      const { data, validJson, code, text } = await Prx.post(url, null, formData)
-      if (validJson) {
-        setEditorBuffer(data.data)
-        setContent(data.data)
-        setLogOutput(data)
-      } else {
-        toast(`Failed to get file ${url} server sent http ${code} ${text}`, "error")
+    if (confirm("Are you sure you want to generate content automatically ?")) {
+      let path = null
+      if (kind == "template") {
+        const { templatePath } = editorOptions
+        path = templatePath
       }
-    } catch (e) {
-      toast(e.toString(), "error")
+      const url = apiUrl(["code-editor/generate", kind, pk])
+      try {
+        const formData = new FormData()
+        //   formData.append("content", content)
+        const { data, validJson, code, text } = await Prx.post(url, null, formData)
+        if (validJson) {
+          setEditorBuffer(data.data)
+          setContent(data.data)
+          setLogOutput(data)
+        } else {
+          toast(`Failed to get file ${url} server sent http ${code} ${text}`, "error")
+        }
+      } catch (e) {
+        toast(e.toString(), "error")
+      }
     }
   }
   const toast = (message, t) => {
@@ -78,7 +96,14 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
     if (kind == "template") {
       const { templatePath } = editorOptions
       path = templatePath
+    } else if (kind == "section") {
+      const { sectionPath } = editorOptions
+      path = sectionPath
+    } else {
+      const { blockPath } = editorOptions
+      path = blockPath
     }
+    setFullPath(path)
     const url = apiUrl([path])
     try {
       const { data, validData, code, text } = await Prx.get(url, null, {}, "text")
@@ -142,9 +167,24 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
 
         <div className={`web-code-editor ${containerCls} ${pk ? "opacity-100" : "opacity-50"}`}>
           <div className="grid-toolbar pb-4">
-            <div className="flex justify-between gap-2">
-              {/* <Button onClick={(e) => backToThemes()} icon="fa fa-chevron-left" caption="Kembali ke Tema" /> */}
-              <div className="flex gap-2"></div>
+            <div className="flex gap-2">
+              <Button
+                onClick={(e) => {
+                  history.back()
+                }}
+                icon="fa fa-chevron-left"
+                caption="Kembali "
+              />
+              {/* <div className="flex gap-2"> */}
+              <FormRow
+                value={fullPath}
+                readonly={true}
+                className="p-0 flex-grow px-0"
+                // label="File Location Path : "
+                label={`Edit ${titleCase(kind)} :`}
+                lblClassName="w-[auto]  text-xs pr-2"
+              />
+              {/* </div> */}
             </div>
           </div>
           <div className="flex flex-col ">
@@ -152,14 +192,23 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
               <div className="p-1.5 ">
                 <div className="">
                   <div className="grid-toolbar pb-4">
-                    <div className="flex  gap-2">
-                      <Button onClick={(e) => reload()} icon="fa fa-refresh" caption="Reload" />
-                      <Button onClick={(e) => save()} icon="fa fa-save" caption="Save" />
-                      <Button onClick={(e) => generate()} icon="fa fa-cog" caption="Generate" />
-                      <div className="flex gap-2"></div>
+                    <div className="flex justify-between gap-2">
+                      <div className="flex gap-2">
+                        <Button onClick={(e) => reload()} icon="fa fa-refresh" caption="Reload" />
+                        <Button onClick={(e) => save()} icon="fa fa-save" caption="Save" />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button onClick={(e) => generate()} icon="fa fa-cog" caption="Generate" />
+                      </div>
                     </div>
                   </div>
-                  <CodeMirror value={editorBuffer} height="200px" extensions={[twigLanguage]} onChange={onChange} />
+                  <CodeMirror
+                    className={`${containerCls} p-[4px]`}
+                    value={editorBuffer}
+                    height={`${vH}px`}
+                    extensions={[twigLanguage]}
+                    onChange={onChange}
+                  />
                 </div>
                 <div className="p-2">
                   <JsonView src={logOutput} />

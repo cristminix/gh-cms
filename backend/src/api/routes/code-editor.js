@@ -68,30 +68,11 @@ class ConfigRouter {
     let output = null
     let success = false
     if (type == "template") {
-      // const template = await this.mWebTemplate.getByPk(pk, true)
-      // if (template) {
-      //   this.initTargetDir(template.templateDir, template.templatePath, content)
-
-      //   record = template
-      //   success = true
-      // }
-      let [out, succ] = await this.generator.generateTemplate(pk)
-      output = out
-      success = succ
+      ;[output, success] = await this.generator.generateTemplate(pk)
     } else if (type == "section") {
-      // const section = await this.mWebBlock.getByPk(pk, true, "section")
-      // if (section) {
-      //   this.initTargetDir(section.sectionDir, section.sectionPath)
-      //   record = section
-      //   success = true
-      // }
+      ;[output, success] = await this.generator.generateSection(pk)
     } else if (type == "block") {
-      // const block = await this.mWebBlock.getByPk(pk, true, "block")
-      // if (block) {
-      //   this.initTargetDir(block.blockDir, block.blockPath)
-      //   record = block
-      //   success = true
-      // }
+      ;[output, success] = await this.generator.generateBlock(pk)
     }
     res.send({ success, data: output })
   }
@@ -112,14 +93,14 @@ class ConfigRouter {
     } else if (type == "section") {
       const section = await this.mWebBlock.getByPk(pk, true, "section")
       if (section) {
-        this.initTargetDir(section.sectionDir, section.sectionPath)
+        this.initTargetDir(section.sectionDir, section.sectionPath, content)
         record = section
         success = true
       }
     } else if (type == "block") {
       const block = await this.mWebBlock.getByPk(pk, true, "block")
       if (block) {
-        this.initTargetDir(block.blockDir, block.blockPath)
+        this.initTargetDir(block.blockDir, block.blockPath, content)
         record = block
         success = true
       }

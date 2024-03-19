@@ -78,7 +78,7 @@ export class MWebBlock {
     try {
       if (includePath && kind) {
         let query = null
-        let addSelect = ["tpl.name templateName", "tpl.slug templateSlug", "th.name themeName", "th.slug themeSlug"]
+        let addSelect = ["th.slug themeSlug"]
         if (kind == "section") {
           query = this.ds
             .createQueryBuilder(WebBlock, "wb")
@@ -94,8 +94,9 @@ export class MWebBlock {
             .leftJoin(WebTemplate, "tpl", "tpl.id = wtb.templateId")
             .leftJoin(WebTheme, "th", "th.id = tpl.themeId")
 
-          addSelect = [...addSelect, "wbs.name sectionName", "wbs.slug sectionSlug"]
+          addSelect = [...addSelect, "wbs.slug sectionSlug"]
         }
+        query.where("wb.id = :id", { id })
         addSelect = [
           ...addSelect,
           "wb.id id",
@@ -108,6 +109,7 @@ export class MWebBlock {
           "wb.parent parent",
         ]
         query = query.select(addSelect)
+        console.log(getCompiledSql(query))
         record = await query.getRawOne()
         if (record) {
           record.themeDir = `themes/${record.themeSlug}`

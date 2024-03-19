@@ -5,11 +5,11 @@ import CheckBox from "./CheckBox"
 import { ValidationErrIcon } from "./ValidationIcon"
 import { inputCls, niceScrollbarCls, inputClsError } from "./cls"
 import { uuid } from "uuidv4"
-const FormRow = ({ label, onChange = (f) => f, value, readonly = false }) => {
+const FormRow = ({ label, onChange = (f) => f, value, readonly = false, className = "", lblClassName = "" }) => {
   return (
-    <div className="flex  items-center p-2 px-2">
-      <div className="w-[70px]">
-        <label className="font-bold">{label}</label>
+    <div className={`flex items-center p-2 px-2 ${className}`}>
+      <div className={`w-[70px] font-bold ${lblClassName}`}>
+        <label className="">{label}</label>
       </div>
       <div className="flex-grow">
         <input className={inputCls} value={value} onChange={onChange} readOnly={readonly} />

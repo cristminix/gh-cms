@@ -46,20 +46,12 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
     }
   }
   const onhashChanged = () => {
-    // const qsn = location.hash.split("?")[1]
-    // const qpn = new URLSearchParams(qs)
-    // setParentPage(parseInt(qpn.get("parentPage")) || 1)
-    // setThemeId(parseInt(qpn.get("themeId")) || null)
-    if (!hashItem) return
-    setKind(hashItem.kind)
-    setParent(hashItem.parent)
-    // setLastParentPage(parentPage)
-
-    if (hashItem.kind == "block" && hashItem.parent != null) {
-      // setTimeout(() => {
-      updateList(hashItem.kind, hashItem.parent)
-      // }, 3000)
-    }
+    // if (!hashItem) return
+    // setKind(hashItem.kind)
+    // setParent(hashItem.parent)
+    // if (hashItem.kind == "block" && hashItem.parent != null) {
+    //   updateList(hashItem.kind, hashItem.parent)
+    // }
   }
   useEffect(() => {
     // console.log(pageNumber)
@@ -143,8 +135,21 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       parent: item.id,
     })
     document.location.hash = `/builder/web-block-manager/${templateId}/page/1?parentPage=${lastParentPage}&kind=block&parent=${item.id}&themeId=${themeId}`
-
-    console.log(item)
+    setKind("block")
+    setParent(item.id)
+    updateList("block", item.id)
+    // console.log(item)
+  }
+  const backToSection = async (item, index) => {
+    // setHashItem({
+    //   kind: "section",
+    //   parent: null,
+    // })
+    document.location.hash = `/builder/web-block-manager/${templateId}/page/1?parentPage=${lastParentPage}&kind=section&&themeId=${themeId}`
+    setKind("section")
+    setParent(null)
+    updateList("section")
+    // console.log(item)
   }
   const deleteForm = async (item, index) => {
     // console.log(item)
@@ -216,7 +221,15 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
   const backToTemplates = (item) => {
     document.location.hash = `/builder/web-template-manager/${themeId}/page/${lastParentPage}`
   }
+  const editTemplate = async (item, index) => {
+    console.log(item)
+    const options = {
+      type: "block",
+      pk: item.id,
+    }
 
+    document.location.hash = `/builder/code-editor/${kind}/${item.id}`
+  }
   const gridOptions = {
     numberWidthCls: "w-[10px]",
     actionWidthCls: "w-[50px]",
@@ -253,6 +266,13 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
+            <Button
+              title="Edit Source File"
+              loading={false}
+              icon="bi bi-braces-asterisk"
+              caption={`Edit File`}
+              onClick={(e) => editTemplate(item, index)}
+            />
             {kind === "section" && (
               <Button
                 title="Lihat Blok"
@@ -299,7 +319,11 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
       <div className={`user-manager ${containerCls}`}>
         <div className="grid-toolbar pb-4">
           <div className="flex justify-between gap-2">
-            <Button onClick={(e) => backToTemplates()} icon="fa fa-chevron-left" caption="Kembali ke Template" />
+            {kind == "block" && parent ? (
+              <Button onClick={(e) => backToSection()} icon="fa fa-chevron-left" caption="Kembali ke Section" />
+            ) : (
+              <Button onClick={(e) => backToTemplates()} icon="fa fa-chevron-left" caption="Kembali ke Template" />
+            )}
             <div className="flex gap-2">
               {!showForm ? (
                 <Button

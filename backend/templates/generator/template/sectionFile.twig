@@ -1,0 +1,7 @@
+<div class="{{section.slug}} p-2">
+    <div class="flex gap-2">
+{% for block in blocks %}
+       {{'{%'}} include '../blocks/{{block.path}}' {{'%}'}}
+{% endfor %}
+    </div>
+</div>
