@@ -1,0 +1,15 @@
+{{'{#'}} Generated {{template.templatePath}} {{'#}'}}
+{{'{%'}} include './html-open.twig' {{'%}'}}
+{{'{%'}} include './html-header-open.twig' {{'%}'}}
+{{'{%'}} include './html-meta.twig' {{'%}'}}
+{{'{%'}} include './html-font.twig' {{'%}'}}
+{{'{%'}} include './html-stylesheet.twig' {{'%}'}}
+{{'{%'}} include './html-header-close.twig' {{'%}'}}
+{{'{%'}} include './html-body-open.twig' {{'%}'}}
+
+{% for section in sections %}
+{{'{%'}} include './sections/{{section.path}}' {{'%}'}}
+{% endfor %}
+{{'{%'}} include './html-script.twig' {{'%}'}}
+{{'{%'}} include './html-body-close.twig' {{'%}'}}
+{{'{%'}} include './html-close.twig' {{'%}'}}

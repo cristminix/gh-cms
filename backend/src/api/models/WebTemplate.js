@@ -71,6 +71,7 @@ export class MWebTemplate {
             "th.name themeName",
             "th.slug themeSlug",
           ])
+          .where("tpl.id = :id", { id })
           .getRawOne()
         if (record) {
           record.themeDir = `themes/${record.themeSlug}`

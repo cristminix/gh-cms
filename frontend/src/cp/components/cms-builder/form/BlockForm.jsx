@@ -468,16 +468,19 @@ const BlockForm = ({
                     setTemplateId(e.target.value)
                   }}
                 /> */}
-                    <FormRowSelect
-                      // validationErrors={validationErrors}
-                      url={apiUrl(["web-template", "dropdown", themeId], { pk })}
-                      label="Template"
-                      value={templateId}
-                      fieldname="templateId"
-                      onChange={(e) => {
-                        setTemplateId(e)
-                      }}
-                    />
+                    {kind == "section" && (
+                      <FormRowSelect
+                        // validationErrors={validationErrors}
+                        url={apiUrl(["web-template", "dropdown", themeId], { pk })}
+                        label="Template"
+                        value={templateId}
+                        fieldname="templateId"
+                        onChange={(e) => {
+                          setTemplateId(e)
+                        }}
+                      />
+                    )}
+
                     <FormRow
                       validationErrors={validationErrors}
                       label="Parent"

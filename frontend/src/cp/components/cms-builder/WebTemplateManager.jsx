@@ -57,11 +57,12 @@ const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
     console.log(item)
     const options = {
       type: "template",
-      data: item,
+      pk: item.id,
     }
 
     const hash = base64.encode(JSON.stringify(options))
-    document.location.hash = `/builder/code-editor/${hash}`
+    console.log(hash)
+    document.location.hash = `/builder/code-editor/template/${item.id}`
   }
   const retrieveIdentityToken = async () => {
     const appId = config.getAppId()

@@ -13,15 +13,15 @@ import WebPageManager from "./cms-builder/WebPageManager"
 import WebCodeEditor from "./cms-builder/WebCodeEditor"
 
 export async function loader({ params }) {
-  const { module, fk, pageNumber } = params
-  return { module, pageNumber, fk }
+  const { module, fk, pageNumber, pk } = params
+  return { module, pageNumber, fk, pk }
 }
 
 const CMSBuilder = ({ store, config }) => {
-  const { module, pageNumber, fk } = useLoaderData()
+  const { module, pageNumber, fk, pk } = useLoaderData()
   const [markdown, setMarkdown] = useState("")
   // const loadMarkdown = async (module) => {
-  // console.log(module, pageNumber, fk)
+  console.log(module, pageNumber, fk, pk)
   if (module == "web-menu-manager") {
     return <WebMenuManager store={store} config={config} />
   } else if (module == "web-theme-manager") {
@@ -33,7 +33,7 @@ const CMSBuilder = ({ store, config }) => {
   } else if (module == "web-page-manager") {
     return <WebPageManager store={store} config={config} pageNumber={pageNumber} />
   } else if (module == "code-editor") {
-    return <WebCodeEditor store={store} config={config} hash={fk} />
+    return <WebCodeEditor store={store} config={config} mode={fk} pk={pk} />
   }
   // }
   // useEffect(() => {

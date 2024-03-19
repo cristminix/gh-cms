@@ -7,6 +7,7 @@ import "reflect-metadata"
 import path from "path"
 import WebTemplate from "../models/WebTemplate.js"
 import WebTheme from "../models/WebTheme.js"
+import { TemplateGenerator } from "../libs/template-generator.js"
 
 class ConfigRouter {
   datasource = null
@@ -19,7 +20,7 @@ class ConfigRouter {
   mWebTemplateBlock = null
   mWebSectionBlock = null
   mWebBlock = null
-  // mWebSectionBlock = null
+  generator = null
   constructor(datasource, appConfig, logger) {
     this.datasource = datasource
     this.appConfig = appConfig
@@ -31,6 +32,7 @@ class ConfigRouter {
     this.mWebBlock = datasource.factory("MWebBlock", true)
     this.mWebTemplateBlock = datasource.factory("MWebTemplateBlock", true)
     this.mWebSectionBlock = datasource.factory("MWebSectionBlock", true)
+    this.generator = new TemplateGenerator(appConfig, this)
 
     this.initRouter()
   }
@@ -44,7 +46,7 @@ class ConfigRouter {
     }
     return null
   }
-  async initTargetDir(dir, filePath) {
+  async initTargetDir(dir, filePath, content = null) {
     const basePath = this.appConfig.get("basepath")
 
     const tDir = path.resolve(`${basePath}/${dir}`)
@@ -55,11 +57,78 @@ class ConfigRouter {
     if (!fs.existsSync(tPath)) {
       fs.writeFileSync(tPath, `{# ${tPath} #}\n`)
     }
+    if (content) {
+      fs.writeFileSync(tPath, content)
+    }
   }
+  async generate(req, res) {
+    let { type, pk } = req.params
+    let { content } = req.body
+    console.log({ type, pk })
+    let output = null
+    let success = false
+    if (type == "template") {
+      // const template = await this.mWebTemplate.getByPk(pk, true)
+      // if (template) {
+      //   this.initTargetDir(template.templateDir, template.templatePath, content)
 
+      //   record = template
+      //   success = true
+      // }
+      let [out, succ] = await this.generator.generateTemplate(pk)
+      output = out
+      success = succ
+    } else if (type == "section") {
+      // const section = await this.mWebBlock.getByPk(pk, true, "section")
+      // if (section) {
+      //   this.initTargetDir(section.sectionDir, section.sectionPath)
+      //   record = section
+      //   success = true
+      // }
+    } else if (type == "block") {
+      // const block = await this.mWebBlock.getByPk(pk, true, "block")
+      // if (block) {
+      //   this.initTargetDir(block.blockDir, block.blockPath)
+      //   record = block
+      //   success = true
+      // }
+    }
+    res.send({ success, data: output })
+  }
+  async saveFile(req, res) {
+    let { type, pk } = req.params
+    let { content } = req.body
+    console.log({ type, pk })
+    let record = null
+    let success = false
+    if (type == "template") {
+      const template = await this.mWebTemplate.getByPk(pk, true)
+      if (template) {
+        this.initTargetDir(template.templateDir, template.templatePath, content)
+
+        record = template
+        success = true
+      }
+    } else if (type == "section") {
+      // const section = await this.mWebBlock.getByPk(pk, true, "section")
+      // if (section) {
+      //   this.initTargetDir(section.sectionDir, section.sectionPath)
+      //   record = section
+      //   success = true
+      // }
+    } else if (type == "block") {
+      // const block = await this.mWebBlock.getByPk(pk, true, "block")
+      // if (block) {
+      //   this.initTargetDir(block.blockDir, block.blockPath)
+      //   record = block
+      //   success = true
+      // }
+    }
+    res.send({ success, data: record })
+  }
   async getFile(req, res) {
     let { type, pk } = req.params
-    // console.log({ type, pk })
+    console.log({ type, pk })
     let record = null
     let success = false
     if (type == "template") {
@@ -106,12 +175,21 @@ class ConfigRouter {
     this.router.use("/themes", express.static(staticPath)) // Serve static files
     this.router.use("/themes", serveIndex(staticPath, { icons: true }))
 
-    // this.router.post("/config/saveMenu", this.multer.none(), async (req, res) => await this.saveMenu(req, res))
-    // this.router.post("/config/test", this.multer.none(), async (req, res) => await this.test(req, res))
     this.router.get(
       "/code-editor/getFile/:type/:pk",
       this.multer.none(),
       async (req, res) => await this.getFile(req, res)
+    )
+
+    this.router.post(
+      "/code-editor/saveFile/:type/:pk",
+      this.multer.none(),
+      async (req, res) => await this.saveFile(req, res)
+    )
+    this.router.post(
+      "/code-editor/generate/:type/:pk",
+      this.multer.none(),
+      async (req, res) => await this.generate(req, res)
     )
   }
 }
