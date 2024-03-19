@@ -10,6 +10,7 @@ import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import Toast from "@/cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@/cp/global/fn"
 import { useLocation } from "react-router-dom"
+import base64 from "base-64"
 
 const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
   const toastRef = useRef(null)
@@ -52,7 +53,16 @@ const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
   useEffect(() => {
     retrieveIdentityToken()
   }, [])
+  const editTemplate = async (item, index) => {
+    console.log(item)
+    const options = {
+      type: "template",
+      data: item,
+    }
 
+    const hash = base64.encode(JSON.stringify(options))
+    document.location.hash = `/builder/code-editor/${hash}`
+  }
   const retrieveIdentityToken = async () => {
     const appId = config.getAppId()
     const url = apiUrl("auth/generateToken")
@@ -216,6 +226,13 @@ const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
+            <Button
+              title="Edit Source File"
+              loading={false}
+              icon="bi bi-braces-asterisk"
+              caption={`Edit File`}
+              onClick={(e) => editTemplate(item, index)}
+            />
             <Button
               title="Lihat Section"
               loading={false}

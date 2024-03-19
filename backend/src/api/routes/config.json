@@ -15,6 +15,14 @@
         }
       }
     },
+    "code-editor": {
+      "routePath": "/api/cms/code-editor",
+      "routes": {
+        "getFile": {
+          "path": "{routePath}/getFile"
+        }
+      }
+    },
     "auth": {
       "routes": {
         "generate": {

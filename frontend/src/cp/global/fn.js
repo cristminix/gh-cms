@@ -379,7 +379,7 @@ const getResponse = async (response) => {
     validData = true
   } catch (error) {
     text = response.statusText
-    // console.log(error)
+    console.log(error)
   }
   return { data, text, ok, code, validData }
 }
@@ -404,8 +404,8 @@ class Prx {
               resolve(jsonResponse)
             })
           } else {
-            getResponse().then((jsonResponse) => {
-              resolve(jsonResponse)
+            getResponse(response).then((textResponse) => {
+              resolve(textResponse)
             })
           }
         })

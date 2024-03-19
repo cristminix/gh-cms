@@ -2,6 +2,8 @@ import { query } from "express"
 import { calculateOffset, calculateTotalPages, getCompiledSql } from "../libs/utils.js"
 import WebTemplateBlock from "./WebTemplateBlock.js"
 import WebSectionBlock from "./WebSectionBlock.js"
+import WebTemplate from "./WebTemplate.js"
+import WebTheme from "./WebTheme.js"
 
 class WebBlock {
   constructor(id, templateId, name, slug, description, kind, previewImage, path_, parent) {
@@ -70,13 +72,58 @@ export class MWebBlock {
     }
     return { limit, total_pages: 0, total_records: 0, record_count: 0 }
   }
-  async getByPk(pk) {
+  async getByPk(pk, includePath = false, kind = null) {
     let id = pk
     let record = null
     try {
-      const webblock = await this.manager.findOne(WebBlock, { where: { id } })
+      if (includePath && kind) {
+        let query = null
+        let addSelect = ["tpl.name templateName", "tpl.slug templateSlug", "th.name themeName", "th.slug themeSlug"]
+        if (kind == "section") {
+          query = this.ds
+            .createQueryBuilder(WebBlock, "wb")
+            .leftJoin(WebTemplateBlock, "wtb", "wtb.blockId = wb.id")
+            .leftJoin(WebTemplate, "tpl", "tpl.id = wtb.templateId")
+            .leftJoin(WebTheme, "th", "th.id = tpl.themeId")
+        } else {
+          query = this.ds
+            .createQueryBuilder(WebBlock, "wb")
+            .leftJoin(WebSectionBlock, "wsb", "wsb.blockId = wb.id")
+            .leftJoin(WebTemplateBlock, "wtb", "wtb.blockId = wsb.sectionId")
+            .leftJoin(WebBlock, "wbs", "wbs.id = wsb.sectionId")
+            .leftJoin(WebTemplate, "tpl", "tpl.id = wtb.templateId")
+            .leftJoin(WebTheme, "th", "th.id = tpl.themeId")
 
-      record = webblock
+          addSelect = [...addSelect, "wbs.name sectionName", "wbs.slug sectionSlug"]
+        }
+        addSelect = [
+          ...addSelect,
+          "wb.id id",
+          "wb.name name",
+          "wb.slug slug",
+          "wb.description description",
+          "wb.previewImage previewImage",
+          "wb.path path",
+          "wb.kind kind",
+          "wb.parent parent",
+        ]
+        query = query.select(addSelect)
+        record = await query.getRawOne()
+        if (record) {
+          record.themeDir = `themes/${record.themeSlug}`
+          record.templateDir = `${record.themeDir}/templates/${record.templateSlug}`
+          if (kind == "section") {
+            record.sectionDir = `${record.templateDir}/sections/${record.slug}`
+            record.sectionPath = `${record.sectionDir}/${record.path}`
+          } else {
+            record.sectionDir = `${record.templateDir}/sections/${record.sectionSlug}`
+            record.blockDir = `${record.sectionDir}/blocks`
+            record.blockPath = `${record.blockDir}/${record.path}`
+          }
+        }
+      } else {
+        record = await this.manager.findOne(WebBlock, { where: { id } })
+      }
     } catch (e) {
       console.error(e)
     }

@@ -10,6 +10,7 @@ import WebThemeManager from "./cms-builder/WebThemeManager"
 import WebBlockManager from "./cms-builder/WebBlockManager"
 import WebTemplateManager from "./cms-builder/WebTemplateManager"
 import WebPageManager from "./cms-builder/WebPageManager"
+import WebCodeEditor from "./cms-builder/WebCodeEditor"
 
 export async function loader({ params }) {
   const { module, fk, pageNumber } = params
@@ -31,6 +32,8 @@ const CMSBuilder = ({ store, config }) => {
     return <WebTemplateManager store={store} config={config} pageNumber={pageNumber} themeId={fk} />
   } else if (module == "web-page-manager") {
     return <WebPageManager store={store} config={config} pageNumber={pageNumber} />
+  } else if (module == "code-editor") {
+    return <WebCodeEditor store={store} config={config} hash={fk} />
   }
   // }
   // useEffect(() => {

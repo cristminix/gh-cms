@@ -1,7 +1,9 @@
+import path from "path"
 import { calculateOffset, calculateTotalPages, getCompiledSql } from "../libs/utils.js"
 import WebBlock from "./WebBlock.js"
 import WebSectionBlock from "./WebSectionBlock.js"
 import WebTemplateBlock from "./WebTemplateBlock.js"
+import WebTheme from "./WebTheme.js"
 
 class WebTemplate {
   constructor(id, themeId, name, slug, description, previewImage, path_) {
@@ -48,13 +50,34 @@ export class MWebTemplate {
     return record
   }
 
-  async getByPk(pk) {
+  async getByPk(pk, includePath = false) {
     let id = pk
     let record = null
     try {
-      const webtemplate = await this.manager.findOne(WebTemplate, { where: { id } })
-
-      record = webtemplate
+      if (!includePath) {
+        record = await this.manager.findOne(WebTemplate, { where: { id } })
+      } else {
+        record = await this.ds
+          .createQueryBuilder(WebTemplate, "tpl")
+          .leftJoin(WebTheme, "th", "th.id = tpl.themeId")
+          .select([
+            "tpl.id id",
+            "tpl.themeId themeId",
+            "tpl.name name",
+            "tpl.slug slug",
+            "tpl.description description",
+            "tpl.previewImage previewImage",
+            "tpl.path path",
+            "th.name themeName",
+            "th.slug themeSlug",
+          ])
+          .getRawOne()
+        if (record) {
+          record.themeDir = `themes/${record.themeSlug}`
+          record.templateDir = `${record.themeDir}/templates/${record.slug}`
+          record.templatePath = `${record.templateDir}/${record.path}`
+        }
+      }
     } catch (e) {
       console.error(e)
     }

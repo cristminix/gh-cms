@@ -74,6 +74,9 @@ class WebBlockRouter extends AuthenticatedRouter {
       if (kind === "section") {
         newRecord = await this.mWebTemplateBlock.create(templateId, record.id)
       }
+      if (kind === "block" && parent != null) {
+        newRecord = await this.mWebSectionBlock.create(parent, record.id)
+      }
     }
     return res.send({
       data: newRecord,
@@ -107,7 +110,7 @@ class WebBlockRouter extends AuthenticatedRouter {
       })
     }
 
-    let { templateId, name, slug, kind, description } = req.body
+    let { templateId, name, slug, kind, description, parent } = req.body
     const path_ = req.body.path
     try {
       let templateBlock = null
@@ -115,6 +118,9 @@ class WebBlockRouter extends AuthenticatedRouter {
       if (webblock) {
         if (kind === "section") {
           templateBlock = await this.mWebTemplateBlock.create(templateId, webblock.id)
+        }
+        if (kind === "block" && parent != null) {
+          newRecord = await this.mWebSectionBlock.create(parent, record.id)
         }
       }
       return res.send({ data: webblock, templateBlock })
