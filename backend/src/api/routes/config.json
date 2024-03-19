@@ -15,6 +15,14 @@
         }
       }
     },
+    "web": {
+      "routePath": "/",
+      "routes": {
+        "homepage": {
+          "path": "/"
+        }
+      }
+    },
     "code-editor": {
       "routePath": "/api/cms/code-editor",
       "routes": {

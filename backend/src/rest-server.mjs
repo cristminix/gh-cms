@@ -60,51 +60,51 @@ const main = async () => {
     setTimeout(() => {
       liveReloadServer.refresh("/")
       liveReloadServer.refresh("/twig")
-    }, 50)
+    }, 512)
   })
   app.use(connectLiveReload())
-  app.set("views", path.join(".", "src/cms/templates/pug/default/"))
-  app.set("view engine", "pug")
+  // app.set("views", path.join(".", "src/cms/templates/pug/default/"))
+  // app.set("view engine", "pug")
   app.use(express.static(path.join(".", "public")))
-  app.get("/", (req, res) => {
-    res.render("template")
-  })
-  app.get("/twig", function (req, res) {
-    const siteData = {
-      name: "This is my",
-      title: "Hello World",
-      description: "This is a simple website.",
-      author: "Author",
-      keywords: "keyword1, keyword2",
-      url: "http://localhost:3000",
-      image: "http://localhost:3000/images/image.jpg",
-      twitter: "@author",
-      content: "Main content",
-    }
-    let loader = createFilesystemLoader(fs)
-    loader.addPath("./src/cms/templates/twig/default/")
-    // loader.addPath("./src/cms/templates/twig/default/sections/")
-    let environment = createEnvironment(loader)
-    environment
-      .render("template.twig", siteData)
-      .then((output) => {
-        res.end(output)
-      })
-      .catch((e) => {
-        res.end(e.toString())
-      })
-  })
+  // app.get("/", (req, res) => {
+  //   res.render("template")
+  // })
+  // app.get("/twig", function (req, res) {
+  //   const siteData = {
+  //     name: "This is my",
+  //     title: "Hello World",
+  //     description: "This is a simple website.",
+  //     author: "Author",
+  //     keywords: "keyword1, keyword2",
+  //     url: "http://localhost:3000",
+  //     image: "http://localhost:3000/images/image.jpg",
+  //     twitter: "@author",
+  //     content: "Main content",
+  //   }
+  //   let loader = createFilesystemLoader(fs)
+  //   loader.addPath("./src/cms/templates/twig/default/")
+  //   // loader.addPath("./src/cms/templates/twig/default/sections/")
+  //   let environment = createEnvironment(loader)
+  //   environment
+  //     .render("template.twig", siteData)
+  //     .then((output) => {
+  //       res.end(output)
+  //     })
+  //     .catch((e) => {
+  //       res.end(e.toString())
+  //     })
+  // })
 
-  app.get("/name/:name", function (req, res) {
-    environment.render("index.twig", req.params).then((output) => {
-      res.end(output)
-    })
-  })
+  // app.get("/name/:name", function (req, res) {
+  //   environment.render("index.twig", req.params).then((output) => {
+  //     res.end(output)
+  //   })
+  // })
   ds = datasource.initialize()
   if (ds) {
     ds.then((f) => {
       LOG.info("Database connected")
-      routers.attach(app, datasource, appConfig, LOG)
+      routers.attach(app, datasource, appConfig, LOG, ["web"])
     }).catch((e) => {
       LOG.error("Database not connected")
     })

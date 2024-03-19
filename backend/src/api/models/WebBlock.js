@@ -111,13 +111,13 @@ export class MWebBlock {
         record = await query.getRawOne()
         if (record) {
           record.themeDir = `themes/${record.themeSlug}`
-          record.templateDir = `${record.themeDir}/templates/${record.templateSlug}`
+          record.templateDir = `${record.themeDir}/templates`
           if (kind == "section") {
-            record.sectionDir = `${record.templateDir}/sections/${record.slug}`
+            record.sectionDir = `${record.templateDir}/sections`
             record.sectionPath = `${record.sectionDir}/${record.path}`
           } else {
-            record.sectionDir = `${record.templateDir}/sections/${record.sectionSlug}`
-            record.blockDir = `${record.sectionDir}/blocks`
+            record.sectionDir = `${record.templateDir}/sections`
+            record.blockDir = `${record.templateDir}/blocks`
             record.blockPath = `${record.blockDir}/${record.path}`
           }
         }

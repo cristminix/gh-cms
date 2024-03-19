@@ -75,7 +75,7 @@ export class MWebTemplate {
           .getRawOne()
         if (record) {
           record.themeDir = `themes/${record.themeSlug}`
-          record.templateDir = `${record.themeDir}/templates/${record.slug}`
+          record.templateDir = `${record.themeDir}/templates`
           record.templatePath = `${record.templateDir}/${record.path}`
         }
       }

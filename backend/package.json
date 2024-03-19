@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node src/main.mjs",
     "tailwind:css": "postcss public/styles/tailwind.css -o public/styles/style.css -w",
-    "dev": "nodemon --watch src src/rest-server.mjs"
+    "dev": "nodemon src/rest-server.mjs"
   },
   "author": "Putra Budiman <cristminix@gmail.com>",
   "license": "MIT",

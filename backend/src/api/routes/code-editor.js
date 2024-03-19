@@ -110,19 +110,19 @@ class ConfigRouter {
         success = true
       }
     } else if (type == "section") {
-      // const section = await this.mWebBlock.getByPk(pk, true, "section")
-      // if (section) {
-      //   this.initTargetDir(section.sectionDir, section.sectionPath)
-      //   record = section
-      //   success = true
-      // }
+      const section = await this.mWebBlock.getByPk(pk, true, "section")
+      if (section) {
+        this.initTargetDir(section.sectionDir, section.sectionPath)
+        record = section
+        success = true
+      }
     } else if (type == "block") {
-      // const block = await this.mWebBlock.getByPk(pk, true, "block")
-      // if (block) {
-      //   this.initTargetDir(block.blockDir, block.blockPath)
-      //   record = block
-      //   success = true
-      // }
+      const block = await this.mWebBlock.getByPk(pk, true, "block")
+      if (block) {
+        this.initTargetDir(block.blockDir, block.blockPath)
+        record = block
+        success = true
+      }
     }
     res.send({ success, data: record })
   }
