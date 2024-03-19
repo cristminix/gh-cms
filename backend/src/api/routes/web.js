@@ -18,6 +18,7 @@ class ManualRouter {
   }
 
   async homepage(req, res) {
+    const { template } = req.params
     const siteData = {
       name: "This is my",
       title: "Hello World",
@@ -35,8 +36,8 @@ class ManualRouter {
     // loader.addPath("./themes/default/green-ponpes/templates/")
     // loader.addPath("./src/cms/templates/twig/default/sections/")
     let environment = createEnvironment(loader)
-
-    let activeTemplateName = "homepage.twig"
+    let templatePath = `${template ? template : "homepage"}.twig`
+    let activeTemplateName = templatePath
     environment
       .render(activeTemplateName, siteData)
       .then((output) => {
@@ -48,7 +49,7 @@ class ManualRouter {
   }
 
   initRouter() {
-    this.router.get("/", async (req, res) => await this.homepage(req, res))
+    this.router.get("/:template?", async (req, res) => await this.homepage(req, res))
   }
 }
 
