@@ -30,4 +30,47 @@ const getCompiledSql = (builder) => {
 
   return sql
 }
-export { calculateOffset, calculateTotalPages, getCompiledSql }
+function snakeToCamel(str) {
+  return str.replace(/([-_]\w)/g, function (matches) {
+    return matches.toUpperCase().replace("-", "").replace("_", "")
+  })
+}
+function camelToSnake(str) {
+  return str.replace(/[A-Z]/g, function (match) {
+    return "-" + match.toLowerCase()
+  })
+}
+const slugify = (str) => {
+  const words = str.replace(/\W+/g, " ").split(" ")
+  return words.join("-").toLowerCase()
+}
+const twigAddFilter = (env, name, filterFn, argList = ["string"]) => {
+  const twgFilter = createFilter(
+    name,
+    (_executionContext, inputArg) => {
+      return Promise.resolve(filterFn(inputArg))
+    },
+    argList
+  )
+  env.addFilter(twgFilter)
+}
+const twigAddFunction = (env, name, fn, argList = ["string"]) => {
+  const twgFn = createFunction(
+    name,
+    (_executionContext, inputArg) => {
+      return Promise.resolve(fn(inputArg))
+    },
+    argList
+  )
+  env.addFunction(twgFn)
+}
+export {
+  calculateOffset,
+  calculateTotalPages,
+  getCompiledSql,
+  snakeToCamel,
+  camelToSnake,
+  slugify,
+  twigAddFilter,
+  twigAddFunction,
+}

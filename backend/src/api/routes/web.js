@@ -1,7 +1,9 @@
 import express from "express"
 import fs from "fs"
-import { createEnvironment, createFilesystemLoader } from "twing"
-class ManualRouter {
+import { createEnvironment, createFilesystemLoader, createFilter, createFunction } from "twing"
+import { camelToSnake, snakeToCamel, slugify, twigAddFilter, twigAddFunction } from "../libs/utils.js"
+
+class WebRouter {
   datasource = null
   mUser = null
   router = null
@@ -16,7 +18,9 @@ class ManualRouter {
   getRouter() {
     return this.router
   }
-
+  getData() {
+    return "Hello Cruel world"
+  }
   async homepage(req, res) {
     const { template } = req.params
     const siteData = {
@@ -29,6 +33,7 @@ class ManualRouter {
       image: "http://localhost:3000/images/image.jpg",
       twitter: "@author",
       content: "Main content",
+      getData: this.getData(),
     }
     let loader = createFilesystemLoader(fs)
     loader.addPath("./themes/default/templates/")
@@ -36,6 +41,9 @@ class ManualRouter {
     // loader.addPath("./themes/default/green-ponpes/templates/")
     // loader.addPath("./src/cms/templates/twig/default/sections/")
     let environment = createEnvironment(loader)
+    twigAddFilter(environment, "slugify", slugify)
+    twigAddFunction(environment, "slug", slugify)
+
     let templatePath = `${template ? template : "homepage"}.twig`
     let activeTemplateName = templatePath
     environment
@@ -53,4 +61,4 @@ class ManualRouter {
   }
 }
 
-export default ManualRouter
+export default WebRouter
