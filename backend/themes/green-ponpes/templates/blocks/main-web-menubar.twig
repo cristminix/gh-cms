@@ -4,7 +4,7 @@
     {% set webMenu = web_menu_get_list(1,100) %}
     {% for menu in webMenu.records %}
       <li class="p-2">
-        <a href="{{menu.link}}">{{menu.title}}</a>
+        <a class="text-green-700 hover:text-black p-2 rounded" href="{{menu.link}}">{{menu.title}}</a>
       </li>
     {% endfor %}
     </ul>

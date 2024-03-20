@@ -82,6 +82,7 @@ class WebRouter {
         true
       )
       twigAddFunction(environment, "page_title", (title) => (page.title = title), ["title"])
+      twigAddFunction(environment, "theme_url", (path) => `/themes/${websiteSetting.theme}/${path}`, ["url"])
       twigAddFunction(environment, "set_meta_description", (description) => (page.meta.description = description), [
         "description",
       ])
