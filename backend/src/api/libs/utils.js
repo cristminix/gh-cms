@@ -1,3 +1,5 @@
+import { createFilter, createFunction } from "twing"
+
 const calculateOffset = (pageNumber, limit) => {
   const offset = (pageNumber - 1) * limit
   return offset
@@ -54,11 +56,15 @@ const twigAddFilter = (env, name, filterFn, argList = ["string"]) => {
   )
   env.addFilter(twgFilter)
 }
-const twigAddFunction = (env, name, fn, argList = ["string"]) => {
+const twigAddFunction = (env, name, fn, argList = ["string"], usePromise = false) => {
   const twgFn = createFunction(
     name,
-    (_executionContext, inputArg) => {
-      return Promise.resolve(fn(inputArg))
+    (_executionContext, a, b, c, d, e, f, g) => {
+      if (usePromise) {
+        return fn(a, b, c, d, e, f, g)
+      } else {
+        return Promise.resolve(fn(a, b, c, d, e, f, g))
+      }
     },
     argList
   )

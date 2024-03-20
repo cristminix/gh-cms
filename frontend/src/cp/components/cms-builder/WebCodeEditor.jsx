@@ -166,8 +166,8 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
         <Toast ref={toastRef} />
 
         <div className={`web-code-editor ${containerCls} ${pk ? "opacity-100" : "opacity-50"}`}>
-          <div className="grid-toolbar pb-4">
-            <div className="flex gap-2">
+          <div className="grid-toolbar pb-2">
+            <div className="flex flex-wrap gap-2 items-center">
               <Button
                 onClick={(e) => {
                   history.back()
@@ -179,10 +179,11 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
               <FormRow
                 value={fullPath}
                 readonly={true}
-                className="p-0 flex-grow px-0"
+                className="p-0 flex-grow px-0 !pr-0"
                 // label="File Location Path : "
                 label={`Edit ${titleCase(kind)} :`}
                 lblClassName="w-[auto]  text-xs pr-2"
+                inputClassName="!py-2 "
               />
               {/* </div> */}
             </div>
@@ -205,7 +206,7 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
                   <CodeMirror
                     className={`${containerCls} p-[4px]`}
                     value={editorBuffer}
-                    height={`${vH}px`}
+                    height={`200px`}
                     extensions={[twigLanguage]}
                     onChange={onChange}
                   />

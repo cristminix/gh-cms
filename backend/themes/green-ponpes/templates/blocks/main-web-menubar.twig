@@ -1,4 +1,11 @@
 <div class="web-main-menu-bar p-2">
     {# <img src="/api/cms/web-block/previews/1c6665f61a2d993aa2d2a740c15009d9.png"/> #}
-    {{slug(getData)}}
+    <ul class="flex">
+    {% set webMenu = web_menu_get_list(1,100) %}
+    {% for menu in webMenu.records %}
+      <li class="p-2">
+        <a href="{{menu.link}}">{{menu.title}}</a>
+      </li>
+    {% endfor %}
+    </ul>
 </div>
