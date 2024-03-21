@@ -1,3 +1,10 @@
-<div class="footer-contact-person-list-with-company-email p-2">
-    <img src="/api/cms/web-block/previews/0cd2c75a0d3acb698582e8cc8e47032a.png"/>
+<div class="footer-contact-person-list-with-company-email p-2  w-1/3">
+    <h4>Kontak</h4>
+	{% set webContactPerson = web_contact_person_get_list(1,10) %}
+	<ul>
+		{% for cp in webContactPerson.records %}
+			<li>{{cp.contactDetail}}
+				({{cp.name}})</li>
+		{% endfor %}
+	</ul>
 </div>
