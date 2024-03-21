@@ -1,0 +1,12 @@
+{
+  "plugins": ["./node_modules/prettier-plugin-twig-melody"],
+  "twigPrintWidth": 120,
+
+  "twigMultiTags": [
+    "nav,endnav",
+    "switch,case,default,endswitch",
+    "ifchildren,endifchildren",
+    "cache,endcache",
+    "js,endjs"
+  ]
+}
