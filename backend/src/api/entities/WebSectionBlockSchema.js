@@ -1,31 +1,26 @@
-
-import {EntitySchema} from "typeorm"  
-import WebSectionBlock from "../models/WebSectionBlock.js"      
+import { EntitySchema } from "typeorm";
+import WebSectionBlock from "../models/WebSectionBlock.js";
 
 const WebSectionBlockSchema = new EntitySchema({
-    name: "WebSectionBlock",
-    target: WebSectionBlock,
-    columns: {
-        id : {
-            type : "int", 
-			primary : true, 
-			generated : true, 
+  name: "WebSectionBlock",
+  target: WebSectionBlock,
+  columns: {
+    id: {
+      type: "int",
+      primary: true,
+      generated: true
+    },
+    sectionId: {
+      type: "int"
+    },
+    templateData: {
+      type: "text",
+      nullable: true
+    },
+    blockId: {
+      type: "int"
+    }
+  }
+});
 
-        },
-		sectionId : {
-            type : "int", 
-
-        },
-		blockId : {
-            type : "int", 
-
-        },
-    } 
-       
-    
-})
-
-
-
-export default WebSectionBlockSchema
-    
+export default WebSectionBlockSchema;

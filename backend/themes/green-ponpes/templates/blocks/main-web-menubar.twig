@@ -1,11 +1,10 @@
-<div class="web-main-menu-bar p-2">
-    {# <img src="/api/cms/web-block/previews/1c6665f61a2d993aa2d2a740c15009d9.png"/> #}
-    <ul class="flex">
-    {% set webMenu = web_menu_get_list(1,100) %}
-    {% for menu in webMenu.records %}
-      <li class="p-2">
-        <a class="text-green-700 hover:text-black p-2 rounded" href="{{menu.link}}">{{menu.title}}</a>
-      </li>
-    {% endfor %}
-    </ul>
+<div
+	class="web-main-menu-bar p-2 pt-5">
+	{# <img src="/api/cms/web-block/previews/1c6665f61a2d993aa2d2a740c15009d9.png"/> #}
+	<div class="flex flex-col mt-5 lg:flex-row lg:items-center lg:justify-end lg:mt-0">
+		{% set webMenu = web_menu_get_list(1,100) %}
+		{% for menu in webMenu.records %}
+			<a class="inline-flex items-center gap-x-3 text-zinc-800 font-bold p-2 gap-2 hover:bg-green-500 hover:text-white" href="{{menu.link}}">{{menu.title}}</a>
+		{% endfor %}
+	</div>
 </div>
