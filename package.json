@@ -9,10 +9,10 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@shopify/prettier-plugin-liquid": "^1.4.4",
         "cheerio": "^1.0.0-rc.12",
         "html-entities": "^2.4.0",
         "htmlparser2": "^9.1.0",
-        "prettier-plugin-twig-melody": "^0.4.6",
         "twing": "^6.1.0-beta.2"
     }
 }

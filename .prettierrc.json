@@ -1,12 +1,5 @@
 {
-  "plugins": ["./node_modules/prettier-plugin-twig-melody"],
+  "plugins": ["@shopify/prettier-plugin-liquid"],
   "twigPrintWidth": 120,
-
-  "twigMultiTags": [
-    "nav,endnav",
-    "switch,case,default,endswitch",
-    "ifchildren,endifchildren",
-    "cache,endcache",
-    "js,endjs"
-  ]
+  "semi": false
 }
