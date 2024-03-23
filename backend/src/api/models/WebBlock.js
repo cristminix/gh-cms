@@ -1,12 +1,26 @@
 import { query } from "express"
-import { calculateOffset, calculateTotalPages, getCompiledSql } from "../libs/utils.js"
+import {
+  calculateOffset,
+  calculateTotalPages,
+  getCompiledSql,
+} from "../libs/utils.js"
 import WebTemplateBlock from "./WebTemplateBlock.js"
 import WebSectionBlock from "./WebSectionBlock.js"
 import WebTemplate from "./WebTemplate.js"
 import WebTheme from "./WebTheme.js"
 
 class WebBlock {
-  constructor(id, templateId, name, slug, description, kind, previewImage, path_, parent) {
+  constructor(
+    id,
+    templateId,
+    name,
+    slug,
+    description,
+    kind,
+    previewImage,
+    path_,
+    parent,
+  ) {
     this.id = id
     this.templateId = templateId
     this.name = name
@@ -33,7 +47,16 @@ export class MWebBlock {
     this.manager = ds.manager
   }
 
-  async create(templateId, name, description, slug, kind, path_, previewImage, parent) {
+  async create(
+    templateId,
+    name,
+    description,
+    slug,
+    kind,
+    path_,
+    previewImage,
+    parent,
+  ) {
     const webblock = new WebBlock()
     // webblock.templateId = templateId
     webblock.name = name
@@ -52,8 +75,32 @@ export class MWebBlock {
     }
     return record
   }
-
-  async getState(templateId = null, limit = 5, page = null, kind = null, parent = null) {
+  async getSectionsByTemplateId(templateId) {
+    return await this.ds
+      .createQueryBuilder(WebTemplateBlock, "wtb")
+      .leftJoin(WebBlock, "wb", "wtb.blockId = wb.id")
+      .select(["wtb.blockId blockId"])
+      .where("wtb.templateId = :templateId", { templateId })
+      .select([
+        "wb.id id",
+        // "wtb.templateId templateId",
+        "wb.name name",
+        "wb.slug slug",
+        "wb.description description",
+        "wb.previewImage previewImage",
+        "wb.path path",
+        "wb.kind kind",
+        "wb.parent parent",
+      ])
+      .getRawMany()
+  }
+  async getState(
+    templateId = null,
+    limit = 5,
+    page = null,
+    kind = null,
+    parent = null,
+  ) {
     if (!limit) {
       limit = 5
     }
@@ -63,7 +110,13 @@ export class MWebBlock {
       let record_count = 0
       if (page && page !== null) {
         const offset = calculateOffset(page, limit)
-        record_count = await this.getListCount(templateId, kind, parent, limit, offset)
+        record_count = await this.getListCount(
+          templateId,
+          kind,
+          parent,
+          limit,
+          offset,
+        )
       }
       return { limit, total_pages, total_records, record_count }
     } catch (e) {
@@ -190,7 +243,9 @@ export class MWebBlock {
         }
       }
     } else {
-      query = this.ds.createQueryBuilder(WebBlock, "wb").select(["COUNT(wb.id) count"])
+      query = this.ds
+        .createQueryBuilder(WebBlock, "wb")
+        .select(["COUNT(wb.id) count"])
     }
 
     if (limit) {
@@ -229,7 +284,7 @@ export class MWebBlock {
     order_by = "id",
     order_dir = "asc",
     kind = null,
-    parent = null
+    parent = null,
   ) {
     if (!limit) {
       limit = 5
@@ -283,7 +338,10 @@ export class MWebBlock {
               .leftJoin(WebBlock, "wb", "wsb.blockId=wb.id")
               .groupBy("wb.id")
 
-              .where("wtb.templateId = :templateId AND wb.kind = :kind", { templateId, kind })
+              .where("wtb.templateId = :templateId AND wb.kind = :kind", {
+                templateId,
+                kind,
+              })
           }
         }
       } else {
@@ -306,19 +364,38 @@ export class MWebBlock {
       // .where("wb.kind = :kind", { kind })
 
       // .groupBy("b.id")
-      query.orderBy(`wb.${order_by}`, order_dir.toUpperCase()).limit(limit).offset(offset)
+      query
+        .orderBy(`wb.${order_by}`, order_dir.toUpperCase())
+        .limit(limit)
+        .offset(offset)
       console.log(getCompiledSql(query))
       const records = await query.getRawMany()
 
       // console.log(records.getQuery())
       // records = records.getRawMany()
 
-      return { page, limit, order_by, order_dir, records, total_pages, total_records }
+      return {
+        page,
+        limit,
+        order_by,
+        order_dir,
+        records,
+        total_pages,
+        total_records,
+      }
     } catch (e) {
       console.error(e)
       // res.send(e)
     }
-    return { page, limit, order_by, order_dir, records: [], total_pages: 0, total_records: 0 }
+    return {
+      page,
+      limit,
+      order_by,
+      order_dir,
+      records: [],
+      total_pages: 0,
+      total_records: 0,
+    }
   }
 }
 export default WebBlock

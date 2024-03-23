@@ -1,5 +1,9 @@
 import path from "path"
-import { calculateOffset, calculateTotalPages, getCompiledSql } from "../libs/utils.js"
+import {
+  calculateOffset,
+  calculateTotalPages,
+  getCompiledSql,
+} from "../libs/utils.js"
 import WebBlock from "./WebBlock.js"
 import WebSectionBlock from "./WebSectionBlock.js"
 import WebTemplateBlock from "./WebTemplateBlock.js"
@@ -85,12 +89,47 @@ export class MWebTemplate {
 
     return record
   }
+  async getBySlug(slug, includePath = false) {
+    let record = null
+    try {
+      if (!includePath) {
+        record = await this.manager.findOne(WebTemplate, { where: { slug } })
+      } else {
+        record = await this.ds
+          .createQueryBuilder(WebTemplate, "tpl")
+          .leftJoin(WebTheme, "th", "th.id = tpl.themeId")
+          .select([
+            "tpl.id id",
+            "tpl.themeId themeId",
+            "tpl.name name",
+            "tpl.slug slug",
+            "tpl.description description",
+            "tpl.previewImage previewImage",
+            "tpl.path path",
+            "th.name themeName",
+            "th.slug themeSlug",
+          ])
+          .where("tpl.slug = :slug", { slug })
+          .getRawOne()
+        if (record) {
+          record.themeDir = `themes/${record.themeSlug}`
+          record.templateDir = `${record.themeDir}/templates`
+          record.templatePath = `${record.templateDir}/${record.path}`
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
 
+    return record
+  }
   async update(pk, row) {
     let id = pk
     let record = null
     try {
-      const webtemplate = await this.manager.findOne(WebTemplate, { where: { id } })
+      const webtemplate = await this.manager.findOne(WebTemplate, {
+        where: { id },
+      })
       if (webtemplate) {
         this.manager.merge(WebTemplate, webtemplate, row)
 
@@ -106,7 +145,9 @@ export class MWebTemplate {
     let id = pk
     let record = null
     try {
-      const webtemplate = await this.manager.findOne(WebTemplate, { where: { id } })
+      const webtemplate = await this.manager.findOne(WebTemplate, {
+        where: { id },
+      })
       if (webtemplate) {
         record = await this.manager.remove(webtemplate)
       }
@@ -157,7 +198,14 @@ export class MWebTemplate {
   //     record.blockCount = 0
   //   })
   // }
-  async getList(themeId = null, page = 1, limit = 5, order_by = "id", order_dir = "asc", filter = null) {
+  async getList(
+    themeId = null,
+    page = 1,
+    limit = 5,
+    order_by = "id",
+    order_dir = "asc",
+    filter = null,
+  ) {
     if (!limit) {
       limit = 5
     }
@@ -220,12 +268,28 @@ export class MWebTemplate {
       // this.addBlockCountBySection(records)
       // }
 
-      return { page, limit, order_by, order_dir, records, total_pages, total_records }
+      return {
+        page,
+        limit,
+        order_by,
+        order_dir,
+        records,
+        total_pages,
+        total_records,
+      }
     } catch (e) {
       console.error(e)
       // res.send(e)
     }
-    return { page, limit, order_by, order_dir, records: [], total_pages: 0, total_records: 0 }
+    return {
+      page,
+      limit,
+      order_by,
+      order_dir,
+      records: [],
+      total_pages: 0,
+      total_records: 0,
+    }
   }
 }
 export default WebTemplate
