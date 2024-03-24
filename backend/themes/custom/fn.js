@@ -7,19 +7,17 @@ import {
   camelToSnake,
   slugify,
 } from "../green-ponpes/js/components/fn"
-// import { createArrayLoader, createEnvironment } from "twing"
 import { createArrayLoader, createEnvironment } from "twing"
 import { applyEnvFunction } from "../green-ponpes/js/components/fn.js"
 async function parseTemplate(code, id, templateData = {}) {
   const twigObj = twig({ data: code })
   let newSourceBuffer = []
   let importBuffer = []
-  twigObj.tokens.forEach((token) => {
-    console.log(token)
+  Object.keys(twigObj.tokens).forEach((index) => {
+    const token = twigObj.tokens[index]
 
     if (token.type == "logic") {
       if (token.token.type == "Twig.logic.type.include") {
-        // console.log(token.token.stack)
         const tplInclude = token.token.stack[0].value
         const componentName = capitalize(snakeToCamel(slugify(tplInclude)))
         if (tplInclude.match(/^\./)) {
@@ -36,40 +34,26 @@ async function parseTemplate(code, id, templateData = {}) {
         )
         console.log(line)
         if (line.length > 0) {
-          // console.log(line)
-          if (!newSourceBuffer.includes(line)) {
-            newSourceBuffer.push(line)
-          }
+          newSourceBuffer.push(line)
         }
       } else {
         const line = code.substring(token.position.start, token.position.end)
         console.log(line)
         if (line.length > 0) {
-          // console.log(line)
-          if (!newSourceBuffer.includes(line)) {
-            newSourceBuffer.push(line)
-          }
+          newSourceBuffer.push(line)
         } else {
-          // console.log(token.value.replace(/\n/g, ""))
-          if (!newSourceBuffer.includes(token.value)) {
-            newSourceBuffer.push(token.value)
-          }
+          newSourceBuffer.push(token.value)
         }
       }
     } else {
       const line = code.substring(token.position.start, token.position.end)
+
+      console.log(index, "NOT LOGIC", token.type, token, line)
       if (line.length > 0) {
-        // console.log(line)
-        if (!newSourceBuffer.includes(line)) {
-          newSourceBuffer.push(line)
-        }
+        newSourceBuffer.push(line)
       } else {
-        // console.log(token.value.replace(/\n/g, ""))
-        if (!newSourceBuffer.includes(token.value)) {
-          newSourceBuffer.push(token.value)
-        }
+        newSourceBuffer.push(token.value)
       }
-      // newSourceBuffer.push(`${line.length > 0 ? `${line}` : token.value}`)
     }
   })
   // console.log(importBuffer)
@@ -98,13 +82,38 @@ async function parseTemplate(code, id, templateData = {}) {
     },
   }
   const twigTplData = `${newSourceBuffer.join("")}`
+
   const loader = createArrayLoader({
     [`${id}`]: twigTplData,
   })
   console.log(twigTplData)
   const environment = createEnvironment(loader)
   applyEnvFunction(environment, tplData)
-  const twigTplRendered = await environment.render(`${id}`, tplData)
+  let twigTplRendered = await environment.render(`${id}`, tplData)
+  const rgxRplcs = [
+    [/classname/g, "className"],
+    [/(<!--.*-->)/g, "{/*$1*/}"],
+    [/(\"CLS_INDEX_)(\d+)(\")/g, "{cls$2}"],
+    [/(\"STL_INDEX_)(\d+)(\")/g, "{styles.stl$2}"],
+    [/clip-rule=/g, "clipRule="],
+    [/fill-rule=/g, "fillRule="],
+    [/viewbox=/g, "viewBox="],
+    [/value=/g, "defaultValue="],
+    [/for=/g, "htmlFor="],
+    [/autocomplete=/g, "autoComplete="],
+    [/stroke-width=/g, "strokeWidth="],
+    [/stroke-linecap=/g, "strokeLinecap="],
+    [/stroke-linejoin=/g, "strokeLinejoin="],
+    [/\>\s*\<\/input\>/g, "/>"],
+    [/\>\s*\<\/textarea\>/g, "/>"],
+    [/\>\s*\<\/img\>/g, "/>"],
+    [/\>\s*\<\/br\>/g, "/>"],
+  ]
+  //   rgxRplcs.forEach((rgxRplc, index) => {
+  //     // console.log(rgxRplc)
+  //     const [rgx, rplc] = rgxRplc
+  //     twigTplRendered = twigTplRendered.replace(rgx, rplc)
+  //   })
   parserBuff += `
 import {useEffect,useState} from "react"
 
