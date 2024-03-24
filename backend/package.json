@@ -12,6 +12,9 @@
   "author": "Putra Budiman <cristminix@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@ssddanbrown/codemirror-lang-twig": "^1.0.0",
+    "@uiw/react-codemirror": "^4.21.25",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.18",
     "base-64": "^1.0.0",
@@ -38,6 +41,7 @@
     "pug": "^3.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-live": "^4.1.6",
     "reflect-metadata": "^0.2.1",
     "serve-index": "^1.9.1",
     "tailwindcss": "^3.4.1",

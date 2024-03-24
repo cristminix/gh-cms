@@ -46,7 +46,11 @@ const main = async () => {
   const HTTP_LOG = RequestLogger(loggerConfig).requestLogger()
 
   const app = express()
-  const datasource = new DS(appConfig.get("db.engine"), appConfig.get("db.location"), LOG)
+  const datasource = new DS(
+    appConfig.get("db.engine"),
+    appConfig.get("db.location"),
+    LOG,
+  )
   let ds = null
 
   app.use(cors())

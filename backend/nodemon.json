@@ -1,1 +1,1 @@
-{ "watch": ["src", "themes"], "ext": "mjs,js,json,hbs,html,css,pug,twig" }
+{ "watch": ["src"], "ext": "mjs,js,json" }

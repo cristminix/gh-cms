@@ -19,7 +19,11 @@ const getCompiledSql = (builder) => {
       if (Array.isArray(value)) {
         sql = sql.replace(
           "?",
-          value.map((element) => (typeof element === "string" ? `"${element}"` : element)).join(",")
+          value
+            .map((element) =>
+              typeof element === "string" ? `"${element}"` : element,
+            )
+            .join(","),
         )
       } else {
         sql = sql.replace("?", value)
@@ -46,17 +50,26 @@ const slugify = (str) => {
   const words = str.replace(/\W+/g, " ").split(" ")
   return words.join("-").toLowerCase()
 }
+const capitalize = (word) => {
+  return word.charAt(0).toUpperCase() + word.slice(1)
+}
 const twigAddFilter = (env, name, filterFn, argList = ["string"]) => {
   const twgFilter = createFilter(
     name,
     (_executionContext, inputArg) => {
       return Promise.resolve(filterFn(inputArg))
     },
-    argList
+    argList,
   )
   env.addFilter(twgFilter)
 }
-const twigAddFunction = (env, name, fn, argList = ["string"], usePromise = false) => {
+const twigAddFunction = (
+  env,
+  name,
+  fn,
+  argList = ["string"],
+  usePromise = false,
+) => {
   const twgFn = createFunction(
     name,
     (_executionContext, a, b, c, d, e, f, g) => {
@@ -66,7 +79,7 @@ const twigAddFunction = (env, name, fn, argList = ["string"], usePromise = false
         return Promise.resolve(fn(a, b, c, d, e, f, g))
       }
     },
-    argList
+    argList,
   )
   env.addFunction(twgFn)
 }
@@ -79,4 +92,5 @@ export {
   slugify,
   twigAddFilter,
   twigAddFunction,
+  capitalize,
 }

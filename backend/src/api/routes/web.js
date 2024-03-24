@@ -56,11 +56,23 @@ class WebRouter {
     const { fn } = req.params
     const { limit, page, order_by, order_dir } = req.query
     const websiteSetting = await this.mWebSiteSetting.getDefault()
-
+    let data
     if (fn === "web_menu_get_list") {
+      data = await this.mWebMenu.getList(limit, page)
     } else if (fn === "web_contact_person_get_list") {
+      data = await this.mWebContactPerson.getList(
+        limit,
+        page,
+        order_by,
+        order_dir,
+        {
+          siteId: websiteSetting.id,
+        },
+      )
     } else if (fn === "web_get_company") {
+      data = await await this.mWebCompany.getByPk(websiteSetting.companyId)
     }
+    res.send(data)
   }
   async arrayLoader(req, res) {
     // loader.addPath("./themes/default/templates/")
@@ -145,6 +157,8 @@ class WebRouter {
       let loader = createFilesystemLoader(fs)
       loader.addPath("./themes/default/templates/")
       loader.addPath(`./themes/${websiteSetting.theme}/templates/`)
+      loader.addPath(`./themes/${websiteSetting.theme}/templates/sections/`)
+      loader.addPath(`./themes/${websiteSetting.theme}/templates/blocks/`)
       let environment = createEnvironment(loader)
       twigAddFilter(environment, "slugify", slugify)
 
@@ -201,6 +215,7 @@ class WebRouter {
         (path) => `/themes/${websiteSetting.theme}/${path}`,
         ["url"],
       )
+      twigAddFunction(environment, "base_url", (path) => `/${path}`, ["url"])
       twigAddFunction(
         environment,
         "set_meta_description",

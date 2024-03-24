@@ -3,12 +3,13 @@ export default {
   content: [
     "src/**/*.pug",
     "src/**/*.twig",
-    ,
     "themes/**/*.twig",
-    "node_modules/preline/dist/*.js"
+    "themes/**/*.{js,ts,jsx,tsx}",
+    "themes/green-ponpes/index.html",
+    "node_modules/preline/dist/*.js",
   ],
   theme: {
-    extend: {}
+    extend: {},
   },
-  plugins: [require("preline/plugin")]
-};
+  plugins: [require("preline/plugin")],
+}

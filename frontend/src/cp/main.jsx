@@ -5,9 +5,9 @@ import "@/cp/global/tailwind.index.css"
 import "./main.css"
 import Store from "@/cp/global/models/Store"
 import Router from "./Router"
-import "bootstrap-icons/font/bootstrap-icons.css"
 import AppConfig from "@/cp/global/config/AppConfig"
 // import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap-icons/font/bootstrap-icons.css"
 import "fontawesome-4.7/css/font-awesome.min.css"
 // import 'bootstrap/dist/js/bootstrap.esm'
 import "@/cp/components/shared/ux/override"
@@ -25,7 +25,7 @@ installer.isFreshIstall().then(async (freshInstall) => {
     store.ready(() => {
       ReactDOM.createRoot(document.getElementById("root")).render(
         // <React.StrictMode>
-        <Router store={store} config={config} />
+        <Router store={store} config={config} />,
         // </React.StrictMode>
       )
     })
