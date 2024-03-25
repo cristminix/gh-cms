@@ -1,20 +1,21 @@
 import React from "react"
 import CodeMirror from "@uiw/react-codemirror"
 import { javascript } from "@codemirror/lang-javascript"
-import { okaidia } from "@uiw/codemirror-themes-all"
-function CodeViewer() {
-  const [value, setValue] = React.useState("console.log('hello world!');")
-  const onChange = React.useCallback((val, viewUpdate) => {
+import { dracula } from "@uiw/codemirror-themes-all"
+function CodeViewer({ code, onChange, extensions }) {
+  const [value, setValue] = React.useState(`${code || ""}`)
+  const onChanges = React.useCallback((val, viewUpdate) => {
     console.log("val:", val)
     setValue(val)
+    onChange(val)
   }, [])
   return (
     <CodeMirror
-      theme={okaidia}
+      theme={dracula}
       value={value}
       height="200px"
       extensions={[javascript({ jsx: true })]}
-      onChange={onChange}
+      onChange={onChanges}
     />
   )
 }

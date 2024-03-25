@@ -195,8 +195,8 @@ const WebBlockFeatureManager = ({ store, config, pageNumber ,blockId  }) => {
     numberWidthCls: "w-[10px]",
     actionWidthCls: "w-[50px]",
     widthCls: [""],
-    headers: ["id","blockId","name","description","kind","content","path_","enabled"],
-    fields: ["id","blockId","name","description","kind","content","path_","enabled"],
+    headers: ["id","blockId","name","description","kind","content","path_","order","enabled"],
+    fields: ["id","blockId","name","description","kind","content","path_","order","enabled"],
     enableEdit: true,
     callbackFields: {
     },

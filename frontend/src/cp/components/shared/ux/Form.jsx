@@ -95,7 +95,7 @@ const FormRowValidation = ({
   className = "",
 }) => {
   return (
-    <div className="flex items-center p-2 px-2">
+    <div className={"flex items-center p-2 px-2 " + className}>
       <div className={`w-[70px] ${useTextArea ? "self-start py-4" : ""} `}>
         <label className="font-bold ">{label}</label>
       </div>
@@ -179,9 +179,9 @@ const FormRowImageValidation = ({
   )
 }
 
-const FormRowCheckbox = ({ label, onChange = (f) => f, value }) => {
+const FormRowCheckbox = ({ label, className = "", onChange = (f) => f, value }) => {
   return (
-    <div className="flex items-center p-2 px-2">
+    <div className={`flex items-center p-2 px-2 ${className}`}>
       <div>
         <CheckBox tabIndex={8} label="" checked={value} onChange={(checked) => onChange(checked)} />
       </div>

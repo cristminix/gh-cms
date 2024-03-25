@@ -56,9 +56,9 @@ class WebBlockFeatureRouter extends AuthenticatedRouter {
         }
         
 
-        let { blockId, name, description, kind, content, path_, enabled }= req.body
+        let { blockId, name, description, kind, content, path_, order, enabled }= req.body
         try {
-            const  webblockfeature = await this.mWebBlockFeature.create(blockId, name, description, kind, content, path_, enabled)
+            const  webblockfeature = await this.mWebBlockFeature.create(blockId, name, description, kind, content, path_, order, enabled)
             return res.send({ data: webblockfeature })
         }catch(e){
             return res.send({ data: e.toString() })
@@ -83,8 +83,8 @@ class WebBlockFeatureRouter extends AuthenticatedRouter {
         }
         const existingRec = await  this.mWebBlockFeature.getByPk(id)
         if (existingRec) {
-            const { blockId, name, description, kind, content, path_, enabled } = req.body
-            const updatedData = { blockId, name, description, kind, content, path_, enabled }
+            const { blockId, name, description, kind, content, path_, order, enabled } = req.body
+            const updatedData = { blockId, name, description, kind, content, path_, order, enabled }
             const  webblockfeature = await this.mWebBlockFeature.update(id,updatedData)
             return res.send({data: webblockfeature, message: "Record updated",success:true})
         }else{
@@ -138,6 +138,7 @@ class WebBlockFeatureRouter extends AuthenticatedRouter {
             check("kind", "kind is required").not().isEmpty(),
             check("content", "content is required").not().isEmpty(),
             check("path_", "path_ is required").not().isEmpty(),
+            check("order", "order is required").not().isEmpty(),
             check("enabled", "enabled is required").not().isEmpty(),
             (req, res) => this.create(req,res))
 
@@ -153,6 +154,7 @@ class WebBlockFeatureRouter extends AuthenticatedRouter {
             check("kind", "kind is required").not().isEmpty(),
             check("content", "content is required").not().isEmpty(),
             check("path_", "path_ is required").not().isEmpty(),
+            check("order", "order is required").not().isEmpty(),
             check("enabled", "enabled is required").not().isEmpty(),
             (req, res) => this.update(req,res))
 
