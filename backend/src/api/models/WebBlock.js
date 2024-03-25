@@ -1,26 +1,12 @@
 import { query } from "express"
-import {
-  calculateOffset,
-  calculateTotalPages,
-  getCompiledSql,
-} from "../libs/utils.js"
+import { calculateOffset, calculateTotalPages, getCompiledSql } from "../libs/utils.js"
 import WebTemplateBlock from "./WebTemplateBlock.js"
 import WebSectionBlock from "./WebSectionBlock.js"
 import WebTemplate from "./WebTemplate.js"
 import WebTheme from "./WebTheme.js"
 
 class WebBlock {
-  constructor(
-    id,
-    templateId,
-    name,
-    slug,
-    description,
-    kind,
-    previewImage,
-    path_,
-    parent,
-  ) {
+  constructor(id, templateId, name, slug, description, kind, previewImage, path_) {
     this.id = id
     this.templateId = templateId
     this.name = name
@@ -29,7 +15,7 @@ class WebBlock {
     this.kind = kind
     this.previewImage = previewImage
     this.path = path_
-    this.parent = parent
+    // this.parent = parent
   }
 }
 export class WebBlockValidation {
@@ -79,17 +65,11 @@ export class MWebBlock {
         "wb.previewImage previewImage",
         "wb.path path",
         "wb.kind kind",
-        "wb.parent parent",
+        // "wb.parent parent",
       ])
       .getRawMany()
   }
-  async getState(
-    templateId = null,
-    limit = 5,
-    page = null,
-    kind = null,
-    parent = null,
-  ) {
+  async getState(templateId = null, limit = 5, page = null, kind = null, parent = null) {
     if (!limit) {
       limit = 5
     }
@@ -99,13 +79,7 @@ export class MWebBlock {
       let record_count = 0
       if (page && page !== null) {
         const offset = calculateOffset(page, limit)
-        record_count = await this.getListCount(
-          templateId,
-          kind,
-          parent,
-          limit,
-          offset,
-        )
+        record_count = await this.getListCount(templateId, kind, parent, limit, offset)
       }
       return { limit, total_pages, total_records, record_count }
     } catch (e) {
@@ -232,9 +206,7 @@ export class MWebBlock {
         }
       }
     } else {
-      query = this.ds
-        .createQueryBuilder(WebBlock, "wb")
-        .select(["COUNT(wb.id) count"])
+      query = this.ds.createQueryBuilder(WebBlock, "wb").select(["COUNT(wb.id) count"])
     }
 
     if (limit) {
@@ -260,7 +232,7 @@ export class MWebBlock {
         "wb.previewImage previewImage",
         "wb.path path",
         "wb.kind kind",
-        "wb.parent parent",
+        // "wb.parent parent",
       ])
       .where("wb.kind = :kind", { kind })
     const records = await query.getRawMany()
@@ -346,17 +318,13 @@ export class MWebBlock {
         "wb.previewImage previewImage",
         "wb.path path",
         "wb.kind kind",
-        "wb.parent parent",
       ])
 
       addSelect.forEach((select) => query.addSelect(select))
       // .where("wb.kind = :kind", { kind })
 
       // .groupBy("b.id")
-      query
-        .orderBy(`wb.${order_by}`, order_dir.toUpperCase())
-        .limit(limit)
-        .offset(offset)
+      query.orderBy(`wb.${order_by}`, order_dir.toUpperCase()).limit(limit).offset(offset)
       console.log(getCompiledSql(query))
       const records = await query.getRawMany()
 

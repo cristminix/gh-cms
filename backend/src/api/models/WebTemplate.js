@@ -1,9 +1,5 @@
 import path from "path"
-import {
-  calculateOffset,
-  calculateTotalPages,
-  getCompiledSql,
-} from "../libs/utils.js"
+import { calculateOffset, calculateTotalPages, getCompiledSql } from "../libs/utils.js"
 import WebBlock from "./WebBlock.js"
 import WebSectionBlock from "./WebSectionBlock.js"
 import WebTemplateBlock from "./WebTemplateBlock.js"
@@ -198,14 +194,7 @@ export class MWebTemplate {
   //     record.blockCount = 0
   //   })
   // }
-  async getList(
-    themeId = null,
-    page = 1,
-    limit = 5,
-    order_by = "id",
-    order_dir = "asc",
-    filter = null,
-  ) {
+  async getList(themeId = null, page = 1, limit = 5, order_by = "id", order_dir = "asc", filter = null) {
     if (!limit) {
       limit = 5
     }
@@ -238,7 +227,6 @@ export class MWebTemplate {
         .createQueryBuilder(WebTemplate, "a")
         .leftJoin(WebTemplateBlock, "wtb", "wtb.templateId = a.id")
         .leftJoin(WebSectionBlock, "wsb", "wsb.sectionId = wtb.blockId")
-        .leftJoin(WebBlock, "block", "block.parent = wtb.id")
 
         .select([
           "a.id id",
