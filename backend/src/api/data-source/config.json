@@ -165,9 +165,9 @@
       "schema": "WebBlockFeatureSchema",
       "model": "WebBlockFeature",
       "pk": "id",
-      "fields": ["id", "blockId", "name","description", "kind", "content", "path_","enabled"],
-      "types": ["int", "int", "varchar", "varchar","varchar", "text", "varchar", "int"],
-      "lengths": [null, null, 225,2225, 100, null, 200, null],
+      "fields": ["id", "blockId", "name","description", "kind", "content", "path_","order","enabled"],
+      "types": ["int", "int", "varchar", "varchar","varchar", "text", "varchar", "int","int"],
+      "lengths": [null, null, 225,2225, 100, null, 200, null,null],
       "nullable": []
     },
     "web_contact_person": {
@@ -350,15 +350,18 @@
       "schema": "WebTemplateBlockSchema",
       "model": "WebTemplateBlock",
       "pk": "id",
-      "fields": ["id", "templateId", "blockId"],
-      "types": ["int", "int", "int"]
+      "fields": ["id", "templateId", "blockId","order"],
+      "types": ["int", "int", "int","int"],
+      "nullable":["order"]
     },
     "sections_blocks": {
       "schema": "WebSectionBlockSchema",
       "model": "WebSectionBlock",
       "pk": "id",
-      "fields": ["id", "sectionId", "blockId"],
-      "types": ["int", "int", "int"]
+      "fields": ["id", "sectionId", "blockId","order"],
+      "types": ["int", "int", "int", "int"],
+      "nullable":["order"]
+
     }
   }
 }

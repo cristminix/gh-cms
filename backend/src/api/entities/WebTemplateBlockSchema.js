@@ -1,5 +1,5 @@
-import { EntitySchema } from "typeorm";
-import WebTemplateBlock from "../models/WebTemplateBlock.js";
+import { EntitySchema } from "typeorm"
+import WebTemplateBlock from "../models/WebTemplateBlock.js"
 
 const WebTemplateBlockSchema = new EntitySchema({
   name: "WebTemplateBlock",
@@ -8,19 +8,23 @@ const WebTemplateBlockSchema = new EntitySchema({
     id: {
       type: "int",
       primary: true,
-      generated: true
+      generated: true,
     },
     templateId: {
-      type: "int"
+      type: "int",
     },
     templateData: {
       type: "text",
-      nullable: true
+      nullable: true,
     },
     blockId: {
-      type: "int"
-    }
-  }
-});
+      type: "int",
+    },
+    order: {
+      type: "int",
+      nullable: true,
+    },
+  },
+})
 
-export default WebTemplateBlockSchema;
+export default WebTemplateBlockSchema

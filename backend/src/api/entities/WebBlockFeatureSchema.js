@@ -38,6 +38,10 @@ const WebBlockFeatureSchema = new EntitySchema({
     enabled: {
       type: "int",
     },
+    order: {
+      type: "int",
+      nullable: true,
+    },
   },
 })
 

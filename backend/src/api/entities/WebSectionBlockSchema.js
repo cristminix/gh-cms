@@ -1,5 +1,5 @@
-import { EntitySchema } from "typeorm";
-import WebSectionBlock from "../models/WebSectionBlock.js";
+import { EntitySchema } from "typeorm"
+import WebSectionBlock from "../models/WebSectionBlock.js"
 
 const WebSectionBlockSchema = new EntitySchema({
   name: "WebSectionBlock",
@@ -8,19 +8,23 @@ const WebSectionBlockSchema = new EntitySchema({
     id: {
       type: "int",
       primary: true,
-      generated: true
+      generated: true,
     },
     sectionId: {
-      type: "int"
+      type: "int",
     },
     templateData: {
       type: "text",
-      nullable: true
+      nullable: true,
     },
     blockId: {
-      type: "int"
-    }
-  }
-});
+      type: "int",
+    },
+    order: {
+      type: "int",
+      nullable: true,
+    },
+  },
+})
 
-export default WebSectionBlockSchema;
+export default WebSectionBlockSchema
