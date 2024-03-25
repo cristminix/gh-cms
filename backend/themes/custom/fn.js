@@ -3,10 +3,11 @@ import twingPkg from "twing"
 const { twig } = twigPkg
 import { capitalize, snakeToCamel, camelToSnake, slugify } from "../green-ponpes/js/components/fn"
 import { createArrayLoader, createEnvironment } from "twing"
-import { applyEnvFunction } from "../green-ponpes/js/components/fn.js"
+import { applyEnvFunction, getBlockFeatureByTemplate } from "../green-ponpes/js/components/fn.js"
 // import jQuery from "jquery"
 // import { Cheerio } from "cheerio"
 import cheerio from "cheerio"
+
 async function parseTemplate(code, id, templateData = {}) {
   const twigObj = twig({ data: code })
   let newSourceBuffer = []
@@ -84,6 +85,10 @@ async function parseTemplate(code, id, templateData = {}) {
   console.log(twigTplData)
   const environment = createEnvironment(loader)
   applyEnvFunction(environment, tplData)
+  let tplPath = id.split("/")
+  tplPath = tplPath[tplPath.length - 1]
+  const blockFeatures = await getBlockFeatureByTemplate(tplPath)
+  console.log(blockFeatures)
   let twigTplRendered = await environment.render(`${id}`, tplData)
   const rgxRplcs = [
     [/class=/g, "className="],

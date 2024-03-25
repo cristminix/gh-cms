@@ -27,13 +27,13 @@ const createUntitledBlockFeature = () => {
   const idx = crc32(new Date().getTime().toString()).toString(16)
   const name = `Untitled-${idx}`
 
-  const blockId = ""
+  const blockId = null
   const description = ""
   const kind = ""
-  const content = ""
-  const path_ = ""
-  const order = ""
-  const enabled = ""
+  const content = "Hello World"
+  const path_ = null
+  const order = 0
+  const enabled = 0
   return {
     blockId,
     name,
@@ -69,8 +69,8 @@ const BlockFeatureForm = ({
   const [kind, setKind] = useState("")
   const [content, setContent] = useState("")
   const [path_, setPath_] = useState("")
-  const [order, setOrder] = useState("")
-  const [enabled, setEnabled] = useState("")
+  const [order, setOrder] = useState(0)
+  const [enabled, setEnabled] = useState(1)
 
   const Ref = useRef(null)
   const formRef = useRef(null)
@@ -139,9 +139,12 @@ const BlockFeatureForm = ({
       pk = data.id
     }
     const formDataItem = { id: pk, blockId, name, description, kind, content, path_, order, enabled }
+    console.log(formDataItem)
     const formData = new FormData()
     Object.keys(formDataItem).map((key) => {
-      formData.append(key, formDataItem[key])
+      if (formDataItem[key] != null && typeof formDataItem[key] != undefined) {
+        formData.append(key, formDataItem[key])
+      }
     })
     const url = apiUrl(["web-block-feature", pk ? `update/${pk}` : "create"])
     const method = pk ? "put" : "post"
@@ -211,7 +214,9 @@ const BlockFeatureForm = ({
     setName(name)
     setDescription(description)
     setKind(kind)
-    setContent(content)
+    setTimeout(() => {
+      setContent(content)
+    }, 512)
     setPath_(path_)
     setOrder(order)
     setEnabled(enabled)
@@ -226,6 +231,8 @@ const BlockFeatureForm = ({
         setValidationErrors({})
       }, 256)
       if (data.id) {
+        setContent(`dlrow0lleh`)
+
         getRemoteRowData(data.id)
       }
     }
@@ -348,13 +355,17 @@ const BlockFeatureForm = ({
                     }}
                   />
                 </div>
-                <CodeViewer
-                  code={content}
-                  onChange={(e) => {
-                    setContent(e)
-                  }}
-                />
+                {content != "dlrow0lleh" && (
+                  <CodeViewer
+                    code={content}
+                    onChange={(e) => {
+                      setContent(e)
+                    }}
+                  />
+                )}
+
                 <FormRowValidation
+                  className="hidden"
                   validationErrors={validationErrors}
                   label="Content"
                   value={content}
@@ -379,6 +390,7 @@ const BlockFeatureForm = ({
                   label="Path_"
                   value={path_}
                   fieldname="path_"
+                  className={`${content.length == 0 || content == "dlrow0lleh" ? "" : "hidden"}`}
                   onChange={(e) => {
                     setPath_(e.target.value)
                   }}
@@ -397,14 +409,15 @@ const BlockFeatureForm = ({
                     className="w-auto"
                     validationErrors={validationErrors}
                     label="Enabled"
-                    value={enabled}
+                    value={enabled ? 1 : 0}
                     fieldname="enabled"
                     onChange={(e) => {
-                      setEnabled(e.target.value)
+                      setEnabled(e ? 1 : 0)
                     }}
                   />
                 </div>
-                {/* <FormRowValidation
+                <FormRowValidation
+                  className="hidden"
                   validationErrors={validationErrors}
                   label="Block"
                   value={blockId}
@@ -412,7 +425,7 @@ const BlockFeatureForm = ({
                   onChange={(e) => {
                     setBlockId(e.target.value)
                   }}
-                /> */}
+                />
               </form>
             </div>
             <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">

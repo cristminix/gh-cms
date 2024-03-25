@@ -1,9 +1,4 @@
-import {
-  createEnvironment,
-  createArrayLoader,
-  createFilter,
-  createFunction,
-} from "twing"
+import { createEnvironment, createArrayLoader, createFilter, createFunction } from "twing"
 
 const twigAddFilter = (env, name, filterFn, argList = ["string"]) => {
   const twgFilter = createFilter(
@@ -15,13 +10,7 @@ const twigAddFilter = (env, name, filterFn, argList = ["string"]) => {
   )
   env.addFilter(twgFilter)
 }
-const twigAddFunction = (
-  env,
-  name,
-  fn,
-  argList = ["string"],
-  usePromise = false,
-) => {
+const twigAddFunction = (env, name, fn, argList = ["string"], usePromise = false) => {
   const twgFn = createFunction(
     name,
     (_executionContext, a, b, c, d, e, f, g) => {
@@ -54,7 +43,13 @@ const apiUrl = (path, qs = null) => {
   }
   return `http://localhost:7700/${dst}`
 }
-
+const getBlockFeatureByTemplate = async (path) => {
+  try {
+    return await fetch(apiUrl("web/tplFunc/web_block_feature_by_tpl_path", { path })).then((r) => r.json())
+  } catch (e) {
+    return []
+  }
+}
 const applyEnvFunction = async (environment, tplData) => {
   const theme = "green-ponpes"
   const themeUrl = (path) => apiUrl(`themes/${theme}/${path}`)
@@ -63,10 +58,7 @@ const applyEnvFunction = async (environment, tplData) => {
   twigAddFunction(
     environment,
     "web_menu_get_list",
-    (limit, page) =>
-      fetch(apiUrl("web/tplFunc/web_menu_get_list", { limit, page })).then(
-        (r) => r.json(),
-      ),
+    (limit, page) => fetch(apiUrl("web/tplFunc/web_menu_get_list", { limit, page })).then((r) => r.json()),
     ["limit", "page"],
     true,
   )
@@ -91,9 +83,7 @@ const applyEnvFunction = async (environment, tplData) => {
     "web_get_company",
     async () => {
       console.log("web_get_company")
-      const company = await fetch(apiUrl("web/tplFunc/web_get_company")).then(
-        (r) => r.json(),
-      )
+      const company = await fetch(apiUrl("web/tplFunc/web_get_company")).then((r) => r.json())
 
       const fixUrlProps = ["logo", "logoSm", "logoMd", "logoLg", "logoXl"]
       Object.keys(company).forEach((key) => {
@@ -109,26 +99,13 @@ const applyEnvFunction = async (environment, tplData) => {
     [],
     true,
   )
-  twigAddFunction(
-    environment,
-    "page_title",
-    (title) => (tplData.page.title = title),
-    ["title"],
-  )
+  twigAddFunction(environment, "page_title", (title) => (tplData.page.title = title), ["title"])
   twigAddFunction(environment, "theme_url", (path) => themeUrl(path), ["path"])
   twigAddFunction(environment, "base_url", (path) => baseUrl(path), ["path"])
-  twigAddFunction(
-    environment,
-    "set_meta_description",
-    (description) => (tplData.page.meta.description = description),
-    ["description"],
-  )
-  twigAddFunction(
-    environment,
-    "set_meta_keywords",
-    (keywords) => (tplData.page.meta.keywords = keywords),
-    ["keywords"],
-  )
+  twigAddFunction(environment, "set_meta_description", (description) => (tplData.page.meta.description = description), [
+    "description",
+  ])
+  twigAddFunction(environment, "set_meta_keywords", (keywords) => (tplData.page.meta.keywords = keywords), ["keywords"])
 }
 function snakeToCamel(str) {
   return str.replace(/([-_]\w)/g, function (matches) {
@@ -156,4 +133,5 @@ export {
   twigAddFilter,
   twigAddFunction,
   capitalize,
+  getBlockFeatureByTemplate,
 }

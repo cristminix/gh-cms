@@ -10,10 +10,11 @@ import { Prx, requestIdentityToken, titleCase } from "@/cp/global/fn"
 import Button from "@/cp/components/shared/ux/Button"
 import JsonView from "react18-json-view"
 import { okaidia } from "@uiw/codemirror-themes-all"
-const containerCls =
-  "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
+const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
 import "react18-json-view/src/style.css"
 import { FormRow } from "../shared/ux/Form"
+import WebBlockFeatureManager from "./WebBlockFeatureManager"
+
 const WebCodeEditor = ({ store, config, mode, pk }) => {
   const toastRef = useRef(null)
   const [kind, setKind] = useState(mode)
@@ -23,6 +24,7 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
   const [content, setContent] = useState("")
   const [logOutput, setLogOutput] = useState("")
   const [fullPath, setFullPath] = useState("")
+  const [viewMode, setViewMode] = useState("code")
   const [vH, setVh] = useState(260)
   const setAutoViewPortHeight = () => {
     config.getUiConfig().applyResizeEvent((rootSize, windowSize, $root) => {
@@ -48,19 +50,12 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
     try {
       const formData = new FormData()
       formData.append("content", content)
-      const { data, validJson, code, text } = await Prx.post(
-        url,
-        null,
-        formData,
-      )
+      const { data, validJson, code, text } = await Prx.post(url, null, formData)
       if (validJson) {
         // setEditorBuffer(data)
         setLogOutput(data)
       } else {
-        toast(
-          `Failed to get file ${url} server sent http ${code} ${text}`,
-          "error",
-        )
+        toast(`Failed to get file ${url} server sent http ${code} ${text}`, "error")
       }
     } catch (e) {
       toast(e.toString(), "error")
@@ -82,20 +77,13 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
       try {
         const formData = new FormData()
         //   formData.append("content", content)
-        const { data, validJson, code, text } = await Prx.post(
-          url,
-          null,
-          formData,
-        )
+        const { data, validJson, code, text } = await Prx.post(url, null, formData)
         if (validJson) {
           setEditorBuffer(data.data)
           setContent(data.data)
           setLogOutput(data)
         } else {
-          toast(
-            `Failed to get file ${url} server sent http ${code} ${text}`,
-            "error",
-          )
+          toast(`Failed to get file ${url} server sent http ${code} ${text}`, "error")
         }
       } catch (e) {
         toast(e.toString(), "error")
@@ -122,19 +110,11 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
     setFullPath(path)
     const url = apiUrl([path])
     try {
-      const { data, validData, code, text } = await Prx.get(
-        url,
-        null,
-        {},
-        "text",
-      )
+      const { data, validData, code, text } = await Prx.get(url, null, {}, "text")
       if (validData) {
         setEditorBuffer(data)
       } else {
-        toast(
-          `Failed to get file ${url} server sent http ${code} ${text}`,
-          "error",
-        )
+        toast(`Failed to get file ${url} server sent http ${code} ${text}`, "error")
       }
     } catch (e) {
       toast(e.toString(), "error")
@@ -189,11 +169,7 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
       <div className="min-h-screen">
         <Toast ref={toastRef} />
 
-        <div
-          className={`web-code-editor ${containerCls} ${
-            pk ? "opacity-100" : "opacity-50"
-          }`}
-        >
+        <div className={`web-code-editor ${containerCls} ${pk ? "opacity-100" : "opacity-50"}`}>
           <div className="grid-toolbar pb-2">
             <div className="flex flex-wrap gap-2 items-center">
               <Button
@@ -223,23 +199,22 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
                   <div className="grid-toolbar pb-4">
                     <div className="flex justify-between gap-2">
                       <div className="flex gap-2">
-                        <Button
-                          onClick={(e) => reload()}
-                          icon="fa fa-refresh"
-                          caption="Reload"
-                        />
-                        <Button
-                          onClick={(e) => save()}
-                          icon="fa fa-save"
-                          caption="Save"
-                        />
+                        <Button onClick={(e) => reload()} icon="fa fa-refresh" caption="Reload" />
+                        <Button onClick={(e) => save()} icon="fa fa-save" caption="Save" />
                       </div>
                       <div className="flex gap-2">
                         <Button
-                          onClick={(e) => generate()}
+                          onClick={(e) => {
+                            const tgViewMode = viewMode != "code" ? "code" : "bf"
+                            // console.log(viewMode)
+                            setViewMode(tgViewMode)
+                          }}
                           icon="fa fa-cog"
-                          caption="Generate"
+                          caption="Toggle Block Feature"
                         />
+                      </div>
+                      <div className="flex gap-2">
+                        <Button onClick={(e) => generate()} icon="fa fa-cog" caption="Generate" />
                         <Button
                           onClick={(e) => templateDataBlock()}
                           icon="fa fa-cog"
@@ -248,14 +223,18 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
                       </div>
                     </div>
                   </div>
-                  <CodeMirror
-                    className={`${containerCls} p-[4px]`}
-                    value={editorBuffer}
-                    height={`300px`}
-                    extensions={[twigLanguage]}
-                    onChange={onChange}
-                    theme={okaidia}
-                  />
+                  {viewMode == "code" ? (
+                    <CodeMirror
+                      className={`${containerCls} p-[4px]`}
+                      value={editorBuffer}
+                      height={`300px`}
+                      extensions={[twigLanguage]}
+                      onChange={onChange}
+                      theme={okaidia}
+                    />
+                  ) : (
+                    <WebBlockFeatureManager routePath={"search"} blockId={pk} config={config} />
+                  )}
                 </div>
                 <div className="p-2">
                   <JsonView src={logOutput} />

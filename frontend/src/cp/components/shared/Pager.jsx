@@ -68,7 +68,30 @@ export class ArrayPager {
     return this.totalRecords
   }
 }
-export default function Pager({ pathQueryString = "", limit, total_pages, page, gotoPage, path = "", onRefresh }) {
+const AutoLink = ({ callbackPage = null, pageNum = null, to = "#", className, children }) => {
+  return (
+    <Link
+      onClick={(e) => {
+        callbackPage(pageNum)
+        e.preventDefault()
+      }}
+      to={callbackPage ? null : to}
+      className={className}
+    >
+      {children}
+    </Link>
+  )
+}
+export default function Pager({
+  callbackPage = null,
+  pathQueryString = "",
+  limit,
+  total_pages,
+  page,
+  gotoPage,
+  path = "",
+  onRefresh,
+}) {
   const name = "pager"
   const [isLoading, setLoading] = useState(false)
   page = parseInt(page)
@@ -94,47 +117,55 @@ export default function Pager({ pathQueryString = "", limit, total_pages, page, 
   return (
     <nav className="flex items-center place-content-center space-x-2" key={name}>
       {hasPrev(page) ? (
-        <Link
+        <AutoLink
+          callbackPage={callbackPage}
+          pageNum={page_number - 1}
           key={`${name}-min-1`}
           className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"
           to={`${path}/page/${page - 1}${pathQueryString}`}
         >
           <span aria-hidden="true">«</span>
           <span>Sebelum</span>
-        </Link>
+        </AutoLink>
       ) : (
         ""
       )}
       {forPages().map((page_number, index) => {
         const isActive = page_number == page
         return isActive ? (
-          <Link
+          <AutoLink
+            callbackPage={callbackPage}
+            pageNum={page_number}
             key={`${name}-num-${index}`}
             className="w-10 h-10 bg-blue-500 text-white p-4 inline-flex items-center text-sm font-medium rounded-full"
             aria-current="page"
             to={`${path}/page/${page_number}${pathQueryString}`}
           >
             {page_number}
-          </Link>
+          </AutoLink>
         ) : (
-          <Link
+          <AutoLink
+            callbackPage={callbackPage}
+            pageNum={page_number}
             key={`${name}-num-${index}`}
             to={`${path}/page/${page_number}${pathQueryString}`}
             className="w-10 h-10 text-gray-500 hover:text-blue-600 p-4 inline-flex items-center text-sm font-medium rounded-full"
           >
             {page_number}
-          </Link>
+          </AutoLink>
         )
       })}
       {hasNext(page) ? (
-        <Link
+        <AutoLink
+          callbackPage={callbackPage}
+          pageNum={page_number + 1}
           key={`${name}-plus-1`}
           className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"
           to={`${path}/page/${page + 1}${pathQueryString}`}
         >
           <span>Berikutnya</span>
           <span aria-hidden="true">»</span>
-        </Link>
+        </AutoLink>
       ) : (
         ""
       )}
