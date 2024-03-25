@@ -119,7 +119,7 @@ export default function Pager({
       {hasPrev(page) ? (
         <AutoLink
           callbackPage={callbackPage}
-          pageNum={page_number - 1}
+          pageNum={page - 1}
           key={`${name}-min-1`}
           className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"
           to={`${path}/page/${page - 1}${pathQueryString}`}
@@ -158,7 +158,7 @@ export default function Pager({
       {hasNext(page) ? (
         <AutoLink
           callbackPage={callbackPage}
-          pageNum={page_number + 1}
+          pageNum={page + 1}
           key={`${name}-plus-1`}
           className="text-gray-500 hover:text-blue-600 p-4 inline-flex items-center gap-2 rounded-md"
           to={`${path}/page/${page + 1}${pathQueryString}`}

@@ -88,6 +88,10 @@ export class MWebBlock {
     }
     return { limit, total_pages: 0, total_records: 0, record_count: 0 }
   }
+  async getByPath(path) {
+    const record = await this.manager.findOne(WebBlock, { where: { path } })
+    return record
+  }
   async getByPk(pk, includePath = false, kind = null) {
     let id = pk
     let record = null

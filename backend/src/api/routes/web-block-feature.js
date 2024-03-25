@@ -34,7 +34,7 @@ class WebBlockFeatureRouter extends AuthenticatedRouter {
     const { page, limit, order_by, order_dir, blockId } = req.query
     let filter = null
     if (blockId) {
-      filter = { blockId }
+      filter = { where: { blockId } }
     }
     const results = await this.mWebBlockFeature.getList(page, limit, order_by, order_dir, filter)
     return res.send(results)

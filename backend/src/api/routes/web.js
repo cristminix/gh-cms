@@ -3,19 +3,8 @@ import fs from "fs"
 import serveIndex from "serve-index"
 import "reflect-metadata"
 import path from "path"
-import {
-  createEnvironment,
-  createFilesystemLoader,
-  createFilter,
-  createFunction,
-} from "twing"
-import {
-  camelToSnake,
-  snakeToCamel,
-  slugify,
-  twigAddFilter,
-  twigAddFunction,
-} from "../libs/utils.js"
+import { createEnvironment, createFilesystemLoader, createFilter, createFunction } from "twing"
+import { camelToSnake, snakeToCamel, slugify, twigAddFilter, twigAddFunction } from "../libs/utils.js"
 
 class WebRouter {
   datasource = null
@@ -31,6 +20,7 @@ class WebRouter {
   mWebTemplateBlock = null
   mWebSectionBlock = null
   mWebBlock = null
+  mWebBlockFeature = null
   constructor(datasource, appConfig, logger) {
     this.datasource = datasource
     this.appConfig = appConfig
@@ -43,6 +33,7 @@ class WebRouter {
     this.mWebTemplateBlock = datasource.factory("MWebTemplateBlock", true)
     this.mWebSectionBlock = datasource.factory("MWebSectionBlock", true)
     this.mWebBlock = datasource.factory("MWebBlock", true)
+    this.mWebBlockFeature = datasource.factory("MWebBlockFeature", true)
 
     this.initRouter()
   }
@@ -54,23 +45,25 @@ class WebRouter {
   }
   async tplFunc(req, res) {
     const { fn } = req.params
-    const { limit, page, order_by, order_dir } = req.query
+    const { limit, page, order_by, order_dir, blockId, tplPath } = req.query
     const websiteSetting = await this.mWebSiteSetting.getDefault()
     let data
     if (fn === "web_menu_get_list") {
       data = await this.mWebMenu.getList(limit, page)
     } else if (fn === "web_contact_person_get_list") {
-      data = await this.mWebContactPerson.getList(
-        limit,
-        page,
-        order_by,
-        order_dir,
-        {
-          siteId: websiteSetting.id,
-        },
-      )
+      data = await this.mWebContactPerson.getList(limit, page, order_by, order_dir, {
+        where: { siteId: websiteSetting.id },
+      })
     } else if (fn === "web_get_company") {
       data = await await this.mWebCompany.getByPk(websiteSetting.companyId)
+    } else if (fn === "web_block_feature_by_tpl_path") {
+      const block = await this.mWebBlock.getByPath(tplPath)
+      if (block) {
+        data = await this.mWebBlockFeature.getList(limit, page, order_by, order_dir, {
+          where: { blockId: block.id },
+        })
+        console.log(data)
+      }
     }
     res.send(data)
   }
@@ -85,10 +78,7 @@ class WebRouter {
     }
     const tpl = await this.mWebTemplate.getBySlug(template, true)
     const tpls = {
-      [tpl.path]: fs.readFileSync(
-        `./themes/${websiteSetting.theme}/templates/${tpl.path}`,
-        "utf8",
-      ),
+      [tpl.path]: fs.readFileSync(`./themes/${websiteSetting.theme}/templates/${tpl.path}`, "utf8"),
     }
     const defaultSections = {
       "html-open.twig": "",
@@ -103,10 +93,7 @@ class WebRouter {
       "html-close.twig": "",
     }
     const tplSections = {}
-    const tmpSections = await this.mWebBlock.getSectionsByTemplateId(
-      tpl.id,
-      true,
-    )
+    const tmpSections = await this.mWebBlock.getSectionsByTemplateId(tpl.id, true)
 
     tmpSections.forEach((section) => {
       tplSections[`./sections/${section.path}`] = fs.readFileSync(
@@ -116,15 +103,7 @@ class WebRouter {
     })
 
     const tplBlocks = {}
-    const tmpBlocks = await this.mWebBlock.getList(
-      tpl.id,
-      1,
-      100,
-      "id",
-      "asc",
-      "block",
-      null,
-    )
+    const tmpBlocks = await this.mWebBlock.getList(tpl.id, 1, 100, "id", "asc", "block", null)
     tmpBlocks.records.forEach((block) => {
       tplBlocks[`../blocks/${block.path}`] = fs.readFileSync(
         `./themes/${websiteSetting.theme}/templates/blocks/${block.path}`,
@@ -183,18 +162,13 @@ class WebRouter {
         environment,
         "web_get_company",
         async () => {
-          const company = await this.mWebCompany.getByPk(
-            websiteSetting.companyId,
-          )
+          const company = await this.mWebCompany.getByPk(websiteSetting.companyId)
           const fixUrlProps = ["logo", "logoSm", "logoMd", "logoLg", "logoXl"]
           Object.keys(company).forEach((key) => {
             if (fixUrlProps.includes(key)) {
               const rgxThemeUrl = new RegExp("{themeUrl}", "g")
               if (rgxThemeUrl.test(company[key])) {
-                company[key] = company[key].replace(
-                  rgxThemeUrl,
-                  `/themes/${websiteSetting.theme}`,
-                )
+                company[key] = company[key].replace(rgxThemeUrl, `/themes/${websiteSetting.theme}`)
               }
             }
           })
@@ -203,31 +177,13 @@ class WebRouter {
         [],
         true,
       )
-      twigAddFunction(
-        environment,
-        "page_title",
-        (title) => (page.title = title),
-        ["title"],
-      )
-      twigAddFunction(
-        environment,
-        "theme_url",
-        (path) => `/themes/${websiteSetting.theme}/${path}`,
-        ["url"],
-      )
+      twigAddFunction(environment, "page_title", (title) => (page.title = title), ["title"])
+      twigAddFunction(environment, "theme_url", (path) => `/themes/${websiteSetting.theme}/${path}`, ["url"])
       twigAddFunction(environment, "base_url", (path) => `/${path}`, ["url"])
-      twigAddFunction(
-        environment,
-        "set_meta_description",
-        (description) => (page.meta.description = description),
-        ["description"],
-      )
-      twigAddFunction(
-        environment,
-        "set_meta_keywords",
-        (keywords) => (page.meta.keywords = keywords),
-        ["keywords"],
-      )
+      twigAddFunction(environment, "set_meta_description", (description) => (page.meta.description = description), [
+        "description",
+      ])
+      twigAddFunction(environment, "set_meta_keywords", (keywords) => (page.meta.keywords = keywords), ["keywords"])
 
       let templatePath = `${template ? template : "homepage"}.twig`
       let activeTemplateName = templatePath
@@ -249,18 +205,9 @@ class WebRouter {
     this.router.use("/themes", express.static(staticPath)) // Serve static files
     this.router.use("/themes", serveIndex(staticPath, { icons: true }))
 
-    this.router.get(
-      "/:template?",
-      async (req, res) => await this.homepage(req, res),
-    )
-    this.router.get(
-      "/arrayLoader/:template",
-      async (req, res) => await this.arrayLoader(req, res),
-    )
-    this.router.get(
-      "/web/tplFunc/:fn",
-      async (req, res) => await this.tplFunc(req, res),
-    )
+    this.router.get("/:template?", async (req, res) => await this.homepage(req, res))
+    this.router.get("/arrayLoader/:template", async (req, res) => await this.arrayLoader(req, res))
+    this.router.get("/web/tplFunc/:fn", async (req, res) => await this.tplFunc(req, res))
   }
 }
 

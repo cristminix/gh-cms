@@ -44,11 +44,13 @@ const apiUrl = (path, qs = null) => {
   return `http://localhost:7700/${dst}`
 }
 const getBlockFeatureByTemplate = async (path) => {
+  let data = null
   try {
-    return await fetch(apiUrl("web/tplFunc/web_block_feature_by_tpl_path", { path })).then((r) => r.json())
+    data = await fetch(apiUrl("web/tplFunc/web_block_feature_by_tpl_path", { tplPath: path })).then((r) => r.json())
   } catch (e) {
-    return []
+    // data = ["fuck"]
   }
+  return data
 }
 const applyEnvFunction = async (environment, tplData) => {
   const theme = "green-ponpes"

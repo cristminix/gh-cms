@@ -88,7 +88,28 @@ async function parseTemplate(code, id, templateData = {}) {
   let tplPath = id.split("/")
   tplPath = tplPath[tplPath.length - 1]
   const blockFeatures = await getBlockFeatureByTemplate(tplPath)
-  console.log(blockFeatures)
+  const loadScriptsBuffers = []
+  if (blockFeatures) {
+    blockFeatures.records.forEach((item) => {
+      if (item.kind == "js") {
+        loadScriptsBuffers.push(`
+        useEffect(()=>{
+          console.log("called")
+          try{
+          ${item.content}
+
+          }catch(e){
+            console.error(e)
+          }
+
+        },[])      
+      `)
+      }
+    })
+  }
+
+  console.log(loadScriptsBuffers)
+
   let twigTplRendered = await environment.render(`${id}`, tplData)
   const rgxRplcs = [
     [/class=/g, "className="],
@@ -134,9 +155,10 @@ async function parseTemplate(code, id, templateData = {}) {
   parserBuff += `
 import {useEffect,useState} from "react"
 import {Link} from "react-router-dom"
+
   const ${mainComponentName} = ({}) => {
 
-
+  ${loadScriptsBuffers.join("\n")}
     
   return <>${twigTplRendered}</>
     
