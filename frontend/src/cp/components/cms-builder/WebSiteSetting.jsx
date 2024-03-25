@@ -10,9 +10,7 @@ import { niceScrollbarCls } from "@/cp/components/shared/ux/cls"
 import Toast from "@/cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@/cp/global/fn"
 
-
-const WebSiteSetting = ({ store, config, pageNumber  }) => {
-
+const WebSiteSetting = ({ store, config, pageNumber }) => {
   const toastRef = useRef(null)
   const [grid, setGrid] = useState({
     records: [],
@@ -31,13 +29,13 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
   const [formData, setFormData] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [requestToken, setRequestToken] = useState(null)
-  
+
   const toast = (message, t) => {
     if (toastRef.current) {
       toastRef.current.add(message, t)
     }
   }
-  
+
   useEffect(() => {
     if (requestToken) {
       updateList()
@@ -47,7 +45,6 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
   useEffect(() => {
     retrieveIdentityToken()
   }, [])
-
 
   const retrieveIdentityToken = async () => {
     const appId = config.getAppId()
@@ -59,14 +56,17 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
   }
 
   const onRefresh = (f) => updateList()
-  
+
   const updateList = async () => {
     const page = parseInt(pageNumber) || 1
 
     const { limit, order_by, order_dir } = grid
-    const url = apiUrl("web-site-settings", { 
-            limit, 
-      page, order_by, order_dir })
+    const url = apiUrl("web-site-settings", {
+      limit,
+      page,
+      order_by,
+      order_dir,
+    })
     try {
       const { data, validJson, code, text } = await Prx.get(url, requestToken)
       if (validJson) {
@@ -85,7 +85,7 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
       toast(e.toString(), "error")
     }
   }
-    
+
   const addForm = async (item, index) => {
     const defaultSiteSetting = createUntitledSiteSetting()
 
@@ -104,10 +104,7 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
     if (confirm(`Are you sure want to delete this upload "${item.name}"`)) {
       const url = apiUrl(["web-site-setting/delete", item.id])
       try {
-        const { data, validJson, code, text } = await Prx.delete(
-          url,
-          requestToken,
-        )
+        const { data, validJson, code, text } = await Prx.delete(url, requestToken)
         if (validJson) {
           const { success, message } = data
           toast(message, success ? "success" : "error")
@@ -122,10 +119,7 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
             }
           }
         } else {
-          toast(
-            `Failed to delete id:${item.id} server sent http ${code} ${text}`,
-            "error",
-          )
+          toast(`Failed to delete id:${item.id} server sent http ${code} ${text}`, "error")
         }
       } catch (e) {
         console.log(e)
@@ -150,8 +144,6 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
     return response
   }
 
-  
-  
   const goToLastPage = async () => {
     try {
       const response = await getListState(grid.limit)
@@ -172,32 +164,21 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
       updateList()
     }
   }
-  
-
 
   const gridOptions = {
     numberWidthCls: "w-[10px]",
     actionWidthCls: "w-[50px]",
     widthCls: [""],
-    headers: ["id","name","slug","theme","companyId","setAsDefault"],
-    fields: ["id","name","slug","theme","companyId","setAsDefault"],
+    headers: ["name", "slug", "theme", "companyId", "setAsDefault"],
+    fields: ["name", "slug", "theme", "companyId", "setAsDefault"],
     enableEdit: true,
-    callbackFields: {
-    },
-    callbackHeaders: {
-    },
+    callbackFields: {},
+    callbackHeaders: {},
     callbackActions: {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
-            
-            <Button
-              title="Edit"
-              loading={false}
-              icon="fa fa-edit"
-              caption=""
-              onClick={(e) => editForm(item, index)}
-            />
+            <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />
             <Button
               title="Delete"
               loading={false}
@@ -210,8 +191,7 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
       },
     },
   }
-  const containerCls =
-    "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
+  const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
   return (
     <div className="min-h-screen">
       <Toast ref={toastRef} />
@@ -234,30 +214,15 @@ const WebSiteSetting = ({ store, config, pageNumber  }) => {
       <div className={`user-manager ${containerCls}`}>
         <div className="grid-toolbar pb-4">
           <div className="flex justify-end gap-2">
-            {!showForm ? (
-              <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" />
-            ) : null}
-            <Button
-              onClick={(e) => goToLastPage()}
-              caption="Go to last page"
-              icon="fa fa-next"
-            />
+            {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" /> : null}
+            <Button onClick={(e) => goToLastPage()} caption="Go to last page" icon="fa fa-next" />
           </div>
         </div>
         <div className="flex flex-col ">
           <div className={`-m-1.5 overflow-x-auto ${niceScrollbarCls}`}>
             <div className="p-1.5 ">
               <div className="">
-                {grid ? (
-                  <Grid
-                    options={gridOptions}
-                    records={grid.records}
-                    page={grid.page}
-                    limit={grid.limit}
-                  />
-                ) : (
-                  ""
-                )}
+                {grid ? <Grid options={gridOptions} records={grid.records} page={grid.page} limit={grid.limit} /> : ""}
               </div>
             </div>
           </div>

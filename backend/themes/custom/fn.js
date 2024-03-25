@@ -1,14 +1,12 @@
 import twigPkg from "twig"
 import twingPkg from "twing"
 const { twig } = twigPkg
-import {
-  capitalize,
-  snakeToCamel,
-  camelToSnake,
-  slugify,
-} from "../green-ponpes/js/components/fn"
+import { capitalize, snakeToCamel, camelToSnake, slugify } from "../green-ponpes/js/components/fn"
 import { createArrayLoader, createEnvironment } from "twing"
 import { applyEnvFunction } from "../green-ponpes/js/components/fn.js"
+// import jQuery from "jquery"
+// import { Cheerio } from "cheerio"
+import cheerio from "cheerio"
 async function parseTemplate(code, id, templateData = {}) {
   const twigObj = twig({ data: code })
   let newSourceBuffer = []
@@ -28,10 +26,7 @@ async function parseTemplate(code, id, templateData = {}) {
           })
         }
       } else if (token.token.type == "Twig.logic.type.for") {
-        const line = code.substring(
-          token.position.open.start,
-          token.position.close.end,
-        )
+        const line = code.substring(token.position.open.start, token.position.close.end)
         console.log(line)
         if (line.length > 0) {
           newSourceBuffer.push(line)
@@ -91,7 +86,7 @@ async function parseTemplate(code, id, templateData = {}) {
   applyEnvFunction(environment, tplData)
   let twigTplRendered = await environment.render(`${id}`, tplData)
   const rgxRplcs = [
-    [/classname/g, "className"],
+    [/class=/g, "className="],
     [/(<!--.*-->)/g, "{/*$1*/}"],
     [/(\"CLS_INDEX_)(\d+)(\")/g, "{cls$2}"],
     [/(\"STL_INDEX_)(\d+)(\")/g, "{styles.stl$2}"],
@@ -109,14 +104,27 @@ async function parseTemplate(code, id, templateData = {}) {
     [/\>\s*\<\/img\>/g, "/>"],
     [/\>\s*\<\/br\>/g, "/>"],
   ]
-  //   rgxRplcs.forEach((rgxRplc, index) => {
-  //     // console.log(rgxRplc)
-  //     const [rgx, rplc] = rgxRplc
-  //     twigTplRendered = twigTplRendered.replace(rgx, rplc)
-  //   })
+  rgxRplcs.forEach((rgxRplc, index) => {
+    // console.log(rgxRplc)
+    const [rgx, rplc] = rgxRplc
+    twigTplRendered = twigTplRendered.replace(rgx, rplc)
+  })
+  const contentRoot = cheerio.load(`${twigTplRendered}`, { xml: true })
+  // const linkTagKey = (new Date()).getTime().toString()
+  contentRoot("a").each(function (o, elt) {
+    var newElt = cheerio("<KINL/>")
+    Array.prototype.slice.call(elt.attributes).forEach(function (a) {
+      if (a.name == "href") {
+        newElt.attr("to", a.value)
+      } else newElt.attr(a.name, a.value)
+    })
+    cheerio(elt).wrapInner(newElt).children(0).unwrap()
+  })
+  twigTplRendered = contentRoot.html()
+  twigTplRendered = twigTplRendered.replace(/KINL/gi, "Link")
   parserBuff += `
 import {useEffect,useState} from "react"
-
+import {Link} from "react-router-dom"
   const ${mainComponentName} = ({}) => {
 
 

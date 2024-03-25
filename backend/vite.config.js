@@ -12,7 +12,8 @@ export default defineConfig({
   },
   ollupOptions: {
     input: {
-      main: resolve("./themes/green-ponpes/index.html"),
+      // main: resolve("./themes/green-ponpes/index.html"),
+      main: resolve("./index.html"),
     },
   },
   plugins: [react(), nodePolyfills(), twig()],

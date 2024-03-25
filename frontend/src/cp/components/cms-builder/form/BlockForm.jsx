@@ -481,7 +481,7 @@ const BlockForm = ({
                       />
                     )}
 
-                    <FormRow
+                    {/* <FormRow
                       validationErrors={validationErrors}
                       label="Parent"
                       value={parent}
@@ -489,7 +489,7 @@ const BlockForm = ({
                       onChange={(e) => {
                         setParent(e.target.value)
                       }}
-                    />
+                    /> */}
                   </form>
                 </div>
               </div>
