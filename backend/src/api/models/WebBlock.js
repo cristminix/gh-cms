@@ -110,7 +110,7 @@ export class MWebBlock {
             .leftJoin(WebTemplate, "tpl", "tpl.id = wtb.templateId")
             .leftJoin(WebTheme, "th", "th.id = tpl.themeId")
 
-          addSelect = [...addSelect, "wbs.slug sectionSlug"]
+          addSelect = [...addSelect, "wbs.slug sectionSlug", "wsb.sectionId parent"]
         }
         query.where("wb.id = :id", { id })
         addSelect = [
@@ -122,7 +122,6 @@ export class MWebBlock {
           "wb.previewImage previewImage",
           "wb.path path",
           "wb.kind kind",
-          "wsb.sectionId parent",
         ]
         query = query.select(addSelect)
         console.log(getCompiledSql(query))

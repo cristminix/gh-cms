@@ -161,6 +161,15 @@
       "nullable":[],
       "lengths": [null, 225, 500, null, null]
     },
+    "web_block_feature": {
+      "schema": "WebBlockFeatureSchema",
+      "model": "WebBlockFeature",
+      "pk": "id",
+      "fields": ["id", "blockId", "name","description", "kind", "content", "path_","enabled"],
+      "types": ["int", "int", "varchar", "varchar","varchar", "text", "varchar", "int"],
+      "lengths": [null, null, 225,2225, 100, null, 200, null],
+      "nullable": []
+    },
     "web_contact_person": {
       "schema": "WebContactPersonSchema",
       "model": "WebContactPerson",

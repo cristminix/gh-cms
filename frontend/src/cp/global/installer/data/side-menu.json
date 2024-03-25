@@ -531,7 +531,7 @@
     "parent": -1,
     "children": [
       {
-        "title": "Konfigurasi Server",
+        "title": "Setingan",
         "slug": "server-config",
         "parent": 23,
         "path": "/settings/server-config",

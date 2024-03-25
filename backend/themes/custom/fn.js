@@ -115,6 +115,10 @@ async function parseTemplate(code, id, templateData = {}) {
     var newElt = cheerio("<KINL/>")
     Array.prototype.slice.call(elt.attributes).forEach(function (a) {
       if (a.name == "href") {
+        if (a.value == "javascript:;") {
+          a.value = "#"
+          newElt.attr("onClick", "KLIKPOON")
+        }
         newElt.attr("to", a.value)
       } else newElt.attr(a.name, a.value)
     })
