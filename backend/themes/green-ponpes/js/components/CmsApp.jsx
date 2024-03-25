@@ -20,8 +20,10 @@ const CMSApp = () => {
       setTpl(templates[template])
     } else {
       import(`../../templates/${template}.twig`).then((module) => {
-        templates[template] = createElement(module.default)
-        setTpl(templates[template])
+        // templates[template] =
+        const tplSet = createElement(module.default)
+        setTpl(tplSet)
+        // setTpl(templates[template])
       })
     }
   }, [template])

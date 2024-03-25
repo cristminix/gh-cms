@@ -84,7 +84,7 @@ const applyEnvFunction = async (environment, tplData) => {
     environment,
     "web_get_company",
     async () => {
-      console.log("web_get_company")
+      // console.log("web_get_company")
       const company = await fetch(apiUrl("web/tplFunc/web_get_company")).then((r) => r.json())
 
       const fixUrlProps = ["logo", "logoSm", "logoMd", "logoLg", "logoXl"]

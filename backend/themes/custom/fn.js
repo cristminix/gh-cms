@@ -28,13 +28,13 @@ async function parseTemplate(code, id, templateData = {}) {
         }
       } else if (token.token.type == "Twig.logic.type.for") {
         const line = code.substring(token.position.open.start, token.position.close.end)
-        console.log(line)
+        // console.log(line)
         if (line.length > 0) {
           newSourceBuffer.push(line)
         }
       } else {
         const line = code.substring(token.position.start, token.position.end)
-        console.log(line)
+        // console.log(line)
         if (line.length > 0) {
           newSourceBuffer.push(line)
         } else {
@@ -44,7 +44,7 @@ async function parseTemplate(code, id, templateData = {}) {
     } else {
       const line = code.substring(token.position.start, token.position.end)
 
-      console.log(index, "NOT LOGIC", token.type, token, line)
+      // console.log(index, "NOT LOGIC", token.type, token, line)
       if (line.length > 0) {
         newSourceBuffer.push(line)
       } else {
@@ -82,7 +82,7 @@ async function parseTemplate(code, id, templateData = {}) {
   const loader = createArrayLoader({
     [`${id}`]: twigTplData,
   })
-  console.log(twigTplData)
+  // console.log(twigTplData)
   const environment = createEnvironment(loader)
   applyEnvFunction(environment, tplData)
   let tplPath = id.split("/")
@@ -94,7 +94,7 @@ async function parseTemplate(code, id, templateData = {}) {
       if (item.kind == "js") {
         loadScriptsBuffers.push(`
         useEffect(()=>{
-          console.log("called")
+          // console.log("called")
           try{
           ${item.content}
 
@@ -108,7 +108,7 @@ async function parseTemplate(code, id, templateData = {}) {
     })
   }
 
-  console.log(loadScriptsBuffers)
+  // console.log(loadScriptsBuffers)
 
   let twigTplRendered = await environment.render(`${id}`, tplData)
   const rgxRplcs = [
