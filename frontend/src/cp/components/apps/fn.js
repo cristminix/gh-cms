@@ -15,7 +15,7 @@ const apiUrl = (path, qs = null) => {
       dst += `?${querStrings.join("&")}`
     }
   }
-  return `http://ubuserver:7700/api/cms/${dst}`
+  return `http://127.0.0.1:7700/api/cms/${dst}`
 }
 // import Queue from "../developers/queue-man/Queue"
 class Queue {}

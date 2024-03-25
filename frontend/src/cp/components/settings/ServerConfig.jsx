@@ -14,7 +14,7 @@ import UserData from "@/cp/global/models/UserData"
 //   "py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
 // import { crc32 } from "crc"
 
-const NativeClient = ({ store, config }) => {
+const ServerConfig = ({ store, config }) => {
   const [grid, setGrid] = useState({
     records: [],
     limit: 5,
@@ -62,9 +62,7 @@ const NativeClient = ({ store, config }) => {
         return {
           ...prevGrid,
           records: prevGrid.records.map((n_record, n_index) =>
-            n_index === idx
-              ? { ...n_record, status: 2, param: data, output: response }
-              : n_record,
+            n_index === idx ? { ...n_record, status: 2, param: data, output: response } : n_record,
           ),
         }
       })
@@ -74,19 +72,18 @@ const NativeClient = ({ store, config }) => {
     numberWidthCls: "1/8",
     actionWidthCls: "1/8",
     widthCls: ["1/4", "1/4", "1/4", "1/4"],
-    headers: ["Cmd & Desc", "Param", "Output", "Status"],
-    fields: ["cmd", "param", "output", "status"],
+    headers: ["Name", "Value", "Default", "Description"],
+    fields: ["name", "value", "defaultValue", "description"],
     enableEdit: true,
     // editUrl : (item) =>{ return `/DBerences/tts-server/${item.key}`},
     // remoteUrl : (item) => `${config.getApiEndpoint()}/api/tts/DBerence?key=${item.key}`,
     callbackHeaders: {},
     callbackFields: {
-      cmd: (field, value, item) => {
-        return (
-          <div>
-            <code>{item.cmd}</code> <p>{item.desc}</p>
-          </div>
-        )
+      defaultValue: (field, value, item) => {
+        return <code>{item.defaultValue}</code>
+      },
+      value: (field, value, item) => {
+        return <code>{item.value}</code>
       },
       param: (field, value, item) => {
         // console.log(item)
@@ -111,12 +108,7 @@ const NativeClient = ({ store, config }) => {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
-            <Button
-              loading={false}
-              icon="fa fa-play"
-              caption="Run"
-              onClick={(e) => runCmd(item, index)}
-            />
+            <Button loading={false} icon="fa fa-edit" caption="Edit" onClick={(e) => editValue(item, index)} />
           </>
         )
       },
@@ -126,31 +118,22 @@ const NativeClient = ({ store, config }) => {
   const updateList = async () => {
     const records = [
       {
-        cmd: "ping",
-        desc: "Ping Module",
-        data: {},
-        output: "",
-        status: 0,
+        name: "backendEndpoint",
+        description: "Backend url endpoint for apiUrl",
+        value: "",
+        defaultValue: "http://localhost:7700",
       },
       {
-        cmd: "send_cookies",
-        desc: "Send Cookie Module",
-        data: {
-          cookies: async () => {
-            const userData = UserData.getInstance()
-            await userData.connect()
-            const row = await userData.get("uCookies")
-            if (row) {
-              if (row.content) {
-                const cookies = row.content
-                return cookies
-              }
-            }
-            return null
-          },
-        },
-        output: "",
-        status: 0,
+        name: "viteTemplateEndpoint",
+        description: "Backend Vite endpoint for template HMR",
+        value: "",
+        defaultValue: "http://localhost:3000",
+      },
+      {
+        name: "enableAuth",
+        description: "Enable App Auth",
+        value: "",
+        defaultValue: "no",
       },
     ]
 
@@ -165,8 +148,7 @@ const NativeClient = ({ store, config }) => {
     updateList()
   }, [])
 
-  const containerCls =
-    "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
+  const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
   return (
     <div className="min-h-screen">
       {
@@ -178,29 +160,7 @@ const NativeClient = ({ store, config }) => {
           <div className="-m-1.5 overflow-x-auto">
             <div className="p-1.5 min-w-full inline-block align-middle">
               <div className="overflow-hidden">
-                {grid ? (
-                  <Grid
-                    options={gridOptions}
-                    records={grid.records}
-                    page={grid.page}
-                    limit={grid.limit}
-                  />
-                ) : (
-                  ""
-                )}
-              </div>
-              <div className="pager-container mt-3">
-                {grid ? (
-                  <Pager
-                    path="/database"
-                    page={grid.page}
-                    total_pages={grid.total_pages}
-                    limit={grid.limit}
-                    onRefresh={onRefresh}
-                  />
-                ) : (
-                  ""
-                )}
+                {grid ? <Grid options={gridOptions} records={grid.records} page={grid.page} limit={grid.limit} /> : ""}
               </div>
             </div>
           </div>
@@ -210,4 +170,4 @@ const NativeClient = ({ store, config }) => {
   )
 }
 
-export default NativeClient
+export default ServerConfig

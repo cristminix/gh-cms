@@ -1,14 +1,6 @@
 import { RouterProvider, createRoutesFromElements, Route, createHashRouter } from "react-router-dom"
 import Template from "./Template"
-
-// import WelcomePage from "./components/WelcomePage"
-// import CoursePage, { loader as courseLoader } from "./components/CoursePage"
-// import DownloadPage from "./components/DownloadPage"
-// import DownloadManager, { loader as courseSlugLoader } from "./components/DownloadManager"
-import SettingPage from "./components/SettingPage"
-// import DatabasePage, { loader as databaseLoader } from "./components/DatabasePage"
-// import BootstrapIcons,{loader as bootstrapIconLoader} from "./components/BootstrapIcons"
-// import TestPage, {loader as testPageLoader} from "./components/TestPage"
+import SettingPage, { loader as settingLoader } from "./components/SettingPage"
 import DeveloperPage, { loader as developerPageLoader } from "./components/DeveloperPage"
 import ErrorPage from "./ErrorPage"
 import Apps, { loader as ncAppLoader } from "./components/Apps"
@@ -19,15 +11,8 @@ export default function Router({ config, store }) {
   const router = createHashRouter(
     createRoutesFromElements(
       <Route path="/" errorElement={<ErrorPage />} element={<Template config={config} store={store} />}>
-        {/* <Route path="/course" element={<CoursePage store={store} />} loader={courseLoader} />
-        <Route path="/course/:ctl/:slug" element={<CoursePage store={store} config={config} />} loader={courseLoader} /> */}
-        {/* <Route path="/manager/:slug" element={<DownloadManager store={store} />} loader={courseSlugLoader} />
-        <Route path="/manager" index={true} element={<DownloadManager store={store} />} loader={courseSlugLoader} /> */}
         <Route path="/setting" element={<SettingPage store={store} />} />
-        {/* <Route path="/database" element={<DatabasePage store={store} config={config} />} loader={databaseLoader} />
-        <Route path="/database/:table" element={<DatabasePage store={store} config={config} />} loader={databaseLoader} />
-        <Route path="/database/:table/:page" element={<DatabasePage store={store} />} loader={databaseLoader} />
-        <Route path="/database" element={<DatabasePage store={store} />} /> */}
+
         <Route
           path="/developer"
           element={<DeveloperPage store={store} config={config} />}
@@ -90,8 +75,29 @@ export default function Router({ config, store }) {
           element={<ManualApp store={store} config={config} />}
           loader={manualAppLoader}
         />
-      </Route>
-    )
+        <Route path="/settings" element={<SettingPage store={store} config={config} />} loader={settingLoader} />
+        <Route
+          path="/settings/:module"
+          element={<SettingPage store={store} config={config} />}
+          loader={settingLoader}
+        />
+        <Route
+          path="/settings/:module/page/:pageNumber"
+          element={<SettingPage store={store} config={config} />}
+          loader={settingLoader}
+        />
+        <Route
+          path="/settings/:module/:fk"
+          element={<SettingPage store={store} config={config} />}
+          loader={settingLoader}
+        />
+        <Route
+          path="/settings/:module/:fk/page/:pageNumber"
+          element={<SettingPage store={store} config={config} />}
+          loader={settingLoader}
+        />
+      </Route>,
+    ),
   )
   return <RouterProvider router={router} />
 }

@@ -25,7 +25,7 @@ const Sidebar = ({ store, config }) => {
         console.log("setHideSidebar", status)
         setHideSidebar(status)
       },
-      "sidebar"
+      "sidebar",
     )
     config.getUiConfig().applyReloadSidebar((f) => {
       reloadSidebar()
@@ -44,8 +44,9 @@ const Sidebar = ({ store, config }) => {
         <div className={cls11}>
           {/* <a href="#" aria-label="Brand" className={cls12}> Brand </a>  */}
           <a className={cls12} href="#" aria-label="Brand">
-            <div className="flex bg-gray-300 p-2 rounded rounded-md">
-              <img src={appLogo} className="w-[48px] h-[48px]" /> <div className="m-3">GH CMS</div>
+            <div className="flex dark:bg-transparent bg-gray-300 p-2 rounded rounded-md">
+              <img src={appLogo} className="w-[48px] h-[48px]" />{" "}
+              <div className="m-3">GH CMS</div>
             </div>
           </a>
         </div>

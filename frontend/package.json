@@ -17,6 +17,7 @@
     "@preline/dropdown": "^2.0.1",
     "@preline/overlay": "^2.0.1",
     "@ssddanbrown/codemirror-lang-twig": "^1.0.0",
+    "@uiw/codemirror-themes-all": "^4.21.25",
     "@uiw/react-codemirror": "^4.21.24",
     "base-64": "^1.0.0",
     "bootstrap-icons": "^1.10.5",

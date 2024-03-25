@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import CodeMirror from "@uiw/react-codemirror"
 import { javascript } from "@codemirror/lang-javascript"
-
+import { okaidia } from "@uiw/codemirror-themes-all"
 function CodeViewer({ buffer = "" }) {
   const [value, setValue] = React.useState("")
   const onChange = React.useCallback((val, viewUpdate) => {
@@ -17,6 +17,7 @@ function CodeViewer({ buffer = "" }) {
     <CodeMirror
       value={buffer}
       height="300px"
+      theme={okaidia}
       extensions={[javascript({ jsx: true })]}
       onChange={onChange}
     />

@@ -6,10 +6,10 @@ import { check, validationResult, checkSchema } from "express-validator"
 import AuthenticatedRouter from "./AuthenticatedRouter.js"
 
 
-class UserRouter extends AuthenticatedRouter {
+class CmsUserRouter extends AuthenticatedRouter {
     
     datasource = null
-    mUser = null
+    mCmsUser = null
     router = null
     uploader = null
     logger = null
@@ -18,7 +18,7 @@ class UserRouter extends AuthenticatedRouter {
         super(datasource, appConfig, logger)
         this.appConfig = appConfig
         this.logger = logger
-        this.mUser = datasource.factory('MUser', true)
+        this.mCmsUser = datasource.factory('MCmsUser', true)
         this.router = express.Router()
         this.uploader = multer()
        
@@ -28,24 +28,24 @@ class UserRouter extends AuthenticatedRouter {
     async getState(req, res) {
         let { limit, page } = req.query
         page = parseInt(page) || null
-        const results = await this.mUser.getState(limit, page)
+        const results = await this.mCmsUser.getState(limit, page)
         return res.send(results)
     }
     async getList(req, res){
         const {page,limit,order_by,order_dir} = req.query
-        const results = await this.mUser.getList(page,limit,order_by,order_dir)
+        const results = await this.mCmsUser.getList(page,limit,order_by,order_dir)
         return res.send(results)
     }    
 
-    /* Route logic for handling GET /user/:id */
+    /* Route logic for handling GET /cms-user/:id */
     async get(req,res){
         let id  = req.params.id
-        const user = await this.mUser.getByPk(id)
+        const cmsuser = await this.mCmsUser.getByPk(id)
         return res.send({
-            data: user 
+            data: cmsuser 
         })
     } 
-    /* Route logic for handling POST /user/create */
+    /* Route logic for handling POST /cms-user/create */
     async create(req,res){
 
             const validationErrors = validationResult(req)
@@ -58,13 +58,13 @@ class UserRouter extends AuthenticatedRouter {
 
         let { username, email, firstName }= req.body
         try {
-            const  user = await this.mUser.create(username, email, firstName)
-            return res.send({ data: user })
+            const  cmsuser = await this.mCmsUser.create(username, email, firstName)
+            return res.send({ data: cmsuser })
         }catch(e){
             return res.send({ data: e.toString() })
         }
     }
-     /* Route logic for handling POST '/user/update */
+     /* Route logic for handling POST '/cms-user/update */
      async update(req,res){
 
             const validationErrors = validationResult(req)
@@ -81,18 +81,18 @@ class UserRouter extends AuthenticatedRouter {
         if(!id){
             id= req.params.id
         }
-        const existingRec = await  this.mUser.getByPk(id)
+        const existingRec = await  this.mCmsUser.getByPk(id)
         if (existingRec) {
             const { username, email, firstName } = req.body
             const updatedData = { username, email, firstName }
-            const  user = await this.mUser.update(id,updatedData)
-            return res.send({data: user, message: "Record updated",success:true})
+            const  cmsuser = await this.mCmsUser.update(id,updatedData)
+            return res.send({data: cmsuser, message: "Record updated",success:true})
         }else{
             return res.send({ success: false, message: "Record not found" })
         }
         
     }
-    /* Route logic for handling POST '/user/delete */
+    /* Route logic for handling POST '/cms-user/delete */
     async delete(req, res){
         let id = null
         if(req.body.id){
@@ -102,31 +102,31 @@ class UserRouter extends AuthenticatedRouter {
             id= req.params.id
         }
         
-        const existingRec = await  this.mUser.getByPk(id)
+        const existingRec = await  this.mCmsUser.getByPk(id)
 
         if (existingRec) {
-            const  user = await this.mUser.delete(id)
-            return res.send({data: user,success: true, message: "Record deleted"})
+            const  cmsuser = await this.mCmsUser.delete(id)
+            return res.send({data: cmsuser,success: true, message: "Record deleted"})
         } else {
             return res.send({ success: false, message: "Record not found" })
         }
     }    
     initRouter(){
      
-        this.router.get('/users', 
+        this.router.get('/cms-users', 
             (req, res, next) => this.authenticateToken(req, res, next),
             (req, res) => this.getList(req, res))
 
-        this.router.get("/user/states",
+        this.router.get("/cms-user/states",
                 (req, res, next) => this.authenticateToken(req, res, next),
                 (req, res) => this.getState(req, res))
         
-        this.router.get('/user/:id', 
+        this.router.get('/cms-user/:id', 
             (req, res, next) => this.authenticateToken(req, res, next),
         
             (req, res) => this.get(req, res))
           
-        this.router.post('/user/create',
+        this.router.post('/cms-user/create',
             (req, res, next) => this.authenticateToken(req, res, next),
  
  
@@ -137,7 +137,7 @@ class UserRouter extends AuthenticatedRouter {
             check("firstName", "firstName is required").not().isEmpty(),
             (req, res) => this.create(req,res))
 
-        this.router.put('/user/update/:id?',
+        this.router.put('/cms-user/update/:id?',
             (req, res, next) => this.authenticateToken(req, res, next),
  
  
@@ -148,7 +148,7 @@ class UserRouter extends AuthenticatedRouter {
             check("firstName", "firstName is required").not().isEmpty(),
             (req, res) => this.update(req,res))
 
-        this.router.delete('/user/delete/:id?',
+        this.router.delete('/cms-user/delete/:id?',
             (req, res, next) => this.authenticateToken(req, res, next),
  
             (req, res) => this.delete(req,res))
@@ -158,4 +158,4 @@ class UserRouter extends AuthenticatedRouter {
     }
 }
 
-export default UserRouter
+export default CmsUserRouter

@@ -11,6 +11,9 @@ import WebBlockManager from "./cms-builder/WebBlockManager"
 import WebTemplateManager from "./cms-builder/WebTemplateManager"
 import WebPageManager from "./cms-builder/WebPageManager"
 import WebCodeEditor from "./cms-builder/WebCodeEditor"
+import WebSiteSetting from "./cms-builder/WebSiteSetting"
+import WebCompany from "./cms-builder/WebCompany"
+import WebContactPerson from "./cms-builder/WebContactPerson"
 
 export async function loader({ params }) {
   const { module, fk, pageNumber, pk } = params
@@ -32,6 +35,12 @@ const CMSBuilder = ({ store, config }) => {
     return <WebTemplateManager store={store} config={config} pageNumber={pageNumber} themeId={fk} />
   } else if (module == "web-page-manager") {
     return <WebPageManager store={store} config={config} pageNumber={pageNumber} />
+  } else if (module == "website-setting") {
+    return <WebSiteSetting store={store} config={config} pageNumber={pageNumber} />
+  } else if (module == "web-company") {
+    return <WebCompany store={store} config={config} pageNumber={pageNumber} />
+  } else if (module == "web-contact-person") {
+    return <WebContactPerson store={store} config={config} pageNumber={pageNumber} />
   } else if (module == "code-editor") {
     return <WebCodeEditor store={store} config={config} mode={fk} pk={pk} />
   }

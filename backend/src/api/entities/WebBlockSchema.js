@@ -10,10 +10,6 @@ const WebBlockSchema = new EntitySchema({
       primary: true,
       generated: true,
     },
-    parent: {
-      type: "int",
-      nullable: true,
-    },
 
     name: {
       type: "varchar",

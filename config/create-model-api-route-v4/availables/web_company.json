@@ -1,0 +1,55 @@
+{
+  "overwrite": true,
+  "useAuthenticatedRouter": true,
+  "enableStateRoute": true,
+
+  "***@1": "UPLOAD OPTIONS ***",
+
+  "enableUpload": false,
+  "uploadPath": "",
+  "uploadField": "",
+  "uploadServeRoute": "",
+
+  "***@2": "FORM VALIDATION OPTIONS ***",
+
+  "enableValidation": true,
+
+  "***@3": "SERVE INDEX OPTIONS ***",
+
+  "enableServeIndex": false,
+  "serveIndexStaticPath": "",
+  "serveIndexRoutePath": "",
+
+  "***@4": "CLIENT OPTIONS ***",
+  "enableGoToPage": true,
+  "enableGoToLastPage": true,
+  "enableListState": true,
+
+  "generateComponent": true,
+  "generateFormComponent": true,
+  "componentOutDir": "frontend/src/cp/components/cms-builder",
+  "componentFormOutDir": "frontend/src/cp/components/cms-builder/form",
+  "gridOptions": {},
+  "pagerOptions": {},
+  "routePath": "/builder/web-company",
+  "componentName": "WebCompany",
+  "formName": "CompanyForm",
+  "itemName": "Company",
+  "fieldItemName": "name",
+  "slugItemName": "slug",
+
+  "***@5": "PARENT MODULE MODE OPTIONS Add access to sub module ***",
+  "enableParentModule": false,
+  "subModuleFk": "",
+  "subModuleRoutePath": "",
+  "subModuleItemName": "",
+
+  "***@6": "SUB MODULE MODE OPTIONS Add access with parent module ***",
+  "enableSubModule": false,
+  "parentModuleRoutePath": "",
+  "parentModuleFk": "",
+  "parentModuleItemName": "",
+
+  "***@7": "FORM RELATED ",
+  "formFieldTypes": {}
+}

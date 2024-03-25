@@ -45,69 +45,6 @@
         }
       }
     },
-    "user": {
-      "routePath": "/api/cms/user",
-      "routes": {
-        "list": {
-          "path": "{routePath}s",
-          "authenticated": false,
-          "groups": [],
-          "method": "get",
-          "controller": "getList",
-          "queryStrings": {
-            "order_by": {
-              "type": "string",
-              "defaultValue": "id"
-            },
-            "order_dir": {
-              "type": "string",
-              "defaultValue": "asc"
-            },
-            "limit": {
-              "type": "int",
-              "defaultValue": 5
-            },
-            "page": {
-              "type": "int",
-              "defaultValue": 1
-            }
-          }
-        },
-        "create": {
-          "path": "{routePath}/create",
-          "authenticated": false,
-          "groups": [],
-          "method": "post",
-          "controller": "create"
-        },
-        "update": {
-          "path": "{routePath}/update",
-          "authenticated": false,
-          "groups": [],
-          "method": "post",
-          "controller": "update",
-          "queryStrings": {
-            "id": {
-              "type": "int",
-              "required": true
-            }
-          }
-        },
-        "delete": {
-          "path": "{routePath}/delete",
-          "authenticated": false,
-          "groups": [],
-          "method": "post",
-          "controller": "delete",
-          "postData": {
-            "id": {
-              "type": "int",
-              "required": true
-            }
-          }
-        }
-      }
-    },
     "yt-upload": {
       "routePath": "/api/cms/yt-upload",
       "routes": {
@@ -551,6 +488,321 @@
     },
     "web-page": {
       "routePath": "/api/cms/web-page",
+      "routes": {
+        "list": {
+          "path": "{routePath}s",
+          "authenticated": false,
+          "groups": [],
+          "method": "get",
+          "controller": "getList",
+          "queryStrings": {
+            "order_by": {
+              "type": "string",
+              "defaultValue": "id"
+            },
+            "order_dir": {
+              "type": "string",
+              "defaultValue": "asc"
+            },
+            "limit": {
+              "type": "int",
+              "defaultValue": 5
+            },
+            "page": {
+              "type": "int",
+              "defaultValue": 1
+            }
+          }
+        },
+        "create": {
+          "path": "{routePath}/create",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "create"
+        },
+        "update": {
+          "path": "{routePath}/update",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "update",
+          "queryStrings": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        },
+        "delete": {
+          "path": "{routePath}/delete",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "delete",
+          "postData": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "cms-user": {
+      "routePath": "/api/cms/cms-user",
+      "routes": {
+        "list": {
+          "path": "{routePath}s",
+          "authenticated": false,
+          "groups": [],
+          "method": "get",
+          "controller": "getList",
+          "queryStrings": {
+            "order_by": {
+              "type": "string",
+              "defaultValue": "id"
+            },
+            "order_dir": {
+              "type": "string",
+              "defaultValue": "asc"
+            },
+            "limit": {
+              "type": "int",
+              "defaultValue": 5
+            },
+            "page": {
+              "type": "int",
+              "defaultValue": 1
+            }
+          }
+        },
+        "create": {
+          "path": "{routePath}/create",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "create"
+        },
+        "update": {
+          "path": "{routePath}/update",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "update",
+          "queryStrings": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        },
+        "delete": {
+          "path": "{routePath}/delete",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "delete",
+          "postData": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "cms-user-group": {
+      "routePath": "/api/cms/cms-user-group",
+      "routes": {
+        "list": {
+          "path": "{routePath}s",
+          "authenticated": false,
+          "groups": [],
+          "method": "get",
+          "controller": "getList",
+          "queryStrings": {
+            "order_by": {
+              "type": "string",
+              "defaultValue": "id"
+            },
+            "order_dir": {
+              "type": "string",
+              "defaultValue": "asc"
+            },
+            "limit": {
+              "type": "int",
+              "defaultValue": 5
+            },
+            "page": {
+              "type": "int",
+              "defaultValue": 1
+            }
+          }
+        },
+        "create": {
+          "path": "{routePath}/create",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "create"
+        },
+        "update": {
+          "path": "{routePath}/update",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "update",
+          "queryStrings": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        },
+        "delete": {
+          "path": "{routePath}/delete",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "delete",
+          "postData": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "web-site-setting": {
+      "routePath": "/api/cms/web-site-setting",
+      "routes": {
+        "list": {
+          "path": "{routePath}s",
+          "authenticated": false,
+          "groups": [],
+          "method": "get",
+          "controller": "getList",
+          "queryStrings": {
+            "order_by": {
+              "type": "string",
+              "defaultValue": "id"
+            },
+            "order_dir": {
+              "type": "string",
+              "defaultValue": "asc"
+            },
+            "limit": {
+              "type": "int",
+              "defaultValue": 5
+            },
+            "page": {
+              "type": "int",
+              "defaultValue": 1
+            }
+          }
+        },
+        "create": {
+          "path": "{routePath}/create",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "create"
+        },
+        "update": {
+          "path": "{routePath}/update",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "update",
+          "queryStrings": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        },
+        "delete": {
+          "path": "{routePath}/delete",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "delete",
+          "postData": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "web-company": {
+      "routePath": "/api/cms/web-company",
+      "routes": {
+        "list": {
+          "path": "{routePath}s",
+          "authenticated": false,
+          "groups": [],
+          "method": "get",
+          "controller": "getList",
+          "queryStrings": {
+            "order_by": {
+              "type": "string",
+              "defaultValue": "id"
+            },
+            "order_dir": {
+              "type": "string",
+              "defaultValue": "asc"
+            },
+            "limit": {
+              "type": "int",
+              "defaultValue": 5
+            },
+            "page": {
+              "type": "int",
+              "defaultValue": 1
+            }
+          }
+        },
+        "create": {
+          "path": "{routePath}/create",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "create"
+        },
+        "update": {
+          "path": "{routePath}/update",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "update",
+          "queryStrings": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        },
+        "delete": {
+          "path": "{routePath}/delete",
+          "authenticated": false,
+          "groups": [],
+          "method": "post",
+          "controller": "delete",
+          "postData": {
+            "id": {
+              "type": "int",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    "web-contact-person": {
+      "routePath": "/api/cms/web-contact-person",
       "routes": {
         "list": {
           "path": "{routePath}s",

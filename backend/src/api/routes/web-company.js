@@ -6,10 +6,10 @@ import { check, validationResult, checkSchema } from "express-validator"
 import AuthenticatedRouter from "./AuthenticatedRouter.js"
 
 
-class UserRouter extends AuthenticatedRouter {
+class WebCompanyRouter extends AuthenticatedRouter {
     
     datasource = null
-    mUser = null
+    mWebCompany = null
     router = null
     uploader = null
     logger = null
@@ -18,7 +18,7 @@ class UserRouter extends AuthenticatedRouter {
         super(datasource, appConfig, logger)
         this.appConfig = appConfig
         this.logger = logger
-        this.mUser = datasource.factory('MUser', true)
+        this.mWebCompany = datasource.factory('MWebCompany', true)
         this.router = express.Router()
         this.uploader = multer()
        
@@ -28,24 +28,24 @@ class UserRouter extends AuthenticatedRouter {
     async getState(req, res) {
         let { limit, page } = req.query
         page = parseInt(page) || null
-        const results = await this.mUser.getState(limit, page)
+        const results = await this.mWebCompany.getState(limit, page)
         return res.send(results)
     }
     async getList(req, res){
         const {page,limit,order_by,order_dir} = req.query
-        const results = await this.mUser.getList(page,limit,order_by,order_dir)
+        const results = await this.mWebCompany.getList(page,limit,order_by,order_dir)
         return res.send(results)
     }    
 
-    /* Route logic for handling GET /user/:id */
+    /* Route logic for handling GET /web-company/:id */
     async get(req,res){
         let id  = req.params.id
-        const user = await this.mUser.getByPk(id)
+        const webcompany = await this.mWebCompany.getByPk(id)
         return res.send({
-            data: user 
+            data: webcompany 
         })
     } 
-    /* Route logic for handling POST /user/create */
+    /* Route logic for handling POST /web-company/create */
     async create(req,res){
 
             const validationErrors = validationResult(req)
@@ -56,15 +56,15 @@ class UserRouter extends AuthenticatedRouter {
         }
         
 
-        let { username, email, firstName }= req.body
+        let { name, address, shortAddress, slug, phone, mobile, email, ig, fb, twitter, youtube }= req.body
         try {
-            const  user = await this.mUser.create(username, email, firstName)
-            return res.send({ data: user })
+            const  webcompany = await this.mWebCompany.create(name, address, shortAddress, slug, phone, mobile, email, ig, fb, twitter, youtube)
+            return res.send({ data: webcompany })
         }catch(e){
             return res.send({ data: e.toString() })
         }
     }
-     /* Route logic for handling POST '/user/update */
+     /* Route logic for handling POST '/web-company/update */
      async update(req,res){
 
             const validationErrors = validationResult(req)
@@ -81,18 +81,18 @@ class UserRouter extends AuthenticatedRouter {
         if(!id){
             id= req.params.id
         }
-        const existingRec = await  this.mUser.getByPk(id)
+        const existingRec = await  this.mWebCompany.getByPk(id)
         if (existingRec) {
-            const { username, email, firstName } = req.body
-            const updatedData = { username, email, firstName }
-            const  user = await this.mUser.update(id,updatedData)
-            return res.send({data: user, message: "Record updated",success:true})
+            const { name, address, shortAddress, slug, phone, mobile, email, ig, fb, twitter, youtube } = req.body
+            const updatedData = { name, address, shortAddress, slug, phone, mobile, email, ig, fb, twitter, youtube }
+            const  webcompany = await this.mWebCompany.update(id,updatedData)
+            return res.send({data: webcompany, message: "Record updated",success:true})
         }else{
             return res.send({ success: false, message: "Record not found" })
         }
         
     }
-    /* Route logic for handling POST '/user/delete */
+    /* Route logic for handling POST '/web-company/delete */
     async delete(req, res){
         let id = null
         if(req.body.id){
@@ -102,53 +102,69 @@ class UserRouter extends AuthenticatedRouter {
             id= req.params.id
         }
         
-        const existingRec = await  this.mUser.getByPk(id)
+        const existingRec = await  this.mWebCompany.getByPk(id)
 
         if (existingRec) {
-            const  user = await this.mUser.delete(id)
-            return res.send({data: user,success: true, message: "Record deleted"})
+            const  webcompany = await this.mWebCompany.delete(id)
+            return res.send({data: webcompany,success: true, message: "Record deleted"})
         } else {
             return res.send({ success: false, message: "Record not found" })
         }
     }    
     initRouter(){
      
-        this.router.get('/users', 
+        this.router.get('/web-companys', 
             (req, res, next) => this.authenticateToken(req, res, next),
             (req, res) => this.getList(req, res))
 
-        this.router.get("/user/states",
+        this.router.get("/web-company/states",
                 (req, res, next) => this.authenticateToken(req, res, next),
                 (req, res) => this.getState(req, res))
         
-        this.router.get('/user/:id', 
+        this.router.get('/web-company/:id', 
             (req, res, next) => this.authenticateToken(req, res, next),
         
             (req, res) => this.get(req, res))
           
-        this.router.post('/user/create',
+        this.router.post('/web-company/create',
             (req, res, next) => this.authenticateToken(req, res, next),
  
  
             this.uploader.none(),
  
-            check("username", "username is required").not().isEmpty(),
+            check("name", "name is required").not().isEmpty(),
+            check("address", "address is required").not().isEmpty(),
+            check("shortAddress", "shortAddress is required").not().isEmpty(),
+            check("slug", "slug is required").not().isEmpty(),
+            check("phone", "phone is required").not().isEmpty(),
+            check("mobile", "mobile is required").not().isEmpty(),
             check("email", "email is required").not().isEmpty(),
-            check("firstName", "firstName is required").not().isEmpty(),
+            check("ig", "ig is required").not().isEmpty(),
+            check("fb", "fb is required").not().isEmpty(),
+            check("twitter", "twitter is required").not().isEmpty(),
+            check("youtube", "youtube is required").not().isEmpty(),
             (req, res) => this.create(req,res))
 
-        this.router.put('/user/update/:id?',
+        this.router.put('/web-company/update/:id?',
             (req, res, next) => this.authenticateToken(req, res, next),
  
  
             this.uploader.none(),
  
-            check("username", "username is required").not().isEmpty(),
+            check("name", "name is required").not().isEmpty(),
+            check("address", "address is required").not().isEmpty(),
+            check("shortAddress", "shortAddress is required").not().isEmpty(),
+            check("slug", "slug is required").not().isEmpty(),
+            check("phone", "phone is required").not().isEmpty(),
+            check("mobile", "mobile is required").not().isEmpty(),
             check("email", "email is required").not().isEmpty(),
-            check("firstName", "firstName is required").not().isEmpty(),
+            check("ig", "ig is required").not().isEmpty(),
+            check("fb", "fb is required").not().isEmpty(),
+            check("twitter", "twitter is required").not().isEmpty(),
+            check("youtube", "youtube is required").not().isEmpty(),
             (req, res) => this.update(req,res))
 
-        this.router.delete('/user/delete/:id?',
+        this.router.delete('/web-company/delete/:id?',
             (req, res, next) => this.authenticateToken(req, res, next),
  
             (req, res) => this.delete(req,res))
@@ -158,4 +174,4 @@ class UserRouter extends AuthenticatedRouter {
     }
 }
 
-export default UserRouter
+export default WebCompanyRouter

@@ -1,41 +1,26 @@
-import { useEffect, useRef } from "react"
-import DropdownMenu from "@/cp/components/shared/ux/DropdownMenu"
-import AdvancedSelect from "@/cp/components/shared/ux/AdvancedSelect"
+import { useLoaderData } from "react-router-dom"
+import { useState, useEffect } from "react"
+import ServerConfig from "./settings/ServerConfig"
+import UserManagement from "./settings/UserManagement"
+import UserGroupManagement from "./settings/UserGroupManagement"
 
-const SettingPage = () => {
-  //   const testBtn = useRef(null)
-  const testFs = async () => {
-    let fileHandle
-      // const testBtn = document.getElementById('testBtn')
-      // testBtn.addEventListener('click', async () => {
-      // Destructure the one-element array.
-    ;[fileHandle] = await window.showOpenFilePicker()
-    console.log(fileHandle)
-    const file = await fileHandle.getFile()
-    const contents = await file.text()
-    console.log(contents)
-    // Do something with the file handle.
-    // });
+export async function loader({ params }) {
+  const { module, fk, pageNumber, pk } = params
+  return { module, pageNumber, fk, pk }
+}
+
+const SettingPage = ({ store, config }) => {
+  const { module, pageNumber, fk, pk } = useLoaderData()
+  console.log(module, pageNumber, fk, pk)
+  if (module == "server-config") {
+    return <ServerConfig store={store} config={config} />
+  } else if (module == "user-manager") {
+    return <UserManagement store={store} config={config} pageNumber={pageNumber} />
+  } else if (module == "user-group") {
+    return <UserGroupManagement store={store} config={config} pageNumber={pageNumber} />
   }
-  useEffect(() => {
-    // testFs()
-  }, [])
-  return (
-    <>
-      <div className="w-full p-4">
-        <AdvancedSelect
-          data={[{ value: "test", text: "Hello" }]}
-          label="Choose"
-        />
-      </div>
-      <div className="w-full p-4">
-        Setting Page
-        <button id="testBtn" onClick={testFs}>
-          Open File
-        </button>
-      </div>
-    </>
-  )
+
+  return null
 }
 
 export default SettingPage

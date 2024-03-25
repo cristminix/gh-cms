@@ -7,15 +7,12 @@ import {
   modalBtnFrmCloseCls,
   modalBtnFrmSaveCls,
 } from "@/cp/components/shared/ux/cls"
-import {
-  FormRowValidation,
-  FormRow,
-  FormRowCheckbox,
-} from "@/cp/components/shared/ux/Form"
+import { FormRowValidation, FormRow, FormRowCheckbox } from "@/cp/components/shared/ux/Form"
 import jQuery from "jquery"
 import CryptoJS from "crypto-js"
 
 import { slugify } from "@/cp/global/fn"
+import { parse } from "uuid"
 const createUntitledMenu = () => {
   const idx = crc32(new Date().getTime().toString()).toString(16)
   const title = `Untitled-${idx}`
@@ -100,20 +97,9 @@ const MenuForm = ({
   const calculateFormChecksum = (data = null) => {
     let formDataItem = null
     if (data) {
-      const {
-        id,
-        title,
-        slug,
-        parent,
-        path,
-        iconCls,
-        hidden,
-        dev,
-        level,
-        order,
-        hasChild,
-        useModel,
-      } = data
+      let { id, title, slug, parent, path, iconCls, hidden, dev, level, order, hasChild, useModel } = data
+
+      // data.order = parseInt(data.order) || 0
       formDataItem = {
         id,
         title,
@@ -248,20 +234,7 @@ const MenuForm = ({
   const initFormData = (data) => {
     // console.log(data)
     if (data) {
-      const {
-        id,
-        title,
-        slug,
-        parent,
-        path,
-        iconCls,
-        hidden,
-        dev,
-        level,
-        order,
-        hasChild,
-        useModel,
-      } = data
+      const { id, title, slug, parent, path, iconCls, hidden, dev, level, order, hasChild, useModel } = data
       setPk(id)
       setTitle(title)
       setPath(path)
@@ -340,30 +313,21 @@ const MenuForm = ({
       onTabExecutedRef.current = false
 
       try {
-        document
-          .querySelector("div[data-hs-overlay-backdrop-template]")
-          .remove()
+        document.querySelector("div[data-hs-overlay-backdrop-template]").remove()
       } catch (e) {}
     }
   }, [])
 
   return (
     <>
-      <button
-        id={`${modalBtnId}`}
-        type="button"
-        className={btnCls}
-        data-hs-overlay={`#${formId}`}
-      >
+      <button id={`${modalBtnId}`} type="button" className={btnCls} data-hs-overlay={`#${formId}`}>
         Open modal
       </button>
       <div id={formId} className={modalCls}>
         <div className="hs-overlay-open:opacity-100 hs-overlay-open:duration-500 opacity-0 transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto ]">
           <div className="flex w-[700px] flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
             <div className="flex justify-between items-center py-3 px-4 border-b dark:border-gray-700">
-              <h3 className="font-bold text-gray-800 dark:text-white">
-                {title}
-              </h3>
+              <h3 className="font-bold text-gray-800 dark:text-white">{title}</h3>
               <button
                 type="button"
                 id={`${modalCloseBtnId}`}
@@ -446,38 +410,17 @@ const MenuForm = ({
                     setOrder(e.target.value)
                   }}
                 />
-                <FormRowCheckbox
-                  value={hidden}
-                  onChange={setHidden}
-                  label="Hidden"
-                />
+                <FormRowCheckbox value={hidden} onChange={setHidden} label="Hidden" />
                 <FormRowCheckbox value={dev} onChange={setDev} label="Dev" />
-                <FormRowCheckbox
-                  value={hasChild}
-                  onChange={setHasChild}
-                  label="Has Child"
-                />
-                <FormRowCheckbox
-                  value={useModel}
-                  onChange={setUseModel}
-                  label="Use Model"
-                />
+                <FormRowCheckbox value={hasChild} onChange={setHasChild} label="Has Child" />
+                <FormRowCheckbox value={useModel} onChange={setUseModel} label="Use Model" />
               </form>
             </div>
             <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
-              <button
-                onClick={(e) => onCancelForm(e)}
-                type="button"
-                className={modalBtnFrmCloseCls}
-              >
+              <button onClick={(e) => onCancelForm(e)} type="button" className={modalBtnFrmCloseCls}>
                 Cancel
               </button>
-              <button
-                tabIndex={10}
-                onClick={(e) => saveForm(e)}
-                type="button"
-                className={modalBtnFrmSaveCls}
-              >
+              <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
                 Save changes
               </button>
             </div>

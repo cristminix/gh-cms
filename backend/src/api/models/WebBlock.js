@@ -47,25 +47,14 @@ export class MWebBlock {
     this.manager = ds.manager
   }
 
-  async create(
-    templateId,
-    name,
-    description,
-    slug,
-    kind,
-    path_,
-    previewImage,
-    parent,
-  ) {
+  async create(name, description, slug, kind, path_, previewImage) {
     const webblock = new WebBlock()
-    // webblock.templateId = templateId
     webblock.name = name
     webblock.slug = slug
     webblock.kind = kind
     webblock.path = path_
     webblock.previewImage = previewImage
     webblock.description = description
-    webblock.parent = parent
     let record = null
 
     try {
@@ -159,7 +148,7 @@ export class MWebBlock {
           "wb.previewImage previewImage",
           "wb.path path",
           "wb.kind kind",
-          "wb.parent parent",
+          "wsb.sectionId parent",
         ]
         query = query.select(addSelect)
         console.log(getCompiledSql(query))
