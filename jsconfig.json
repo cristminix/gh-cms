@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@cp": ["./cp/"],
+      "@themes": ["./themes/"],
+      "@components": ["./themes/green-ponpes/js/components/"],
+      "@public": ["./public/"],
+      "@templates": ["./themes/green-ponpes/templates/"],
+      "@default_templates": ["./themes/default/templates/"]
+      }
+    }
+  }
+  

@@ -1,12 +1,12 @@
 import { useEffect, useState, createElement } from "react"
 export async function loader({ params }) {
-  const { template } = params
-  return { template }
+  const { template, path } = params
+  return { template, path }
 }
 import { useLoaderData } from "react-router-dom"
-
+import base64 from "base-64"
 const CMSApp = () => {
-  let { template } = useLoaderData()
+  let { template, path } = useLoaderData()
   const [page, setPage] = useState(null)
 
   const [tpl, setTpl] = useState(null)
@@ -19,14 +19,27 @@ const CMSApp = () => {
     if (templates[template]) {
       setTpl(templates[template])
     } else {
-      import(`../../templates/${template}.twig`).then((module) => {
-        // templates[template] =
-        const tplSet = createElement(module.default)
-        setTpl(tplSet)
-        // setTpl(templates[template])
-      })
+      if (path) {
+        path = base64.decode(path)
+        path = path.replace("themes/green-ponpes/templates/", "")
+        // console.log(path)
+
+        import(`../../templates/${path}?import`).then((module) => {
+          // templates[template] =
+          const tplSet = createElement(module.default)
+          setTpl(tplSet)
+          // setTpl(templates[template])
+        })
+      } else {
+        import(`../../templates/${template}.twig`).then((module) => {
+          // templates[template] =
+          const tplSet = createElement(module.default)
+          setTpl(tplSet)
+          // setTpl(templates[template])
+        })
+      }
     }
-  }, [template])
+  }, [template, path])
 
   return tpl
 }

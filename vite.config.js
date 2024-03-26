@@ -33,4 +33,14 @@ export default defineConfig({
   define: {
     global: {},
   },
+  handleHotUpdate({ server, modules, timestamp }) {
+    // Also use `server.ws.send` to support Vite <5.1 if needed
+    // server.hot.send({ type: "full-reload" })
+    // Invalidate modules manually
+    const invalidatedModules = new Set()
+    for (const mod of modules) {
+      server.moduleGraph.invalidateModule(mod, invalidatedModules, timestamp, true)
+    }
+    return []
+  },
 })

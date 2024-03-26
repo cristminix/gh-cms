@@ -14,7 +14,7 @@ const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark
 import "react18-json-view/src/style.css"
 import { FormRow } from "../shared/ux/Form"
 import WebBlockFeatureManager from "./WebBlockFeatureManager"
-
+import TwigViewer from "./TwigViewer"
 const WebCodeEditor = ({ store, config, mode, pk }) => {
   const toastRef = useRef(null)
   const [kind, setKind] = useState(mode)
@@ -235,6 +235,9 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
                   ) : (
                     <WebBlockFeatureManager routePath={"search"} blockId={pk} config={config} />
                   )}
+                </div>
+                <div>
+                  <TwigViewer path={fullPath} />
                 </div>
                 <div className="p-2">
                   <JsonView src={logOutput} />
