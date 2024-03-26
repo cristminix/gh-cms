@@ -1,0 +1,26 @@
+{% set company = web_get_company() %}
+
+<div class="top-social-net-button-list p-2">
+    <ul class="flex gap-4 ">
+      <li> 
+        <a target="_blank" class="hover:text-green-600 text-black"  href="https://instagram.com/{{company.ig}}">
+            <i class="bi bi-instagram"></i>
+        </a>
+      </li>
+      <li> 
+        <a target="_blank" class="hover:text-green-600 text-black"  href="https://facebook.com/{{company.fb}}">
+            <i class="bi bi-facebook"></i>
+        </a>
+      </li>
+      <li> 
+        <a target="_blank" class="hover:text-green-600 text-black"  href="https://twitter.com/{{company.twitter}}">
+            <i class="bi bi-twitter"></i>
+        </a>
+      </li>
+      <li> 
+        <a target="_blank" class="hover:text-green-600 text-black"  href="https://youtube.com/@{{company.youtube}}">
+            <i class="bi bi-youtube"></i>
+        </a>
+      </li>
+    </ul>
+</div>
