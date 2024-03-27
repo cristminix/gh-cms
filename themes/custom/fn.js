@@ -93,8 +93,8 @@ async function parseTemplate(code, id, templateData = {}) {
     blockFeatures.records.forEach((item) => {
       if (item.kind == "js") {
         loadScriptsBuffers.push(`
-        useEffect(()=>{
-          // console.log("called")
+        componentDidMount()
+          console.log("componentDidMount called")
           try{
           ${item.content}
 
@@ -102,7 +102,7 @@ async function parseTemplate(code, id, templateData = {}) {
             console.error(e)
           }
 
-        },[])      
+        } 
       `)
       }
     })
@@ -153,18 +153,42 @@ async function parseTemplate(code, id, templateData = {}) {
   twigTplRendered = contentRoot.html()
   twigTplRendered = twigTplRendered.replace(/KINL/gi, "Link")
   parserBuff += `
-import {useEffect,useState} from "react"
+
+import { HMREventHandler } from '@lib/shared/HotModuleReloadSetup.js';
+
+if (import.meta.hot) {
+  import.meta.hot.accept(HMREventHandler)
+}
+
+import {useEffect,useState,Component} from "react"
 import {Link} from "react-router-dom"
 
-  const ${mainComponentName} = ({}) => {
-
-  ${loadScriptsBuffers.join("\n")}
+class ${mainComponentName} extends Component{
+  timer
+  constructor(props){
+    console.log(props)
+    super(props)
+    this.state = {
+      content : ""
+    }
+  }
+  hotReload(oldModule) {
+    console.log('Hello World')
+    const {onHotReload} = this.props
+    onHotReload(this)
+  }
+  render(){
+    ${loadScriptsBuffers.join("\n")}
     
-  return <>${twigTplRendered}</>
+    return <>${twigTplRendered}</>  
+  }
+
+  
     
 } 
 export default ${mainComponentName}
     `
+  console.log(parserBuff)
   return parserBuff
 }
 

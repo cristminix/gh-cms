@@ -8,11 +8,7 @@ const router = createBrowserRouter([
   //   element: <TemplateViewer />,
   //   loader: tplLoader,
   // },
-  {
-    path: "/preview/:path",
-    element: <CMSApp />,
-    loader: cmsLoader,
-  },
+
   {
     path: "/:template?",
     element: <CMSApp />,

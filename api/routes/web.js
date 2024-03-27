@@ -201,9 +201,9 @@ class WebRouter {
   }
 
   initRouter() {
-    // const staticPath = path.join(this.appConfig.get("basepath"), "themes")
-    // this.router.use("/themes", express.static(staticPath)) // Serve static files
-    // this.router.use("/themes", serveIndex(staticPath, { icons: true }))
+    const staticPath = path.join(this.appConfig.get("basepath"), "themes")
+    this.router.use("/themes", express.static(staticPath)) // Serve static files
+    this.router.use("/themes", serveIndex(staticPath, { icons: true }))
 
     this.router.get("/web/:template?", async (req, res) => await this.homepage(req, res))
     this.router.get("/web/arrayLoader/:template", async (req, res) => await this.arrayLoader(req, res))

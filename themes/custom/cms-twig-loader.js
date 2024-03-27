@@ -16,5 +16,16 @@ export default function twig() {
 
       return null
     },
+   
+
+    // handleHotUpdate({ server, modules, timestamp, file }) {
+    //    if (file.endsWith(".twig")) {
+    //     console.log(file)
+    //     server.ws.send({
+    //       type: "custom",
+    //       event: "tpl-update",
+    //     })
+    //    }
+    // },
   }
 }

@@ -3,6 +3,7 @@
       "baseUrl": ".",
       "paths": {
         "@cp": ["./cp/"],
+        "@lib": ["./lib/"],
       "@themes": ["./themes/"],
       "@components": ["./themes/green-ponpes/js/components/"],
       "@public": ["./public/"],

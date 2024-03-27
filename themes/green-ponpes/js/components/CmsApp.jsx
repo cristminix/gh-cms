@@ -22,16 +22,15 @@ const CMSApp = () => {
       if (path) {
         path = base64.decode(path)
         path = path.replace("themes/green-ponpes/templates/", "")
-        // console.log(path)
 
-        import(`../../templates/${path}?import`).then((module) => {
+        import(`../../templates/${path}?import`  /* @vite-ignore */ ).then((module) => {
           // templates[template] =
           const tplSet = createElement(module.default)
           setTpl(tplSet)
           // setTpl(templates[template])
         })
       } else {
-        import(`../../templates/${template}.twig`).then((module) => {
+        import(`../../templates/${template}.twig`  /* @vite-ignore */ ).then((module) => {
           // templates[template] =
           const tplSet = createElement(module.default)
           setTpl(tplSet)
