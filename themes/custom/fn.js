@@ -66,7 +66,8 @@ async function parseTemplate(code, id, templateData = {}) {
     }
     parserBuff += `import ${item.name} from '${item.tpl}'\n`
   })
-  const mainComponentName = capitalize(snakeToCamel(slugify(id)))
+  // const tplPaths = id.split("/")
+  // console.log(id)
   const tplData = {
     page: {
       title: "",
@@ -87,13 +88,23 @@ async function parseTemplate(code, id, templateData = {}) {
   applyEnvFunction(environment, tplData)
   let tplPath = id.split("/")
   tplPath = tplPath[tplPath.length - 1]
+  let kind = "undef"
+  if (id.match(/\/templates\/blocks/)) {
+    kind = "block"
+  } else if (id.match(/\/templates\/sections/)) {
+    kind = "section"
+  } else {
+    kind = "template"
+  }
+  const mainComponentName = capitalize(snakeToCamel(tplPath.replace(".twig", `-${kind}`)))
+
   const blockFeatures = await getBlockFeatureByTemplate(tplPath)
   const loadScriptsBuffers = []
   if (blockFeatures) {
     blockFeatures.records.forEach((item) => {
       if (item.kind == "js") {
         loadScriptsBuffers.push(`
-        componentDidMount()
+        useEffect(()=>{
           console.log("componentDidMount called")
           try{
           ${item.content}
@@ -102,7 +113,7 @@ async function parseTemplate(code, id, templateData = {}) {
             console.error(e)
           }
 
-        } 
+        },[]) 
       `)
       }
     })
@@ -163,32 +174,21 @@ if (import.meta.hot) {
 import {useEffect,useState,Component} from "react"
 import {Link} from "react-router-dom"
 
-class ${mainComponentName} extends Component{
-  timer
-  constructor(props){
-    console.log(props)
-    super(props)
-    this.state = {
-      content : ""
-    }
-  }
-  hotReload(oldModule) {
-    console.log('Hello World')
-    const {onHotReload} = this.props
-    onHotReload(this)
-  }
-  render(){
+const ${mainComponentName} =({})=>{
+ 
     ${loadScriptsBuffers.join("\n")}
     
-    return <>${twigTplRendered}</>  
-  }
+    return <>
+      ${twigTplRendered}
+    </>  
+  
 
   
     
 } 
 export default ${mainComponentName}
     `
-  console.log(parserBuff)
+  // console.log(parserBuff)
   return parserBuff
 }
 
