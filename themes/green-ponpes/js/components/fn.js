@@ -108,11 +108,19 @@ const slugify = (str) => {
 const capitalize = (word) => {
   return word.charAt(0).toUpperCase() + word.slice(1)
 }
-const isTemplate = (path, baseName) => {
-  // return path.match(/template\/()//)
+const getTwigComponentName = (path) => {
+  let tplPath = path.split("/")
+  tplPath = tplPath[tplPath.length - 1]
+  let kind = "undef"
+  if (path.match(/\/templates\/blocks/)) {
+    kind = "block"
+  } else if (path.match(/\/templates\/sections/)) {
+    kind = "section"
+  } else {
+    kind = "template"
+  }
+  return capitalize(snakeToCamel(tplPath.replace(".twig", `-${kind}`)))
 }
-const isBlock = (path) => {}
-const isSection = (path) => {}
 
 export {
   applyEnvFunction,
@@ -123,4 +131,5 @@ export {
   twigAddFunction,
   capitalize,
   getBlockFeatureByTemplate,
+  getTwigComponentName,
 }

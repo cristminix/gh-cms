@@ -10,7 +10,7 @@ const router = createBrowserRouter([
   // },
 
   {
-    path: "/:template?",
+    path: "/preview/:template?",
     element: <CMSApp />,
     loader: cmsLoader,
   },

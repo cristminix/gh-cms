@@ -10,14 +10,27 @@ Coming soon ...
 
 Please specify server port on `config/app.json`
 
+Install deendencies
+
 ```
-pnpm i
-npm run dev
+npm i
 ```
 
-Open up `http://localhost:5000/` for public twig hmr update while editing twig template
+Run Vite dev server for frontend
 
-Open up `http://localhost:5000/web` for native template rendering via express server
+```
+npx vite dev
+```
+
+Run Express dev server for backend
+
+```
+npx nodemon api/rest-server.mjs
+```
+
+Open up `http://localhost:5000/preview/` for public twig hmr update while editing twig template
+
+Open up `http://localhost:7700/web/` for native template rendering via express server
 
 Open up `http://localhost:5000/cp/` for content management system control panel
 

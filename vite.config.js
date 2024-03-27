@@ -1,7 +1,7 @@
 import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import twig from "./themes/custom/cms-twig-loader"
-// import { nodePolyfills } from "vite-plugin-node-polyfills"
+import { nodePolyfills } from "vite-plugin-node-polyfills"
 import path from "path"
 import { resolve } from "path"
 import appConfig from "./config/app.json"
@@ -10,9 +10,9 @@ export default defineConfig({
   server: {
     host: appConfig.bindHost,
     port: appConfig.vitePort,
-     watch: {
-      usePolling: true
-    }
+    watch: {
+      usePolling: true,
+    },
   },
   ollupOptions: {
     input: {
@@ -21,7 +21,7 @@ export default defineConfig({
       cp: resolve("./cp/index.html"),
     },
   },
-  plugins: [react(), /*nodePolyfills(),*/ twig()],
+  plugins: [react(), nodePolyfills(), twig()],
   resolve: {
     alias: {
       "@cp": path.resolve("./cp/"),
@@ -31,7 +31,7 @@ export default defineConfig({
       "@public": path.resolve("./public/"),
       "@templates": path.resolve("./themes/green-ponpes/templates/"),
       "@default_templates": path.resolve("./themes/default/templates/"),
-      // buffer: "rollup-plugin-node-polyfills/polyfills/buffer-es6",
+      buffer: "rollup-plugin-node-polyfills/polyfills/buffer-es6",
     },
   },
   define: {

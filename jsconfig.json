@@ -8,7 +8,9 @@
       "@components": ["./themes/green-ponpes/js/components/"],
       "@public": ["./public/"],
       "@templates": ["./themes/green-ponpes/templates/"],
-      "@default_templates": ["./themes/default/templates/"]
+      "@default_templates": ["./themes/default/templates/"],
+      "buffer": ["rollup-plugin-node-polyfills/polyfills/buffer-es6"],
+
       }
     }
   }

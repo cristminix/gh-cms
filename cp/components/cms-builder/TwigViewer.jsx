@@ -7,12 +7,8 @@ import HotModuleReloadSetup from "@lib/shared/HotModuleReloadSetup.js"
 const TwigViewer = ({ path }) => {
   const [tpl, setTpl] = useState(null)
   const loadPath = async () => {
-    console.log(path)
-    // const mainComponentName = capitalize(snakeToCamel(slugify(id)))
     const hmr = new HotModuleReloadSetup({
       onHotReload: (obj) => {
-        // console.log(obj)
-        // // setTpl(obj)
         setTpl(obj)
       },
     })
