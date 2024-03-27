@@ -22,10 +22,16 @@ Run Vite dev server for frontend
 npx vite dev
 ```
 
-Run Express dev server for backend
+Run Express backend dev server
 
 ```
 npx nodemon api/rest-server.mjs
+```
+
+Apply tailwind css on backend dev server
+
+```
+npm run tailwind:css
 ```
 
 Open up `http://localhost:5000/preview/` for public twig hmr update while editing twig template
