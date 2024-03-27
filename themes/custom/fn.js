@@ -105,7 +105,7 @@ async function parseTemplate(code, id, templateData = {}) {
       if (item.kind == "js") {
         loadScriptsBuffers.push(`
         useEffect(()=>{
-          console.log("componentDidMount called")
+          console.log("${item.name} called")
           try{
           ${item.content}
 
