@@ -15,6 +15,10 @@ import "react18-json-view/src/style.css"
 import { FormRow } from "../shared/ux/Form"
 import WebBlockFeatureManager from "./WebBlockFeatureManager"
 import TwigViewer from "./TwigViewer"
+import $ from "jquery"
+import { makeDelay } from "@cp/global/fn"
+const delay = makeDelay(512)
+
 const WebCodeEditor = ({ store, config, mode, pk }) => {
   const toastRef = useRef(null)
   const [kind, setKind] = useState(mode)
@@ -159,10 +163,27 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
   useEffect(() => {
     retrieveIdentityToken()
   }, [])
+
+  const onKeyDown = (e) => {
+    console.log("onKeyDown")
+    if ((e.ctrlKey || e.metaKey) && e.which == 83) {
+      // Save Function
+      console.log("save")
+      delay((f) => $("#saveBtn").click())
+
+      e.preventDefault()
+      return false
+    }
+  }
   const onChange = useCallback((val, viewUpdate) => {
     // console.log("val:", val)
     // setValue(val)
     setContent(val)
+    $(document).on("keydown", onKeyDown)
+
+    return () => {
+      $(document).off("keydown", onKeyDown)
+    }
   }, [])
   return (
     <>
@@ -199,8 +220,8 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
                   <div className="grid-toolbar pb-4">
                     <div className="flex justify-between gap-2">
                       <div className="flex gap-2">
-                        <Button onClick={(e) => reload()} icon="fa fa-refresh" caption="Reload" />
-                        <Button onClick={(e) => save()} icon="fa fa-save" caption="Save" />
+                        <Button id="reloadBtn" onClick={(e) => reload()} icon="fa fa-refresh" caption="Reload" />
+                        <Button id="saveBtn" onClick={(e) => save()} icon="fa fa-save" caption="Save" />
                       </div>
                       <div className="flex gap-2">
                         <Button

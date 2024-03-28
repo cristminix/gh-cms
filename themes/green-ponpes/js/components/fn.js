@@ -36,8 +36,13 @@ const getBlockFeatureByTemplate = async (path) => {
 }
 const applyEnvFunction = async (environment, tplData) => {
   const theme = "green-ponpes"
-  const themeUrl = (path) => apiUrl(`themes/${theme}/${path}`)
+  const themeUrl = (path) => `/themes/${theme}/${path}`
   const baseUrl = (path) => apiUrl(path)
+  const dark = (path) => {
+    const paths = path.split("/")
+    paths[paths.length - 1] = `dark-${paths[paths.length - 1]}`
+    return paths.join("/")
+  }
 
   twigAddFunction(
     environment,
@@ -73,8 +78,11 @@ const applyEnvFunction = async (environment, tplData) => {
       Object.keys(company).forEach((key) => {
         if (fixUrlProps.includes(key)) {
           const rgxThemeUrl = new RegExp("{themeUrl}", "g")
+          const rgxThemeUrl2 = new RegExp("{themeUrl}/", "g")
+
           if (rgxThemeUrl.test(company[key])) {
             company[key] = company[key].replace(rgxThemeUrl, themeUrl(""))
+            company[key] = company[key].replace(/\/\//g, "/")
           }
         }
       })
@@ -86,6 +94,7 @@ const applyEnvFunction = async (environment, tplData) => {
   twigAddFunction(environment, "page_title", (title) => (tplData.page.title = title), ["title"])
   twigAddFunction(environment, "theme_url", (path) => themeUrl(path), ["path"])
   twigAddFunction(environment, "base_url", (path) => baseUrl(path), ["path"])
+  twigAddFunction(environment, "dark", (path) => dark(path), ["path"])
   twigAddFunction(environment, "set_meta_description", (description) => (tplData.page.meta.description = description), [
     "description",
   ])

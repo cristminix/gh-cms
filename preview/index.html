@@ -4,16 +4,21 @@
     <title>Green Ponpes Website</title>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/themes/green-ponpes/favicon.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       body{
-        font-family: Inter;
+        font-family: Inter,sans-serif; 
         font-size: .88em;
       }
     </style>
   </head>
-  <body onscroll="setScroll()" onload="setScreen()">
+  <body onscroll="setScroll()" onload="setScreen()" 
+  class="dark:bg-gray-800 dark:border-gray-700 text-gray-800 dark:text-gray-200 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-slate-700 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500"
+>
     <div id="root"></div>
   </body>
   <script type="module" src="/themes/green-ponpes/js/main.jsx"></script>

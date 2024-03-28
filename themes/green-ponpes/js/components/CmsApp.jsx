@@ -41,7 +41,7 @@ const CMSApp = () => {
       if (!template) {
         template = "homepage"
       }
-      tplPath = `../../templates/${template}.twig?import${t ? tstamp : ""}`
+      tplPath = `../../templates/${template}.twig?import${tstamp}`
       instanceKey = getTwigComponentName(`${template}.twig`)
     }
     console.log(tplPath, instanceKey)

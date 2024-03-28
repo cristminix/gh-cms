@@ -744,6 +744,9 @@ video {
 .h-\[48px\] {
   height: 48px;
 }
+.h-\[55px\] {
+  height: 55px;
+}
 .h-auto {
   height: auto;
 }
@@ -824,6 +827,9 @@ video {
 }
 .w-\[140px\] {
   width: 140px;
+}
+.w-\[266px\] {
+  width: 266px;
 }
 .w-\[30px\] {
   width: 30px;
@@ -1169,6 +1175,18 @@ video {
 }
 .bg-\[url\(\'\/images\/arches\.png\'\)\] {
   background-image: url('/images/arches.png');
+}
+.bg-\[url\(\'\/themes\/green-ponpes\/\/images\/logo\/logo\.png\'\)\] {
+  background-image: url('/themes/green-ponpes//images/logo/logo.png');
+}
+.bg-\[url\(\'\{\{company\.logo\}\}\'\)\] {
+  background-image: url('{{company.logo}}');
+}
+.bg-\[url\(\'themes\/green-ponpes\/\/images\/logo\/logo\.png\'\)\] {
+  background-image: url('themes/green-ponpes//images/logo/logo.png');
+}
+.bg-\[url\(\'\/themes\/green-ponpes\/images\/logo\/logo\.png\'\)\] {
+  background-image: url('/themes/green-ponpes/images/logo/logo.png');
 }
 .fill-current {
   fill: currentColor;
@@ -2058,11 +2076,6 @@ video {
     background-color: rgb(17 24 39 / var(--tw-bg-opacity));
   }
 
-  .dark\:bg-red-100 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(254 226 226 / var(--tw-bg-opacity));
-  }
-
   .dark\:bg-slate-700 {
     --tw-bg-opacity: 1;
     background-color: rgb(51 65 85 / var(--tw-bg-opacity));
@@ -2084,6 +2097,46 @@ video {
 
   .dark\:bg-opacity-80 {
     --tw-bg-opacity: 0.8;
+  }
+
+  .dark\:bg-\[url\(\'dark-\{\{company\.logo\}\}\'\)\] {
+    background-image: url('dark-{{company.logo}}');
+  }
+
+  .dark\:bg-\[url\(\'dark-\/themes\/green-ponpes\/\/images\/logo\/logo\.png\'\)\] {
+    background-image: url('dark-/themes/green-ponpes//images/logo/logo.png');
+  }
+
+  .dark\:bg-\[url\(\'dark-themes\/green-ponpes\/\/images\/logo\/logo\.png\'\)\] {
+    background-image: url('dark-themes/green-ponpes//images/logo/logo.png');
+  }
+
+  .dark\:bg-\[url\(\'\{\{\'dark-\'\+company\.logo\}\}\'\)\] {
+    background-image: url('{{'dark-'+company.logo}}');
+  }
+
+  .dark\:bg-\[url\(\'\{\{\"\#\{company\.logo\}\"\}\}\'\)\] {
+    background-image: url('{{"#{company.logo}"}}');
+  }
+
+  .dark\:bg-\[url\(\'themes\/green-ponpes\/\/images\/logo\/logo\.png\'\)\] {
+    background-image: url('themes/green-ponpes//images/logo/logo.png');
+  }
+
+  .dark\:bg-\[url\(\'\/themes\/green-ponpes\/\/images\/logo\/logo\.png\'\)\] {
+    background-image: url('/themes/green-ponpes//images/logo/logo.png');
+  }
+
+  .dark\:bg-\[url\(\'\/themes\/green-ponpes\/images\/logo\/logo\.png\'\)\] {
+    background-image: url('/themes/green-ponpes/images/logo/logo.png');
+  }
+
+  .dark\:bg-\[url\(\'\{\{dark\(company\.logo\)\}\}\'\)\] {
+    background-image: url('{{dark(company.logo)}}');
+  }
+
+  .dark\:bg-\[url\(\'\/themes\/green-ponpes\/images\/logo\/dark-logo\.png\'\)\] {
+    background-image: url('/themes/green-ponpes/images/logo/dark-logo.png');
   }
 
   .dark\:text-blue-500 {

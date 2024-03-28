@@ -1,6 +1,7 @@
 
 {% set company = web_get_company() %}
 
-<div class="brand p-2 ">
-  <img src="{{company.logo}}"></img>
+<div class="brand p-2 flex">
+  <div class="brand-logo w-[266px] h-[55px] dark:bg-[url('{{dark(company.logo)}}')] bg-[url('{{company.logo}}')]" >
+  </div>
 </div>

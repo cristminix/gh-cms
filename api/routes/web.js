@@ -167,8 +167,12 @@ class WebRouter {
           Object.keys(company).forEach((key) => {
             if (fixUrlProps.includes(key)) {
               const rgxThemeUrl = new RegExp("{themeUrl}", "g")
+              const rgxThemeUrl2 = new RegExp("{themeUrl}/", "g")
               if (rgxThemeUrl.test(company[key])) {
                 company[key] = company[key].replace(rgxThemeUrl, `/themes/${websiteSetting.theme}`)
+              }
+              if (rgxThemeUrl2.test(company[key])) {
+                company[key] = company[key].replace(rgxThemeUrl2, `/themes/${websiteSetting.theme}`)
               }
             }
           })
@@ -178,6 +182,16 @@ class WebRouter {
         true,
       )
       twigAddFunction(environment, "page_title", (title) => (page.title = title), ["title"])
+      twigAddFunction(
+        environment,
+        "dark",
+        (path) => {
+          const paths = path.split("/")
+          paths[paths.length - 1] = `dark-${paths[paths.length - 1]}`
+          return paths.join("/")
+        },
+        ["path"],
+      )
       twigAddFunction(environment, "theme_url", (path) => `/themes/${websiteSetting.theme}/${path}`, ["url"])
       twigAddFunction(environment, "base_url", (path) => `/${path}`, ["url"])
       twigAddFunction(environment, "set_meta_description", (description) => (page.meta.description = description), [

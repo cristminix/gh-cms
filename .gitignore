@@ -2,3 +2,4 @@ node_modules
 unused
 logs
 package-lock.json
+generated-react-jsx

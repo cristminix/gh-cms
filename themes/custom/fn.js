@@ -7,6 +7,7 @@ import { applyEnvFunction, getBlockFeatureByTemplate } from "../green-ponpes/js/
 // import jQuery from "jquery"
 // import { Cheerio } from "cheerio"
 import cheerio from "cheerio"
+import { saveTwigComponent } from "./save-twig-component"
 
 async function parseTemplate(code, id, templateData = {}) {
   const twigObj = twig({ data: code })
@@ -188,7 +189,7 @@ const ${mainComponentName} =({})=>{
 } 
 export default ${mainComponentName}
     `
-  // console.log(parserBuff)
+  saveTwigComponent(id, parserBuff, mainComponentName)
   return parserBuff
 }
 
