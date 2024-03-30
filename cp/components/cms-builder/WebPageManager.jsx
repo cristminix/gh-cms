@@ -170,33 +170,54 @@ const WebPageManager = ({ store, config, pageNumber }) => {
     actionWidthCls: "w-[50px]",
     widthCls: [""],
     headers: [
-      /*"id","templateId","categories","tags",*/ "title",
-      "slug",
-      "description",
-      "authors",
-      "highlight",
-      "coverImage",
-      "content",
-      "kind",
-      "path",
+      // "id","templateId","categories","tags", 
+    "title",
+      // "slug",
+      // "description",
+      // "authors",
+      // "highlight",
+      // "coverImage",
+      // "content",
+      // "kind",
+      // "path",
       "status",
       "visibility" /*,"dateCreated","dateUpdated","datePublished","relatedPages","relatedPosts"*/,
     ],
     fields: [
       /*"id","templateId","categories","tags",*/ "title",
-      "slug",
-      "description",
-      "authors",
-      "highlight",
-      "coverImage",
-      "content",
-      "kind",
-      "path",
+      // "slug",
+      // "description",
+      // "authors",
+      // "highlight",
+      // "coverImage",
+      // "content",
+      // "kind",
+      // "path",
       "status",
       "visibility" /*,"dateCreated","dateUpdated","datePublished","relatedPages","relatedPosts"*/,
     ],
     enableEdit: true,
-    callbackFields: {},
+    callbackFields: {
+      title: (field, value, item, index) => {
+        return (
+          <div className="flex gap-2">
+            <div className="w-1/3 overflow-hidden">
+              <img className="h-full w-auto" src={cmsApiUrl(["web-page/covers", item.coverImage])}/>
+            </div>
+            <div className="w-2/3">
+              <h2 className="font-bold">
+                {item.title} (<span className="p-y italic">{item.authors}</span>)
+              </h2>
+              <p>
+                {/* <span className="pr-1 italic font-bold">{item.description}</span> */}
+                <span className="pr-1 underline">{item.highlight}</span>
+                <a href={`view-berita-detail/${item.slug}`}>Preview</a>
+              </p>
+            </div>
+          </div>
+        )
+      },
+    },
     callbackHeaders: {},
     callbackActions: {
       edit: (item, index, options, linkCls, gridAction) => {

@@ -66,13 +66,15 @@ export class MWebPage {
     slug,
     description,
     authors,
+      highlight,
+
     content,
     kind,
     status,
     visibility,
     dateCreated,
     dateUpdated,
-    datePublished
+    datePublished,coverImage
   ) {
     const webpages = new WebPage()
     webpages.templateId = templateId
@@ -87,6 +89,8 @@ export class MWebPage {
     webpages.dateCreated = dateCreated
     webpages.dateUpdated = dateUpdated
     webpages.datePublished = datePublished
+    webpages.highlight = highlight
+    webpages.coverImage = coverImage
 
     let record = null
 

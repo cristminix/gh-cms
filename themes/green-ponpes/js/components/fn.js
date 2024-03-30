@@ -69,6 +69,23 @@ const applyEnvFunction = async (environment, tplData) => {
   )
   twigAddFunction(
     environment,
+    "web_page_get_list",
+    (limit, page) =>
+      fetch(
+        apiUrl("web/tplFunc/web_page_get_list", {
+          limit,
+          page,
+          order_by: "id",
+          order_dir: "asc",
+        }),
+      ).then((r) => r.json()),
+
+    ["limit", "page"],
+    true,
+  )
+  
+  twigAddFunction(
+    environment,
     "web_get_company",
     async () => {
       // console.log("web_get_company")

@@ -1,9 +1,12 @@
 <div class="footer-contact-person-list-with-company-email p-2  w-1/3">
-  <h4>Kontak</h4>
+  <h4 class="font-bold py-2">Kontak</h4>
   {% set webContactPerson = web_contact_person_get_list(1,10) %}
   <ul>
     {% for cp in webContactPerson.records %}
-      <li>{{ cp.contactDetail }} ({{ cp.name }})</li>
+      <li >
+      <p class="text-xs flex gap-2" ><span class="bi bi-whatsapp"></span>{{ cp.contactDetail }} ({{ cp.name }})</p>
+      
+      </li>
     {% endfor %}
   </ul>
 </div>

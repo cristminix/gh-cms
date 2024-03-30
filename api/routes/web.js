@@ -21,6 +21,7 @@ class WebRouter {
   mWebSectionBlock = null
   mWebBlock = null
   mWebBlockFeature = null
+  mWebPage = null
   constructor(datasource, appConfig, logger) {
     this.datasource = datasource
     this.appConfig = appConfig
@@ -34,6 +35,7 @@ class WebRouter {
     this.mWebSectionBlock = datasource.factory("MWebSectionBlock", true)
     this.mWebBlock = datasource.factory("MWebBlock", true)
     this.mWebBlockFeature = datasource.factory("MWebBlockFeature", true)
+    this.mWebPage = datasource.factory("MWebPage", true)
 
     this.initRouter()
   }
@@ -64,6 +66,8 @@ class WebRouter {
         })
         console.log(data)
       }
+    }else if (fn === "web_page_get_list") {
+      data = await await this.mWebPage.getList(limit,page,order_by,order_dir)
     }
     res.send(data)
   }
@@ -150,6 +154,13 @@ class WebRouter {
       )
       twigAddFunction(
         environment,
+        "web_page_get_list",
+        (limit, page) => this.mWebPage.getList(limit, page),
+        ["limit", "page"],
+        true,
+      )
+      twigAddFunction(
+        environment,
         "web_contact_person_get_list",
         (limit, page) =>
           this.mWebContactPerson.getList(limit, page, "id", "asc", {
@@ -216,8 +227,11 @@ class WebRouter {
 
   initRouter() {
     const staticPath = path.join(this.appConfig.get("basepath"), "themes")
+    const storagePath = path.join(this.appConfig.get("basepath"), "storage")
     this.router.use("/themes", express.static(staticPath)) // Serve static files
+    this.router.use("/storage", express.static(storagePath)) // Serve static files
     this.router.use("/themes", serveIndex(staticPath, { icons: true }))
+    this.router.use("/storage", serveIndex(storagePath, { icons: true }))
 
     this.router.get("/web/:template?", async (req, res) => await this.homepage(req, res))
     this.router.get("/web/arrayLoader/:template", async (req, res) => await this.arrayLoader(req, res))
