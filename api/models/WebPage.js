@@ -3,7 +3,7 @@ import { calculateOffset, calculateTotalPages } from "../libs/utils.js"
 class WebPage {
   constructor(
     id,
-    templateId,
+    // templateId,
     categories,
     tags,
     title,
@@ -21,10 +21,10 @@ class WebPage {
     dateUpdated,
     datePublished,
     relatedPages,
-    relatedPosts
+    relatedPosts,
   ) {
     this.id = id
-    this.templateId = templateId
+    // this.templateId = templateId
     this.categories = categories
     this.tags = tags
     this.title = title
@@ -61,12 +61,12 @@ export class MWebPage {
   }
 
   async create(
-    templateId,
+    // templateId,
     title,
     slug,
     description,
     authors,
-      highlight,
+    highlight,
 
     content,
     kind,
@@ -74,10 +74,12 @@ export class MWebPage {
     visibility,
     dateCreated,
     dateUpdated,
-    datePublished,coverImage
+    datePublished,
+    coverImage,
+    blocks,
   ) {
     const webpages = new WebPage()
-    webpages.templateId = templateId
+    // webpages.templateId = templateId
     webpages.title = title
     webpages.slug = slug
     webpages.description = description
@@ -91,6 +93,7 @@ export class MWebPage {
     webpages.datePublished = datePublished
     webpages.highlight = highlight
     webpages.coverImage = coverImage
+    webpages.blocks = blocks
 
     let record = null
 

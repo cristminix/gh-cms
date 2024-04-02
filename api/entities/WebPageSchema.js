@@ -10,9 +10,7 @@ const WebPageSchema = new EntitySchema({
       primary: true,
       generated: true,
     },
-    templateId: {
-      type: "int",
-    },
+
     categories: {
       type: "varchar",
       length: 225,
@@ -53,6 +51,10 @@ const WebPageSchema = new EntitySchema({
     },
     content: {
       type: "text",
+    },
+    blocks: {
+      type: "text",
+      nullable: true,
     },
     kind: {
       length: 100,

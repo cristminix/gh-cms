@@ -5,7 +5,7 @@ import jQuery from "jquery"
 import { makeDelay } from "@cp/global/fn"
 const DEV_MODE = import.meta.env.DEV
 const delay = makeDelay(1000)
-const MenuItem = ({ hasChild, title, path, icon, name, childrens, index }) => {
+const MenuItem = ({ hasChild, title, path, icon, name, childrens, index, showCaption }) => {
   const activeTabCls =
     "flex items-center gap-x-3.5 py-2 px-2.5 bg-gray-100 text-sm text-slate-700 rounded-md dark:bg-gray-900 dark:text-white"
   const activeMenuCls = "bg-gray-100 text-sm text-slate-700 rounded-md dark:bg-gray-900 dark:text-white"
@@ -20,7 +20,7 @@ const MenuItem = ({ hasChild, title, path, icon, name, childrens, index }) => {
           <li id={`${name}-accordion`} className={`${cls17} `} key={name} path={path.replace(/^\//, "")}>
             <button type="button" className={`${cls18} ${pathname.match(path) ? activeMenuCls : ""}`}>
               <i className={icon}></i>
-              {title}
+              {showCaption && title}
 
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -77,6 +77,7 @@ const MenuItem = ({ hasChild, title, path, icon, name, childrens, index }) => {
                       title={item_.title}
                       path={item_.path}
                       icon={item_.iconCls}
+                      showCaption={showCaption}
                     />
                   )
                 })}
@@ -87,9 +88,9 @@ const MenuItem = ({ hasChild, title, path, icon, name, childrens, index }) => {
       ) : (
         <>
           <li key={name}>
-            <NavLink to={path} className={linkCls}>
+            <NavLink to={path} className={linkCls} title={title}>
               <i className={icon}></i>
-              {title}
+              {showCaption && title}
             </NavLink>{" "}
           </li>
         </>
@@ -97,7 +98,7 @@ const MenuItem = ({ hasChild, title, path, icon, name, childrens, index }) => {
     </>
   )
 }
-const Menu = ({ data, store, config }) => {
+const Menu = ({ data, store, config, showCaption = true }) => {
   const { pathname } = useLocation()
 
   const getChildrenByModel = (item) => {
@@ -201,6 +202,7 @@ const Menu = ({ data, store, config }) => {
               title={item.title}
               path={item.path}
               icon={item.iconCls}
+              showCaption={showCaption}
             />
           )
         })}

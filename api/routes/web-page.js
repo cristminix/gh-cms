@@ -89,7 +89,7 @@ class WebPageRouter extends AuthenticatedRouter {
     }
 
     let {
-      templateId,
+      blocks,
       title,
       slug,
       description,
@@ -105,13 +105,12 @@ class WebPageRouter extends AuthenticatedRouter {
     } = req.body
     try {
       const webpage = await this.mWebPage.create(
-        templateId,
         title,
         slug,
         description,
         authors,
-      highlight,
-        
+        highlight,
+
         content,
         kind,
         status,
@@ -119,7 +118,8 @@ class WebPageRouter extends AuthenticatedRouter {
         dateCreated,
         dateUpdated,
         datePublished,
-        coverImage
+        coverImage,
+        blocks,
       )
       return res.send({ data: webpage })
     } catch (e) {
@@ -179,11 +179,11 @@ class WebPageRouter extends AuthenticatedRouter {
         })
       }
       const {
-        templateId,
+        blocks,
         title,
         slug,
         description,
-      highlight,
+        highlight,
         authors,
         content,
         kind,
@@ -194,12 +194,12 @@ class WebPageRouter extends AuthenticatedRouter {
         datePublished,
       } = req.body
       const updatedData = {
-        templateId,
+        blocks,
         title,
         slug,
         description,
         authors,
-      highlight,
+        highlight,
         content,
         kind,
         status,
@@ -254,20 +254,20 @@ class WebPageRouter extends AuthenticatedRouter {
     this.router.get(
       "/web-pages",
       (req, res, next) => this.authenticateToken(req, res, next),
-      (req, res) => this.getList(req, res)
+      (req, res) => this.getList(req, res),
     )
 
     this.router.get(
       "/web-page/states",
       (req, res, next) => this.authenticateToken(req, res, next),
-      (req, res) => this.getState(req, res)
+      (req, res) => this.getState(req, res),
     )
 
     this.router.get(
       "/web-page/:id",
       (req, res, next) => this.authenticateToken(req, res, next),
 
-      (req, res) => this.get(req, res)
+      (req, res) => this.get(req, res),
     )
 
     this.router.post(
@@ -276,7 +276,6 @@ class WebPageRouter extends AuthenticatedRouter {
 
       this.uploader.array("coverImage"),
 
-      check("templateId", "Template is required").not().isEmpty(),
       check("title", "Title is required").not().isEmpty(),
       check("slug", "Slug is required").not().isEmpty(),
       check("description", "Description is required").not().isEmpty(),
@@ -288,7 +287,7 @@ class WebPageRouter extends AuthenticatedRouter {
       // check("dateCreated", "dateCreated is required").not().isEmpty(),
       // check("dateUpdated", "dateUpdated is required").not().isEmpty(),
       // check("datePublished", "datePublished is required").not().isEmpty(),
-      (req, res) => this.create(req, res)
+      (req, res) => this.create(req, res),
     )
 
     this.router.put(
@@ -297,7 +296,6 @@ class WebPageRouter extends AuthenticatedRouter {
 
       this.uploader.array("coverImage"),
 
-      check("templateId", "Template is required").not().isEmpty(),
       check("title", "Title is required").not().isEmpty(),
       check("slug", "Slug is required").not().isEmpty(),
       check("description", "Description is required").not().isEmpty(),
@@ -309,14 +307,14 @@ class WebPageRouter extends AuthenticatedRouter {
       // check("dateCreated", "dateCreated is required").not().isEmpty(),
       // check("dateUpdated", "dateUpdated is required").not().isEmpty(),
       // check("datePublished", "datePublished is required").not().isEmpty(),
-      (req, res) => this.update(req, res)
+      (req, res) => this.update(req, res),
     )
 
     this.router.delete(
       "/web-page/delete/:id?",
       (req, res, next) => this.authenticateToken(req, res, next),
 
-      (req, res) => this.delete(req, res)
+      (req, res) => this.delete(req, res),
     )
   }
   getRouter() {

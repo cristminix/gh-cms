@@ -13,7 +13,6 @@ import { DS } from "./data-source/index.js"
 import routers from "./routes/routers.js"
 import AppConfig from "./AppConfig.js"
 import twing from "twing"
-import livereload from "livereload"
 import connectLiveReload from "connect-livereload"
 // console.log(twing)
 const { createEnvironment, createArrayLoader, createFilesystemLoader } = twing
@@ -59,14 +58,14 @@ const main = async () => {
 
   // LOG.info("Memulai gh-cms rest server.")
   // console.log(fs.existsSync(`./templates/index.twig`))
-  const liveReloadServer = livereload.createServer()
-  liveReloadServer.server.once("connection", () => {
-    setTimeout(() => {
-      liveReloadServer.refresh("/")
-      liveReloadServer.refresh("/twig")
-    }, 512)
-  })
-  app.use(connectLiveReload())
+  // const liveReloadServer = livereload.createServer()
+  // liveReloadServer.server.once("connection", () => {
+  //   setTimeout(() => {
+  //     liveReloadServer.refresh("/")
+  //     liveReloadServer.refresh("/twig")
+  //   }, 512)
+  // })
+  // app.use(connectLiveReload())
   // app.set("views", path.join(".", "src/cms/templates/pug/default/"))
   // app.set("view engine", "pug")
   app.use(express.static(path.join(".", "public")))

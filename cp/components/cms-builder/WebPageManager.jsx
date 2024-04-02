@@ -9,6 +9,7 @@ import jQuery from "jquery"
 import { niceScrollbarCls } from "@cp/components/shared/ux/cls"
 import Toast from "@cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@cp/global/fn"
+import PageEditor from "./form/PageEditor"
 
 const WebPageManager = ({ store, config, pageNumber }) => {
   const toastRef = useRef(null)
@@ -28,6 +29,7 @@ const WebPageManager = ({ store, config, pageNumber }) => {
 
   const [formData, setFormData] = useState(null)
   const [showForm, setShowForm] = useState(false)
+  const [showWisiwig, setShowWisiwig] = useState(false)
   const [requestToken, setRequestToken] = useState(null)
 
   const toast = (message, t) => {
@@ -143,7 +145,11 @@ const WebPageManager = ({ store, config, pageNumber }) => {
     }
     return response
   }
-
+  const editWisiwig = async (item, index) => {
+    setFormData(item)
+    setShowWisiwig(true)
+    console.log(item)
+  }
   const goToLastPage = async () => {
     try {
       const response = await getListState(grid.limit)
@@ -170,8 +176,8 @@ const WebPageManager = ({ store, config, pageNumber }) => {
     actionWidthCls: "w-[50px]",
     widthCls: [""],
     headers: [
-      // "id","templateId","categories","tags", 
-    "title",
+      // "id","templateId","categories","tags",
+      "title",
       // "slug",
       // "description",
       // "authors",
@@ -198,23 +204,42 @@ const WebPageManager = ({ store, config, pageNumber }) => {
     ],
     enableEdit: true,
     callbackFields: {
+      visibility: (field, value, item, index) => {
+        return (
+          <>
+            <span className={`bi bi-${item.visibility == "public" ? "eye" : "eye-slash"}`}></span>
+          </>
+        )
+      },
+      status: (field, value, item, index) => {
+        return (
+          <>
+            <span className={`bi bi-${item.status == "published" ? "check-circle" : "journal"}`}></span>
+          </>
+        )
+      },
       title: (field, value, item, index) => {
         return (
-          <div className="flex gap-2">
-            <div className="w-1/3 overflow-hidden">
-              <img className="h-full w-auto" src={cmsApiUrl(["web-page/covers", item.coverImage])}/>
+          <>
+            <h2 className="font-bold">
+              {item.title} (<span className="p-y italic">{item.authors}</span>)
+            </h2>
+            <div className="flex gap-2 mt-2">
+              <div className="w-2/6 overflow-hidden">
+                <img
+                  className="h-full rounded-lg object-cover object-cover"
+                  src={cmsApiUrl(["web-page/covers", item.coverImage])}
+                />
+              </div>
+              <div className="w-4/6">
+                <p>
+                  {/* <span className="pr-1 italic font-bold">{item.description}</span> */}
+                  <span className="pr-1 pt-2">{item.highlight}</span>
+                  <a href={`view-berita-detail/${item.slug}`}>Preview</a>
+                </p>
+              </div>
             </div>
-            <div className="w-2/3">
-              <h2 className="font-bold">
-                {item.title} (<span className="p-y italic">{item.authors}</span>)
-              </h2>
-              <p>
-                {/* <span className="pr-1 italic font-bold">{item.description}</span> */}
-                <span className="pr-1 underline">{item.highlight}</span>
-                <a href={`view-berita-detail/${item.slug}`}>Preview</a>
-              </p>
-            </div>
-          </div>
+          </>
         )
       },
     },
@@ -223,7 +248,15 @@ const WebPageManager = ({ store, config, pageNumber }) => {
       edit: (item, index, options, linkCls, gridAction) => {
         return (
           <>
+            <Button
+              title="Wysywyg Edit"
+              loading={false}
+              icon="bi bi-card-text"
+              caption=""
+              onClick={(e) => editWisiwig(item, index)}
+            />
             <Button title="Edit" loading={false} icon="fa fa-edit" caption="" onClick={(e) => editForm(item, index)} />
+
             <Button
               title="Delete"
               loading={false}
@@ -263,28 +296,44 @@ const WebPageManager = ({ store, config, pageNumber }) => {
             <Button onClick={(e) => goToLastPage()} caption="Go to last page" icon="fa fa-next" />
           </div>
         </div>
-        <div className="flex flex-col ">
-          <div className={`-m-1.5 overflow-x-auto ${niceScrollbarCls}`}>
-            <div className="p-1.5 ">
-              <div className="">
-                {grid ? <Grid options={gridOptions} records={grid.records} page={grid.page} limit={grid.limit} /> : ""}
+
+        {showWisiwig ? (
+          <>
+            <PageEditor
+              data={formData}
+              closeEditor={(e) => setShowWisiwig(false)}
+              toast={toast}
+              requestToken={requestToken}
+            />
+          </>
+        ) : (
+          <div className="flex flex-col ">
+            <div className={`-m-1.5 overflow-x-auto ${niceScrollbarCls}`}>
+              <div className="p-1.5 ">
+                <div className="">
+                  {grid ? (
+                    <Grid options={gridOptions} records={grid.records} page={grid.page} limit={grid.limit} />
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
             </div>
+            <div className="pager-container mt-3">
+              {grid ? (
+                <Pager
+                  path="/builder/web-page-manager"
+                  page={grid.page}
+                  total_pages={grid.total_pages}
+                  limit={grid.limit}
+                  onRefresh={(e) => onRefresh()}
+                />
+              ) : (
+                ""
+              )}
+            </div>
           </div>
-          <div className="pager-container mt-3">
-            {grid ? (
-              <Pager
-                path="/builder/web-page-manager"
-                page={grid.page}
-                total_pages={grid.total_pages}
-                limit={grid.limit}
-                onRefresh={(e) => onRefresh()}
-              />
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )
