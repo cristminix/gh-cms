@@ -14,6 +14,8 @@ export default {
     "themes/green-ponpes/index.html",
     "node_modules/preline/dist/*.js",
   ],
+  darkMode: "selector",
+
   theme: {
     extend: {},
   },

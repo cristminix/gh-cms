@@ -290,12 +290,14 @@ const WebPageManager = ({ store, config, pageNumber }) => {
       />
 
       <div className={`user-manager ${containerCls}`}>
-        <div className="grid-toolbar pb-4">
-          <div className="flex justify-end gap-2">
-            {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" /> : null}
-            <Button onClick={(e) => goToLastPage()} caption="Go to last page" icon="fa fa-next" />
+        {!showWisiwig && (
+          <div className="grid-toolbar pb-4">
+            <div className="flex justify-end gap-2">
+              {!showForm ? <Button onClick={(e) => addForm()} icon="fa fa-plus" caption="" /> : null}
+              <Button onClick={(e) => goToLastPage()} caption="Go to last page" icon="fa fa-next" />
+            </div>
           </div>
-        </div>
+        )}
 
         {showWisiwig ? (
           <>

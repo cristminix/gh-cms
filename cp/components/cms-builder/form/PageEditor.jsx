@@ -6,7 +6,7 @@ import { useEffect, useRef, useCallback, useState } from "react"
 import { createReactEditorJS } from "react-editor-js"
 import { cmsApiUrl } from "@cp/components/apps/fn"
 import { Prx } from "@cp/global/fn"
-
+import "./page-editor.css"
 const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
   const [row, setRow] = useState(data)
   const [blocks, setBlocks] = useState(null)
@@ -114,7 +114,7 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
             })
           }
         }
-      }, 1000)
+      }, 512)
     }
   }, [row])
 
