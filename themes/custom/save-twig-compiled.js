@@ -31,7 +31,11 @@ export function saveTwigCompiled(templateRendered, mainComponentName, kind) {
     }
     const componentFilePath = `${componentDir}/${mainComponentName}.twig`
     const bufferCrc = crc32(templateRendered).toString(16)
-    const fileCrc = crc32(fs.readFileSync(componentFilePath, "utf-8")).toString(16)
+    let fileCrc = null 
+    if(fs.existsSync(componentFilePath)){
+      fileCrc = crc32(fs.readFileSync(componentFilePath, "utf-8")).toString(16)
+
+    }
     let continueWriteFile = bufferCrc != fileCrc
     if (continueWriteFile) {
       fs.writeFileSync(componentFilePath, decodeHTMLEntities(templateRendered))

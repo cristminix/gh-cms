@@ -6,6 +6,10 @@ export default function twig() {
   return {
     name: "vite-plugin-twig-loader",
     async transform(code, id) {
+      // if(id.match(/twig/)){
+      //       console.log(arguments)
+      //       console.log(import.meta)
+      //     }
       if (id.endsWith(".twig")) {
         const scriptBuffer = await parseTemplate(code, id)
         return transformWithEsbuild(scriptBuffer, id, {
@@ -19,7 +23,7 @@ export default function twig() {
 
     handleHotUpdate({ server, modules, timestamp, file }) {
       if (file.endsWith(".twig")) {
-        console.log(file)
+        // console.log(file)
         server.ws.send({
           type: "custom",
           event: "hot-module-reload",

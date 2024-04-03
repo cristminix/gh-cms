@@ -145,6 +145,18 @@ export class MWebPage {
 
     return record
   }
+  async getBySlug(slug) {
+    let record = null
+    try {
+      const webpages = await this.manager.findOne(WebPage, { where: { slug } })
+
+      record = webpages
+    } catch (e) {
+      console.error(e)
+    }
+
+    return record
+  }
 
   async update(pk, row) {
     let id = pk

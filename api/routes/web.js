@@ -5,6 +5,7 @@ import "reflect-metadata"
 import path from "path"
 import { createEnvironment, createFilesystemLoader, createFilter, createFunction } from "twing"
 import { camelToSnake, snakeToCamel, slugify, twigAddFilter, twigAddFunction } from "../libs/utils.js"
+import { crc32 } from "crc"
 
 class WebRouter {
   datasource = null
@@ -45,9 +46,37 @@ class WebRouter {
   getData() {
     return "Hello Cruel world"
   }
+  async setImportAttributes(req, res) {
+    // const { path } = req.params
+    const { key, value, path, target } = req.query
+    const importAttributesJsonPath = this.appConfig.get("importAttributesJsonPath")
+    let json = {}
+    let jsonStr = ""
+    if (fs.existsSync(importAttributesJsonPath)) {
+      jsonStr = fs.readFileSync(importAttributesJsonPath)
+      // try {
+      //   json = JSON.parse(jsonStr)
+      // } catch (e) {}
+    }
+    json[path] = {
+      [key]: value,
+      target,
+    }
+    let fileCrc = crc32(jsonStr).toString(16)
+    const newJsonStr = JSON.stringify(json)
+    const bufferCrc = crc32(newJsonStr).toString(16)
+    let continueWriteFile = bufferCrc != fileCrc
+    if (continueWriteFile) {
+      fs.writeFileSync(importAttributesJsonPath, newJsonStr)
+    }
+    res.send({
+      importAttributesJsonPath,
+      json,
+    })
+  }
   async tplFunc(req, res) {
     const { fn } = req.params
-    const { limit, page, order_by, order_dir, blockId, tplPath } = req.query
+    const { limit, page, order_by, order_dir, blockId, tplPath, slug } = req.query
     const websiteSetting = await this.mWebSiteSetting.getDefault()
     let data
     if (fn === "web_menu_get_list") {
@@ -66,8 +95,10 @@ class WebRouter {
         })
         console.log(data)
       }
-    }else if (fn === "web_page_get_list") {
-      data = await await this.mWebPage.getList(limit,page,order_by,order_dir)
+    } else if (fn === "web_page_get_list") {
+      data = await await this.mWebPage.getList(limit, page, order_by, order_dir)
+    } else if (fn === "web_get_page") {
+      data = await await this.mWebPage.getBySlug(slug)
     }
     res.send(data)
   }
@@ -232,6 +263,7 @@ class WebRouter {
     this.router.use("/storage", express.static(storagePath)) // Serve static files
     this.router.use("/themes", serveIndex(staticPath, { icons: true }))
     this.router.use("/storage", serveIndex(storagePath, { icons: true }))
+    this.router.get("/web/setImportAttributes", async (req, res) => await this.setImportAttributes(req, res))
 
     this.router.get("/web/:template?", async (req, res) => await this.homepage(req, res))
     this.router.get("/web/arrayLoader/:template", async (req, res) => await this.arrayLoader(req, res))

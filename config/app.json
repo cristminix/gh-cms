@@ -6,5 +6,6 @@
     "useHttps": false,
     "storageDir" : "storage",
     "logDir" : "logs",
-    "downloadDir" : "${storageDir}/downloads"
+    "downloadDir" : "${storageDir}/downloads",
+    "importAttributesJsonPath":"themes/custom/import-attributes.json"
 }

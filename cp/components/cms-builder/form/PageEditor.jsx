@@ -120,7 +120,7 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
 
   return (
     <div className="bg-inherit">
-      <div className="flex gap-2 justify-center">
+      <div className="flex gap-2 justify-between">
         <Button onClick={handleSave} caption="Save" icon="fa fa-save" />
         <Button onClick={closeEditor} caption="Close" icon="fa fa-times" />
       </div>

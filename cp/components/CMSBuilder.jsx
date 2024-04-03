@@ -37,7 +37,7 @@ const CMSBuilder = ({ store, config }) => {
   } else if (module == "web-template-manager") {
     return <WebTemplateManager store={store} config={config} pageNumber={pageNumber} themeId={fk} />
   } else if (module == "web-page-manager") {
-    return <WebPageManager store={store} config={config} pageNumber={pageNumber} />
+    return <WebPageManager store={store} config={config} pageNumber={pageNumber} cmd={fk} pk={pk}/>
   } else if (module == "website-setting") {
     return <WebSiteSetting store={store} config={config} pageNumber={pageNumber} />
   } else if (module == "web-company") {

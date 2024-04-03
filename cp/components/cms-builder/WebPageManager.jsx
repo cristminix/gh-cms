@@ -11,7 +11,7 @@ import Toast from "@cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@cp/global/fn"
 import PageEditor from "./form/PageEditor"
 
-const WebPageManager = ({ store, config, pageNumber }) => {
+const WebPageManager = ({ store, config, pageNumber,cmd,pk }) => {
   const toastRef = useRef(null)
   const [grid, setGrid] = useState({
     records: [],
@@ -146,6 +146,8 @@ const WebPageManager = ({ store, config, pageNumber }) => {
     return response
   }
   const editWisiwig = async (item, index) => {
+    document.location.hash = `/builder/web-page-manager/page-editor/${item.id}`
+
     setFormData(item)
     setShowWisiwig(true)
     console.log(item)
@@ -299,13 +301,16 @@ const WebPageManager = ({ store, config, pageNumber }) => {
           </div>
         )}
 
-        {showWisiwig ? (
+        {cmd=='page-editor'&& pk ? (
           <>
             <PageEditor
               data={formData}
-              closeEditor={(e) => setShowWisiwig(false)}
+              closeEditor={(e) => {
+                document.location.hash=`/builder/web-page-manager/page/${pageNumber||1}`
+                }}
               toast={toast}
               requestToken={requestToken}
+              pk={pk}
             />
           </>
         ) : (

@@ -1,5 +1,7 @@
 import twigPkg from "twig"
 import twingPkg from "twing"
+import path from "path"
+import fs from "fs"
 const { twig } = twigPkg
 import { capitalize, snakeToCamel, camelToSnake, slugify } from "../green-ponpes/js/components/fn"
 import { createArrayLoader, createEnvironment } from "twing"
@@ -11,6 +13,27 @@ import { saveTwigComponent } from "./save-twig-component"
 import { saveTwigCompiled } from "./save-twig-compiled"
 
 async function parseTemplate(code, id, templateData = {}) {
+  let importAttributes = {}
+  let importAttribute = {}
+  let hasImportAttr = false
+  const basePath = path.basename(id)
+
+  // try {
+  //   const jsonStr = fs.readFileSync("./themes/custom/import-attributes.json")
+  //   importAttributes = JSON.parse(jsonStr)
+  //   if (importAttributes[basePath]) {
+  //     console.log(basePath, importAttributes[basePath])
+  //     hasImportAttr = true
+  //     Object.keys(importAttributes[basePath]).forEach((key) => {
+  //       const value = importAttributes[basePath][key]
+
+  //       code = `{% set ${key}="${value}" %}\n${code}`
+  //     })
+  //   }
+  // } catch (e) {
+  //   console.log(e)
+  // }
+
   const twigObj = twig({ data: code })
   let newSourceBuffer = []
   let importBuffer = []
@@ -20,12 +43,14 @@ async function parseTemplate(code, id, templateData = {}) {
     if (token.type == "logic") {
       if (token.token.type == "Twig.logic.type.include") {
         const tplInclude = token.token.stack[0].value
+        let tplIncludeBasePath = tplInclude.split("/").pop()
         const componentName = capitalize(snakeToCamel(slugify(tplInclude)))
         if (tplInclude.match(/^\./)) {
           newSourceBuffer.push(`<${componentName}/>`)
           importBuffer.push({
             name: componentName,
             tpl: tplInclude,
+            path: tplIncludeBasePath,
           })
         }
       } else if (token.token.type == "Twig.logic.type.for") {
@@ -57,6 +82,7 @@ async function parseTemplate(code, id, templateData = {}) {
   // console.log(importBuffer)
   // console.log(newSourceBuffer)
   let parserBuff = ""
+  let refBuffer = []
   importBuffer.forEach((item) => {
     const importPath = item.tpl
     if (item.tpl.match(/^\.\//)) {
@@ -106,6 +132,16 @@ async function parseTemplate(code, id, templateData = {}) {
     blockFeatures.records.forEach((item) => {
       if (item.kind == "js") {
         loadScriptsBuffers.push(`
+          console.log("${item.name} called")
+          try{
+          ${item.content}
+
+          }catch(e){
+            console.error(e)
+          }
+
+      `)
+        /*loadScriptsBuffers.push(`
         useEffect(()=>{
           console.log("${item.name} called")
           try{
@@ -116,13 +152,25 @@ async function parseTemplate(code, id, templateData = {}) {
           }
 
         },[]) 
-      `)
+      `)*/
       }
     })
   }
 
   // console.log(loadScriptsBuffers)
-
+  if (hasImportAttr) {
+    // loadScriptsBuffers.push(`
+    //       // console.log("rerender called")
+    //       this.rerenderOnTarget(importAttributes)
+    //       // console.log(importAttributes)
+    //   `)
+    // loadScriptsBuffers.push(`
+    //     useEffect(()=>{
+    //       console.log("hasImportAttr called")
+    //       console.log(originalTpl)
+    //     },[])
+    //   `)
+  }
   let twigTplRendered = await environment.render(`${id}`, tplData)
   const rgxRplcs = [
     [/class=/g, "className="],
@@ -165,9 +213,13 @@ async function parseTemplate(code, id, templateData = {}) {
   })
   twigTplRendered = contentRoot.html()
   twigTplRendered = twigTplRendered.replace(/KINL/gi, "Link")
+
+  // const source = await loader.getSource(id)
+  // console.log(source.code)
   parserBuff += `
 
-import { HMREventHandler } from '@lib/shared/HotModuleReloadSetup.js';
+import HotModuleReloadSetup,{ HMREventHandler } from '@lib/shared/HotModuleReloadSetup.js';
+import TwigComponent from '@lib/shared/TwigComponent';
 
 if (import.meta.hot) {
   import.meta.hot.accept(HMREventHandler)
@@ -175,20 +227,40 @@ if (import.meta.hot) {
 
 import {useEffect,useState,Component} from "react"
 import {Link} from "react-router-dom"
-
-const ${mainComponentName} =({})=>{
- 
+import importAttributes from "@themes/custom/import-attributes.json"
+class ${mainComponentName} extends TwigComponent {
+    constructor(props){
+      super(props)
+      this.path="${basePath}"
+      this.code = \`${code}\`
+      this.state = {
+        content:null,
+        rerender:false
+      }
+    }
+    
+    componentDidMount(){
     ${loadScriptsBuffers.join("\n")}
-    
-    return <>
-      ${twigTplRendered}
-    </>  
-  
 
-  
-    
+    this.rerenderOnTarget(importAttributes)
+    }
+
+    render(){
+      return <>
+      {this.state.rerender?<div dangerouslySetInnerHTML={{__html:this.state.content}}></div>:<>${twigTplRendered}</>}
+        
+      </>  
+    }
 } 
+ 
+const hmrInstance = HotModuleReloadSetup.getInstance()
+if (hmrInstance) {
+  // console.log(hmrInstance.modules)
+  hmrInstance.modules['${mainComponentName}']=${mainComponentName}
+}
 export default ${mainComponentName}
+
+
     `
   // saveTwigComponent(id, parserBuff, mainComponentName)
   saveTwigCompiled(twigTplRendered, mainComponentName, kind)

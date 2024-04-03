@@ -1,0 +1,72 @@
+import { Component } from "react"
+import twigPkg from "twig"
+import twingPkg from "twing"
+const { twig } = twigPkg
+import { capitalize, snakeToCamel, camelToSnake, slugify } from "@themes/green-ponpes/js/components/fn"
+import { createArrayLoader, createEnvironment } from "twing"
+import { applyEnvFunction, getBlockFeatureByTemplate } from "@themes/green-ponpes/js/components/fn.js"
+
+class TwigComponent extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      content: null,
+      rerender: false,
+    }
+  }
+  rerenderOnTarget(iAttr) {
+    // console.log(iAttr)
+    const target = this.path.replace(".twig", "")
+    Object.keys(iAttr).forEach((key) => {
+      const opt = iAttr[key]
+      if (opt.target == target) {
+        return this.rerender(iAttr)
+        // console.log(opt)
+        // this.setState({ rerender: true, content: opt.content })
+      }
+    })
+    // console.log(this.path)
+    // console.log(this.code)
+  }
+  rerender(iAttr) {
+    let code = this.code
+    Object.keys(iAttr).forEach((key) => {
+      const opts = iAttr[key]
+      Object.keys(opts).forEach((prop) => {
+        if (!["target"].includes(prop)) {
+          code = `{% set ${prop}="${opts[prop]}" %}\n${code}`
+          // this.code = code
+        }
+      })
+    })
+    console.log(code)
+    const tplData = {
+      page: {
+        title: "",
+        meta: {
+          description: "This is a simple website.",
+          author: "Author",
+          keywords: "keyword1, keyword2",
+        },
+      },
+    }
+
+    const loader = createArrayLoader({
+      [this.path]: code,
+    })
+    // console.log(twigTplData)
+    const environment = createEnvironment(loader)
+    applyEnvFunction(environment, tplData)
+    environment
+      .render(this.path, tplData)
+      .then((content) => {
+        console.log(content)
+        this.setState({ rerender: true, content })
+      })
+      .catch((e) => {
+        console.error(e)
+      })
+    // this.setState({ rerender: true, content })
+  }
+}
+export default TwigComponent
