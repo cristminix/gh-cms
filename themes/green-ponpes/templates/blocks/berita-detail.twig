@@ -1,13 +1,16 @@
 
+{% if slug %}
 {% set page = web_get_page(slug) %}
-<div class="berita-detail p-2 w-3/4">
+<div class="berita-detail p-2 flex flex-col lg:w-3/4">
 {% if page %}
-    <h3 class="text-2xl py-2">{{page.title}}</h3>
-    <img class="w-full py-4 rounded-md" src="/storage/covers/{{page.coverImage}}"/>
-
-    <div>{{page.content|raw}}</div>
+    <h3 class="text-2xl py-2 ">{{page.title}}</h3>
+    <img class="w-full  rounded-md object-cover" src="/storage/covers/{{page.coverImage}}"/>
+    <div class="prose-sm dark:prose-invert page-detail">
+    {{blocks_to_html(page.blocks)|raw}}
+    </div>
 {% else %}
     <div class="bg-pink-300">{{slug}}</div>
     <img src="/storage/previews/e1d7a1d8266ccf3948c552985ff2847f.png"/>
 {% endif %}
 </div>
+{% endif %}

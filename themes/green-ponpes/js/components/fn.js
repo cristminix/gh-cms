@@ -1,5 +1,7 @@
 import { createEnvironment, createArrayLoader, createFilter, createFunction } from "twing"
 import { apiUrl } from "../../../../lib/shared/fn.js"
+
+import blocksToHtml from "editorjs-render"
 const twigAddFilter = (env, name, filterFn, argList = ["string"]) => {
   const twgFilter = createFilter(
     name,
@@ -57,6 +59,24 @@ const applyEnvFunction = async (environment, tplData) => {
     (slug) => fetch(apiUrl("web/tplFunc/web_get_page", { slug })).then((r) => r.json()),
     ["slug"],
     true,
+  )
+  twigAddFunction(
+    environment,
+    "blocks_to_html",
+    (blocks) => {
+      if (typeof blocks === "string") {
+        try {
+          blocks = JSON.parse(blocks)
+          blocks = blocks.blocks
+          console.log(blocks)
+        } catch (e) {
+          blocks = []
+        }
+      }
+      return blocksToHtml(blocks)
+    },
+    ["blocks"],
+    false,
   )
   twigAddFunction(
     environment,

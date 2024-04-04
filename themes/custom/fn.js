@@ -235,7 +235,8 @@ class ${mainComponentName} extends TwigComponent {
       this.code = \`${code}\`
       this.state = {
         content:null,
-        rerender:false
+        rerender:false,
+        containerCls:"blank"
       }
     }
     
@@ -247,7 +248,7 @@ class ${mainComponentName} extends TwigComponent {
 
     render(){
       return <>
-      {this.state.rerender?<div dangerouslySetInnerHTML={{__html:this.state.content}}></div>:<>${twigTplRendered}</>}
+      {this.state.rerender?<div class={\`${slugify(basePath)} ${"$"}${"{this.state.containerCls}"}\`} dangerouslySetInnerHTML={{__html:this.state.content}}></div>:<>${twigTplRendered}</>}
         
       </>  
     }

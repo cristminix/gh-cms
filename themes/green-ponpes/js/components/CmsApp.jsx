@@ -9,7 +9,7 @@ export async function loader({ params }) {
 import { useLoaderData } from "react-router-dom"
 import base64 from "base-64"
 import { apiUrl } from "@lib/shared/fn"
-
+import "./web.css"
 const CMSApp = () => {
   let { template, path, slug, block } = useLoaderData()
 

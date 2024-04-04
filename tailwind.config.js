@@ -19,5 +19,5 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [require("preline/plugin")],
+  plugins: [require("@tailwindcss/typography"), require("preline/plugin")],
 }

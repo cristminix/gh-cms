@@ -1,0 +1,31 @@
+
+.page-detail{
+    /* @apply bg-green-600 flex items-center; */
+
+}
+
+.page-detail > .editorjs-show{
+    /* @apply bg-black flex items-center; */
+
+}
+
+.page-detail > .editorjs-show > .editorjs-show__html{
+    /* @apply bg-white flex flex-col items-center w-full; */
+
+}
+
+
+.page-detail > .editorjs-show > .editorjs-show__html >.ce-block{
+    /* @apply bg-white flex flex-col items-center w-full; */
+
+}
+
+.page-detail > .editorjs-show > .editorjs-show__html >.ce-block > .ce-block__content{
+    /* @apply bg-green-500 flex  items-center w-full; */
+
+}
+
+.page-detail > .editorjs-show > .editorjs-show__html >.ce-block > .ce-block__content > p{
+    /* @apply bg-green-500 flex  items-center w-full; */
+
+}

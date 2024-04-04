@@ -6,6 +6,7 @@ import path from "path"
 import { createEnvironment, createFilesystemLoader, createFilter, createFunction } from "twing"
 import { camelToSnake, snakeToCamel, slugify, twigAddFilter, twigAddFunction } from "../libs/utils.js"
 import { crc32 } from "crc"
+import blocksToHtml from "editorjs-render"
 
 class WebRouter {
   datasource = null
@@ -150,7 +151,7 @@ class WebRouter {
     })
   }
   async homepage(req, res) {
-    const { template } = req.params
+    const { template, block, slug } = req.params
     // PREPARE SITE DATA
     const websiteSetting = await this.mWebSiteSetting.getDefault()
     const page = {
@@ -167,6 +168,7 @@ class WebRouter {
       const siteData = {
         setting: websiteSetting,
         page,
+        slug,
       }
       let loader = createFilesystemLoader(fs)
       loader.addPath("./themes/default/templates/")
@@ -183,6 +185,25 @@ class WebRouter {
         ["limit", "page"],
         true,
       )
+      twigAddFunction(
+        environment,
+        "blocks_to_html",
+        (blocks) => {
+          if (typeof blocks === "string") {
+            try {
+              blocks = JSON.parse(blocks)
+              blocks = blocks.blocks
+              console.log(blocks)
+            } catch (e) {
+              blocks = []
+            }
+          }
+          return blocksToHtml(blocks)
+        },
+        ["blocks"],
+        false,
+      )
+      twigAddFunction(environment, "web_get_page", (slug) => this.mWebPage.getBySlug(slug), ["slug"], true)
       twigAddFunction(
         environment,
         "web_page_get_list",
@@ -265,9 +286,9 @@ class WebRouter {
     this.router.use("/storage", serveIndex(storagePath, { icons: true }))
     this.router.get("/web/setImportAttributes", async (req, res) => await this.setImportAttributes(req, res))
 
-    this.router.get("/web/:template?", async (req, res) => await this.homepage(req, res))
     this.router.get("/web/arrayLoader/:template", async (req, res) => await this.arrayLoader(req, res))
     this.router.get("/web/tplFunc/:fn", async (req, res) => await this.tplFunc(req, res))
+    this.router.get("/:template?/:block?/:slug?", async (req, res) => await this.homepage(req, res))
   }
 }
 
