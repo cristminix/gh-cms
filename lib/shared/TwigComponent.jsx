@@ -18,7 +18,7 @@ class TwigComponent extends Component {
   rerenderOnTarget(iAttr) {
     // console.log(iAttr)
     this.setState({
-      containerCls: " opacity-0 transition-opacity	duration-200 ease-in-out",
+      containerCls: "",
     })
     const target = this.path.replace(".twig", "")
     Object.keys(iAttr).forEach((key) => {

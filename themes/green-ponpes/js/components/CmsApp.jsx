@@ -6,6 +6,7 @@ export async function loader({ params }) {
   const { template, path, slug, block } = params
   return { template, path, slug, block }
 }
+import jQuery from "jquery"
 import { useLoaderData } from "react-router-dom"
 import base64 from "base-64"
 import { apiUrl } from "@lib/shared/fn"
@@ -22,6 +23,7 @@ const CMSApp = () => {
       if (typeof obj == "string") {
         if (obj == "refresh-parent") {
           // loadPath()
+
           console.log("Hello")
           loadPath(true)
         }
@@ -31,6 +33,8 @@ const CMSApp = () => {
     },
   })
   const loadPath = async (t = null) => {
+    jQuery("#root").removeClass("opacity-1").addClass("opacity-0")
+
     console.log(t, template, path, slug, block)
     console.log(t, templateRef.current, pathRef.current, slugRef.current)
     if (template) templateRef.current = template
@@ -72,13 +76,16 @@ const CMSApp = () => {
         if (typeof obj == "string") {
           if (obj == "refresh-parent") {
             // loadPath()
-            console.log("Hello22")
+
             loadPath(true)
           }
         } else {
           setTpl(obj)
         }
       }
+      setTimeout(() => {
+        jQuery("#root").removeClass("opacity-0").addClass("opacity-1")
+      }, 256)
     } catch (e) {
       console.error(e)
     }

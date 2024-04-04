@@ -1,52 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" theme="light" class="light">
   <head>
     <title>Green Ponpes Website</title>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/themes/green-ponpes/favicon.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      body{
-        font-family: Inter,sans-serif; 
-        font-size: .88em;
+      body {
+        font-family: Inter, sans-serif;
+        font-size: 0.88em;
       }
     </style>
   </head>
-  <body onscroll="setScroll()" onload="setScreen()" 
-  class="dark:bg-gray-800 dark:border-gray-700 text-gray-800 dark:text-gray-200 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-slate-700 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500"
->
-    <div id="root"></div>
+  <body
+    onscroll="setScroll()"
+    onload="setScreen()"
+    class="dark:bg-gray-800 dark:border-gray-700 text-gray-800 dark:text-gray-200 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-slate-700 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500"
+  >
+    <div id="root" class="opacity-0 transition-opacity"></div>
   </body>
   <script type="module" src="/themes/green-ponpes/js/main.jsx"></script>
   <script src="/preline.js"></script>
   <script type="text/javascript">
-
     function setScreen() {
-        var yScreen = localStorage.getItem("yPos");
-        console.log(yScreen)
-        setTimeout(()=>{
-          window.scrollTo(0, yScreen);
-        },1000)
+      var yScreen = localStorage.getItem("yPos")
+      console.log(yScreen)
+      setTimeout(() => {
+        window.scrollTo(0, yScreen)
+      }, 1000)
     }
     function setScroll() {
-        var yScroll = window.pageYOffset;
-        localStorage.setItem("yPos", yScroll);
+      var yScroll = window.pageYOffset
+      localStorage.setItem("yPos", yScroll)
     }
     function clearScreen() {
-        localStorage.setItem("yPos", 0);
-        window.scrollTo(0, 0);
+      localStorage.setItem("yPos", 0)
+      window.scrollTo(0, 0)
     }
-
-</script>
+  </script>
   <script>
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-  document.documentElement.classList.add('dark')
-} else {
-  document.documentElement.classList.remove('dark')
-}
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
   </script>
 </html>
