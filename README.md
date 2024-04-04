@@ -36,7 +36,7 @@ npm run tailwind:css
 
 Open up `http://localhost:5000/preview/` for public twig hmr update while editing twig template
 
-Open up `http://localhost:7700/web/` for native template rendering via express server
+Open up `http://localhost:7700/` for native template rendering via express server
 
 Open up `http://localhost:5000/cp/` for content management system control panel
 

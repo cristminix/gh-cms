@@ -150,8 +150,11 @@ class WebRouter {
       tpls: { ...tpls, ...defaultSections, ...tplSections, ...tplBlocks },
     })
   }
-  async homepage(req, res) {
-    const { template, block, slug } = req.params
+  async homepage(req, res, defaultTemplate) {
+    let { template, block, slug } = req.params
+    if (defaultTemplate) {
+      template = defaultTemplate
+    }
     // PREPARE SITE DATA
     const websiteSetting = await this.mWebSiteSetting.getDefault()
     const page = {
@@ -288,7 +291,15 @@ class WebRouter {
 
     this.router.get("/web/arrayLoader/:template", async (req, res) => await this.arrayLoader(req, res))
     this.router.get("/web/tplFunc/:fn", async (req, res) => await this.tplFunc(req, res))
-    this.router.get("/:template?/:block?/:slug?", async (req, res) => await this.homepage(req, res))
+
+    this.router.get("/", async (req, res) => await this.homepage(req, res, "homepage"))
+    this.router.get("/profile", async (req, res) => await this.homepage(req, res, "profile"))
+    this.router.get("/berita", async (req, res) => await this.homepage(req, res, "berita"))
+    this.router.get("/lembaga", async (req, res) => await this.homepage(req, res, "lembaga"))
+    this.router.get("/kegiatan", async (req, res) => await this.homepage(req, res, "kegiatan"))
+    this.router.get("/pendaftaran", async (req, res) => await this.homepage(req, res, "pendaftaran"))
+    this.router.get("/kontak", async (req, res) => await this.homepage(req, res, "kontak"))
+    this.router.get("/lihat-berita/:block/:slug?", async (req, res) => await this.homepage(req, res, "lihat-berita"))
   }
 }
 
