@@ -9,7 +9,7 @@ console.log(appConfig)
 export default defineConfig({
   optimizeDeps: {
     // exclude: ["api", "tools", "themes"],
-    entries: ["!api/**/*.js"],
+    entries: ["!api/**/*.js", "!tools/**/*.js"],
   },
   server: {
     host: appConfig.bindHost,

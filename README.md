@@ -8,18 +8,30 @@ Coming soon ...
 
 # INSTALL AND RUN PROJECT
 
-Please specify server port on `config/app.json`
-
 Install deendencies
 
 ```
 npm i
 ```
 
+Please specify server port on `config/app.json` before running this projects
+
+```
+{
+  "host": "localhost",
+  "bindHost": "0.0.0.0",
+  "port": 7700,
+  "vitePort": 5000,
+  "useHttps": false
+  ...
+}
+
+```
+
 Run Vite dev server for frontend
 
 ```
-npx vite dev
+npx vite
 ```
 
 Run Express backend dev server
