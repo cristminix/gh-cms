@@ -13,7 +13,7 @@ import { DS } from "./data-source/index.js"
 import routers from "./routes/routers.js"
 import AppConfig from "./AppConfig.js"
 import twing from "twing"
-import connectLiveReload from "connect-livereload"
+// import connectLiveReload from "connect-livereload"
 // console.log(twing)
 const { createEnvironment, createArrayLoader, createFilesystemLoader } = twing
 // import { TwingExtensionStringLoader } from 'twing-extension-string-loader'
@@ -45,11 +45,7 @@ const main = async () => {
   const HTTP_LOG = RequestLogger(loggerConfig).requestLogger()
 
   const app = express()
-  const datasource = new DS(
-    appConfig.get("db.engine"),
-    appConfig.get("db.location"),
-    LOG,
-  )
+  const datasource = new DS(appConfig.get("db.engine"), appConfig.get("db.location"), LOG)
   let ds = null
 
   app.use(cors())

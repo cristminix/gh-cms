@@ -7,6 +7,10 @@ import { resolve } from "path"
 import appConfig from "./config/app.json"
 console.log(appConfig)
 export default defineConfig({
+  optimizeDeps: {
+    // exclude: ["api", "tools", "themes"],
+    entries: ["!api/**/*.js"],
+  },
   server: {
     host: appConfig.bindHost,
     port: appConfig.vitePort,
@@ -14,11 +18,14 @@ export default defineConfig({
       usePolling: true,
     },
   },
-  rollupOptions: {
-    input: {
-      // main: resolve("./themes/green-ponpes/index.html"),
-      preview: resolve("./preview/index.html"),
-      cp: resolve("./cp/index.html"),
+  build: {
+    rollupOptions: {
+      // external: [/api\/.*/, /tools\/.*/, /themes\/\.*/],
+      input: {
+        // main: resolve("./themes/green-ponpes/index.html"),
+        preview: resolve("./preview/index.html"),
+        cp: resolve("./cp/index.html"),
+      },
     },
   },
   plugins: [react(), nodePolyfills(), twig()],
