@@ -14,10 +14,10 @@ export default defineConfig({
       usePolling: true,
     },
   },
-  ollupOptions: {
+  rollupOptions: {
     input: {
       // main: resolve("./themes/green-ponpes/index.html"),
-      // main: resolve("./index.html"),
+      preview: resolve("./preview/index.html"),
       cp: resolve("./cp/index.html"),
     },
   },

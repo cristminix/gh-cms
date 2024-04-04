@@ -1,11 +1,11 @@
 {
-    "host" : "localhost",
-    "bindHost" : "0.0.0.0",
-    "port" : 7700,
-    "vitePort" : 5000,
-    "useHttps": false,
-    "storageDir" : "storage",
-    "logDir" : "logs",
-    "downloadDir" : "${storageDir}/downloads",
-    "importAttributesJsonPath":"themes/custom/import-attributes.json"
+  "host": "ubuserver",
+  "bindHost": "0.0.0.0",
+  "port": 7700,
+  "vitePort": 5000,
+  "useHttps": false,
+  "storageDir": "storage",
+  "logDir": "logs",
+  "downloadDir": "${storageDir}/downloads",
+  "importAttributesJsonPath": "themes/custom/import-attributes.json"
 }
