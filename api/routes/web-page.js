@@ -178,7 +178,7 @@ class WebPageRouter extends AuthenticatedRouter {
           }
         })
       }
-      const {
+      let {
         blocks,
         title,
         slug,
@@ -189,11 +189,17 @@ class WebPageRouter extends AuthenticatedRouter {
         kind,
         status,
         visibility,
+        categories,
+        tags,
         dateCreated,
         dateUpdated,
         datePublished,
       } = req.body
+      const now = new Date()
+      dateUpdated = now.toISOString().slice(0, 19).replace("T", " ")
       const updatedData = {
+        categories,
+        tags,
         blocks,
         title,
         slug,
@@ -204,7 +210,7 @@ class WebPageRouter extends AuthenticatedRouter {
         kind,
         status,
         visibility,
-        dateCreated,
+        // dateCreated,
         dateUpdated,
         datePublished,
       }

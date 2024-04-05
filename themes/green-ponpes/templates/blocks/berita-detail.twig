@@ -4,6 +4,16 @@
 <div class="berita-detail p-2 flex flex-col lg:w-3/4">
 {% if page %}
     <h3 class="text-2xl py-2 font-bold">{{page.title}}</h3>
+    <div class="flex items-center gap-2">
+    <span class="inline-flex justify-center items-center size-[46px] rounded-full bg-blue-600 text-white dark:bg-blue-500">
+<span class="fa fa-user"></span>
+</span>
+<div class="flex flex-col">
+<span>{{page.authors}}</span>
+<p><span>Diterbitkan di {{page.categories}}</span> <span>6 Menit Membaca</span>  <span>6 Hari yang lalu</span></p>
+    </div>
+    </div>
+    <p class="py-2 text-lg">{{page.highlight}}</p>
     <img class="w-full  rounded-md object-cover" src="/storage/covers/{{page.coverImage}}"/>
     <div class="prose-sm dark:prose-invert page-detail">
     {{blocks_to_html(page.blocks)|raw}}
