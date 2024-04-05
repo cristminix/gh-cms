@@ -7,6 +7,11 @@ import { createEnvironment, createFilesystemLoader, createFilter, createFunction
 import { camelToSnake, snakeToCamel, slugify, twigAddFilter, twigAddFunction } from "../libs/utils.js"
 import { crc32 } from "crc"
 import blocksToHtml from "editorjs-render"
+import { readingTime } from "../../lib/shared/fn.js"
+import TimeAgo from "javascript-time-ago"
+import id from "javascript-time-ago/locale/id" //with { type: "json" }
+
+TimeAgo.addDefaultLocale(id)
 
 class WebRouter {
   datasource = null
@@ -187,6 +192,21 @@ class WebRouter {
         (limit, page) => this.mWebMenu.getList(limit, page),
         ["limit", "page"],
         true,
+      )
+      twigAddFunction(environment, "reading_time", (text) => readingTime(text), ["text"], false)
+      twigAddFunction(
+        environment,
+        "time_ago",
+        (text) => {
+          try {
+            const timeAgo = new TimeAgo("id-ID")
+            return timeAgo.format(new Date(text))
+          } catch (e) {
+            return "n.a"
+          }
+        },
+        ["text"],
+        false,
       )
       twigAddFunction(
         environment,

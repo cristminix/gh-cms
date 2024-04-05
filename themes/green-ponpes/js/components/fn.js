@@ -1,7 +1,11 @@
-import { createEnvironment, createArrayLoader, createFilter, createFunction } from "twing"
-import { apiUrl } from "../../../../lib/shared/fn.js"
-
+import { createFilter, createFunction } from "twing"
+import { apiUrl, readingTime } from "../../../../lib/shared/fn.js"
+import TimeAgo from "javascript-time-ago"
+import id from "javascript-time-ago/locale/id"
 import blocksToHtml from "editorjs-render"
+
+TimeAgo.addDefaultLocale(id)
+
 const twigAddFilter = (env, name, filterFn, argList = ["string"]) => {
   const twgFilter = createFilter(
     name,
@@ -52,6 +56,21 @@ const applyEnvFunction = async (environment, tplData) => {
     (limit, page) => fetch(apiUrl("web/tplFunc/web_menu_get_list", { limit, page })).then((r) => r.json()),
     ["limit", "page"],
     true,
+  )
+  twigAddFunction(environment, "reading_time", (text) => readingTime(text), ["text"], false)
+  twigAddFunction(
+    environment,
+    "time_ago",
+    (text) => {
+      try {
+        const timeAgo = new TimeAgo("id-ID")
+        return timeAgo.format(new Date(text))
+      } catch (e) {
+        return "n.a"
+      }
+    },
+    ["text"],
+    false,
   )
   twigAddFunction(
     environment,

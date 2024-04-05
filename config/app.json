@@ -1,5 +1,5 @@
 {
-  "host": "ubuserver",
+  "host": "localhost",
   "bindHost": "0.0.0.0",
   "port": 7700,
   "vitePort": 5000,
