@@ -1,6 +1,6 @@
-@tailwind base; 
+/* @tailwind base; 
 @tailwind components; 
-@tailwind utilities;
+@tailwind utilities; */
 
 .ce-block--selected .ce-block__content,
 .ce-inline-toolbar,
@@ -100,4 +100,9 @@ background: #4d4d4d !important;
 .dark .cdx-notify__cross::before {
 /* background: #1a1a1a; */
 }
-
+.ce-toolbar__content,
+.ce-block__content{
+    /* max-width: auto;
+     */
+     @apply max-w-[90%];
+}

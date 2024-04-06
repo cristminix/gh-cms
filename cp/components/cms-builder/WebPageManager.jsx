@@ -11,7 +11,7 @@ import Toast from "@cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@cp/global/fn"
 import PageEditor from "./form/PageEditor"
 
-const WebPageManager = ({ store, config, pageNumber,cmd,pk }) => {
+const WebPageManager = ({ store, config, pageNumber, cmd, pk }) => {
   const toastRef = useRef(null)
   const [grid, setGrid] = useState({
     records: [],
@@ -20,7 +20,7 @@ const WebPageManager = ({ store, config, pageNumber,cmd,pk }) => {
     total_pages: 0,
     total_records: 0,
     order_by: "id",
-    order_dir: "asc",
+    order_dir: "desc",
   })
 
   const formId = "basic-modal-web-page"
@@ -228,10 +228,7 @@ const WebPageManager = ({ store, config, pageNumber,cmd,pk }) => {
             </h2>
             <div className="flex gap-2 mt-2">
               <div className="w-2/6 overflow-hidden">
-                <img
-                  className="h-full rounded-lg object-cover object-cover"
-                  src={cmsApiUrl(["web-page/covers", item.coverImage])}
-                />
+                <img className="h-full rounded-lg object-cover" src={cmsApiUrl(["web-page/covers", item.coverImage])} />
               </div>
               <div className="w-4/6">
                 <p>
@@ -301,13 +298,13 @@ const WebPageManager = ({ store, config, pageNumber,cmd,pk }) => {
           </div>
         )}
 
-        {cmd=='page-editor'&& pk ? (
+        {cmd == "page-editor" && pk ? (
           <>
             <PageEditor
               data={formData}
               closeEditor={(e) => {
-                document.location.hash=`/builder/web-page-manager/page/${pageNumber||1}`
-                }}
+                document.location.hash = `/builder/web-page-manager/page/${pageNumber || 1}`
+              }}
               toast={toast}
               requestToken={requestToken}
               pk={pk}

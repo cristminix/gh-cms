@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { cls28 } from "@cp/components/shared/ux/cls"
 import { useOutlet } from "react-router-dom"
 // import DownloadManager from "../DownloadManager"
-const ExampleContent = ({ store, config }) => {
+const ExampleContent = ({ store, config, showCaptionMenu }) => {
   // const [outletEmpty, setOutletEmpty] = useState(true)
   const [hideSidebar, setHideSidebar] = useState(false)
   useEffect(() => {
@@ -12,7 +12,7 @@ const ExampleContent = ({ store, config }) => {
         console.log(status)
         setHideSidebar(status)
       },
-      "example-content"
+      "example-content",
     )
   }, [])
   const outlet = useOutlet()
@@ -20,12 +20,13 @@ const ExampleContent = ({ store, config }) => {
     () => {},
     [
       /*props.children*/
-    ]
+    ],
   )
-  const mainContentCls = !hideSidebar ? `${cls28} pb-2` : `${cls28} lg:ps-8`
+  const ps = showCaptionMenu ? " " : "lg:ps-[128px]"
+  const mainContentCls = !hideSidebar ? `${cls28} ${ps} pb-2` : `${cls28} lg:ps-8`
   return (
     <>
-      <div className={`${mainContentCls} bg-white dark:bg-transparent`}>
+      <div className={`pt-[90px] ${mainContentCls} bg-white dark:bg-transparent`}>
         {/*<!-- Page Heading -->*/}
 
         {outlet || "Hello"}

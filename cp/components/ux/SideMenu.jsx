@@ -17,6 +17,7 @@ class SideMenu extends Component {
       // sideMenuLinks: Object.assign({}, side_menu.links),
       menus: [],
       hideSidebar: false,
+      showCaption: true,
     }
   }
   async reload() {
@@ -71,11 +72,11 @@ class SideMenu extends Component {
   }
   render() {
     const { store, config } = this.props
-    const { menus } = this.state
+    const { menus, showCaption } = this.state
     return (
       <>
         <nav className={cls13}>
-          <Menu showCaption={true} data={menus} store={store} config={config} />
+          <Menu showCaption={showCaption} data={menus} store={store} config={config} />
         </nav>
       </>
     )

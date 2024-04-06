@@ -15,7 +15,7 @@ const TwigViewer = ({ path }) => {
 
     try {
       const tstamp = new Date().getTime()
-      hmr.import(await import(`../../../${path}?import&t=${tstamp}`))
+      hmr.import(await import(/* @vite-ignore */ `../../../${path}?import&t=${tstamp}`))
       const [instanceKey] = Object.keys(hmr.instances)
       const instance = hmr.instances[instanceKey]
       setTpl(instance)

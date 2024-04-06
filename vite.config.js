@@ -5,7 +5,6 @@ import { nodePolyfills } from "vite-plugin-node-polyfills"
 import path from "path"
 import { resolve } from "path"
 import appConfig from "./config/app.json"
-console.log(appConfig)
 export default defineConfig({
   optimizeDeps: {
     // exclude: ["api", "tools", "themes"],

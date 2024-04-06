@@ -68,7 +68,7 @@ const CMSApp = () => {
       console.log(res)
     }
     try {
-      hmr.import(await import(tplPath))
+      hmr.import(await import(tplPath /* @vite-ignore */))
       // console.log(hmr)
       const instance = hmr.instances[instanceKey]
       setTpl(instance)
