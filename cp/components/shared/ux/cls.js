@@ -11,7 +11,7 @@ const cls7 = "cls-7 flex items-center text-sm text-gray-800 dark:text-gray-400"
 const cls8 = "cls-8 flex-shrink-0 mx-3 overflow-visible h-2.5 w-2.5 text-gray-400 dark:text-gray-600"
 const cls9 = "cls-9 text-sm font-semibold text-gray-800 truncate dark:text-gray-400"
 const clsTopHeader =
-  "clsTopHeader bg-white border-e border-gray-200 overflow-y-auto lg:block lg:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+  "clsTopHeader bg-white border-e border-gray-200 overflow-y-auto  lg:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
 
 const cls10 =
   "cls-10  hs-overlay hs-overlay-open:translate-x-0 -translate-x-full transition-all duration-300 transform hidden fixed top-0 start-0 bottom-0 z-[60] w-64 bg-white border-e border-gray-200 pt-7 pb-10 overflow-y-auto lg:block lg:translate-x-0 lg:end-auto lg:bottom-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-track]:bg-slate-700 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 dark:bg-gray-800 dark:border-gray-700"

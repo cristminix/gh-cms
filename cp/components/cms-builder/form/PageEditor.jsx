@@ -1,11 +1,47 @@
-import EditorJS from "@editorjs/editorjs"
+// import EditorJS from "@editorjs/editorjs"
 import Button from "@cp/components/shared/ux/Button"
 import { useEffect, useRef, useCallback, useState } from "react"
-// import Header from "@editorjs/header"
-// import List from "@editorjs/list"
+
 import { createReactEditorJS } from "react-editor-js"
 import { cmsApiUrl } from "@cp/components/apps/fn"
 import { Prx } from "@cp/global/fn"
+import Embed from "@editorjs/embed"
+import Table from "@editorjs/table"
+import Paragraph from "@editorjs/paragraph"
+import List from "@editorjs/list"
+import Warning from "@editorjs/warning"
+import Code from "@editorjs/code"
+import LinkTool from "@editorjs/link"
+import Image from "@editorjs/image"
+import Raw from "@editorjs/raw"
+import Header from "@editorjs/header"
+import Quote from "@editorjs/quote"
+import Marker from "@editorjs/marker"
+import CheckList from "@editorjs/checklist"
+import Delimiter from "@editorjs/delimiter"
+import InlineCode from "@editorjs/inline-code"
+import SimpleImage from "@editorjs/simple-image"
+import $ from "jquery"
+const EDITOR_JS_TOOLS = {
+  // NOTE: Paragraph is default tool. Declare only when you want to change paragraph option.
+  // paragraph: Paragraph,
+  embed: Embed,
+  // table: Table,
+  list: List,
+  // warning: Warning,
+  // code: Code,
+  linkTool: LinkTool,
+  // image: Image,
+  raw: Raw,
+  header: Header,
+  quote: Quote,
+  // marker: Marker,
+  checklist: CheckList,
+  // delimiter: Delimiter,
+  // inlineCode: InlineCode,
+  // simpleImage: SimpleImage,
+}
+
 import "./page-editor.css"
 const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
   const [row, setRow] = useState(data)
@@ -117,14 +153,21 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
       }, 512)
     }
   }, [row])
-
+  const onCloeEditor = (e) => {
+    if (confirm("Are you sure you want to close this editor?")) {
+      $("#page-editor-save-btn").click()
+      setTimeout(() => {
+        closeEditor()
+      }, 512)
+    }
+  }
   return (
     <div className="bg-inherit">
       <div className="flex gap-2 justify-between">
-        <Button onClick={handleSave} caption="Save" icon="fa fa-save" />
-        <Button onClick={closeEditor} caption="Close" icon="fa fa-times" />
+        <Button id="page-editor-save-btn" onClick={handleSave} title="Save" icon="fa fa-save" />
+        <Button onClick={(e) => onCloeEditor(e)} title="Close" icon="fa fa-times" />
       </div>
-      {row && <ReactEditorJS value={blocks} onInitialize={handleInitialize} />}
+      {row && <ReactEditorJS value={blocks} onInitialize={handleInitialize} tools={EDITOR_JS_TOOLS} />}
     </div>
   )
 }
