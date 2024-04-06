@@ -1,7 +1,10 @@
 /* @tailwind base; 
 @tailwind components; 
 @tailwind utilities; */
-
+.ce-toolbar div:nth-child(1) ,
+.ce-toolbar div:nth-child(2) {
+    /* @apply !bg-red-500 ; */
+} 
 .ce-block--selected .ce-block__content,
 .ce-inline-toolbar,
 .codex-editor--narrow .ce-toolbox,
