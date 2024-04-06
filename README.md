@@ -54,7 +54,7 @@ Open up `http://localhost:5000/cp/` for content management system control panel
 
 ![GH-CMS Control Panel](wiki/images/gh-cms-cp.PNG?raw=true "cp")
 
-![GH-CMS Control Panel](wiki/images/ss-page-editor.PNG?raw=true "Page editor with block feature")
+![GH-CMS Control Panel](wiki/images/ss-page-editor.png?raw=true "Page editor with block feature")
 
 This project is still in progress ....
 
