@@ -254,7 +254,9 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
     }
   }
   const mouseOutListener = (e) => {}
-  useEffect(() => {}, [])
+  useEffect(() => {
+    $("body,div[contenteditable]").attr("spellcheck", false)
+  }, [])
   const onCloseEditor = (e) => {
     // if (confirm("Are you sure you want to close this editor?")) {
     //   // $("#page-editor-save-btn").click()
