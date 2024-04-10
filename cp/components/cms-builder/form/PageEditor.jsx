@@ -99,6 +99,7 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
 
   const handleInitialize = useCallback((instance) => {
     editorCore.current = instance
+    console.log(instance)
   }, [])
 
   const handleSave = useCallback(async () => {
@@ -222,18 +223,13 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
           const nBlocks = [...defaultBlocks, ...blk.blocks]
           blk.blocks = nBlocks
           setBlocks(blk)
-          $(selector).off("mouseover", mouseOvListener)
-          $(selector).on("mouseover", mouseOvListener)
-
-          $(selector).off("mouseout", mouseOutListener)
-          $(selector).on("mouseout", mouseOutListener)
+         
         }
       }, 512)
     }
 
     return () => {
-      $(selector).off("mouseover", mouseOvListener)
-      $(selector).off("mouseout", mouseOutListener)
+
     }
   }, [row])
   const mouseOvListener = (e) => {

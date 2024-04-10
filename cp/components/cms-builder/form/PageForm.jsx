@@ -553,7 +553,7 @@ const PageForm = ({
                   validationErrors={validationErrors}
                   label="Kind"
                   value={kind}
-                  data={["html", "markdown", "plain", "template"]}
+                  data={["raw", "markdown", "text","block"]}
                   fieldname="kind"
                   onChange={(e) => {
                     setKind(e)

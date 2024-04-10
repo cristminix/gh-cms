@@ -27,7 +27,7 @@ const TopHeader = ({ onToggleMenu }) => {
   }
   return (
     <>
-      <div className={`top-header ${clsTopHeader} flex items-center justify-between  py-3 fixed w-full z-[61]`}>
+      <div className={`top-header ${clsTopHeader} flex items-center justify-between  py-3 fixed w-full z-[60]`}>
         <div className={`${cls11} flex items-center gap-2`}>
           <button
             className="p-2 rounded-md"

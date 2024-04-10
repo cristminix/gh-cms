@@ -1,9 +1,31 @@
 /* @tailwind base; 
 @tailwind components; 
 @tailwind utilities; */
-.ce-toolbar div:nth-child(1) ,
-.ce-toolbar div:nth-child(2) {
-    /* @apply !bg-red-500 ; */
+ 
+h1.ce-header{
+	@apply text-4xl;
+}
+h2.ce-header{
+	@apply text-3xl;
+}
+h3.ce-header{
+	@apply text-2xl;
+}
+h4.ce-header{
+	@apply text-xl;
+}
+.ce-popover .cdx-search-field.ce-popover__search,
+.ce-conversion-tool[data-tool=pageTitle],
+.ce-conversion-tool[data-tool=highlight],
+.ce-popover-item[data-item-name=pageTitle],
+.ce-popover-item[data-item-name=highlight],
+.ce-popover-item[data-item-name=move-up],
+.ce-popover-item[data-item-name=move-down],
+.ce-popover-item[data-item-name=delete],
+.ce-toolbar .ce-toolbar__plus
+/*.ce-toolbar .ce-toolbar__settings-btn */
+{
+     @apply !hidden ; 
 } 
 .ce-block--selected .ce-block__content,
 .ce-inline-toolbar,
