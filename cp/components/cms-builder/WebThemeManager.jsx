@@ -51,7 +51,8 @@ const WebThemeManager = ({ store, config, pageNumber }) => {
     jQuery(`#${modalBtnId}`).trigger("click")
   }
   const editForm = async (item, index) => {
-    setFormData(item)
+    setFormData((prevData) => ({ ...prevData, ...item }))
+
     setShowForm(true)
     jQuery(`#${modalBtnId}`).trigger("click")
   }

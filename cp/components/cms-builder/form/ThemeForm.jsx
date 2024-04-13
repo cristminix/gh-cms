@@ -16,6 +16,7 @@ import CryptoJS from "crypto-js"
 
 import { FormRow, FormRowImageValidation, FormRowValidation } from "@cp/components/shared/ux/Form"
 import { Prx } from "@cp/global/fn"
+import Button from "@cp/components/shared/ux/Button"
 
 const createUntitledUpload = () => {
   const idx = crc32(new Date().getTime().toString()).toString(16)
@@ -344,6 +345,25 @@ const ThemeForm = ({
                   }}
                   autofocus="yes"
                 />
+                <div className="flex gap-2">
+                  <FormRowValidation
+                    validationErrors={validationErrors}
+                    label="Slug"
+                    value={slug}
+                    fieldname="slug"
+                    onChange={(e) => {
+                      setSlug(e.target.value)
+                    }}
+                    className="w-full"
+                  />
+                  <Button
+                    className="m-2"
+                    icon="fa fa-refresh"
+                    onClick={() => {
+                      setSlug(slugify(name))
+                    }}
+                  />
+                </div>
                 <FormRowValidation
                   validationErrors={validationErrors}
                   useTextArea={true}
@@ -352,14 +372,6 @@ const ThemeForm = ({
                   fieldname="description"
                   onChange={(e) => {
                     setDescription(e.target.value)
-                  }}
-                />
-
-                <FormRow
-                  label="Slug"
-                  value={slug}
-                  onChange={(e) => {
-                    setSlug(e.target.value)
                   }}
                 />
 

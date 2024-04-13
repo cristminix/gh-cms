@@ -125,8 +125,8 @@ const WebBlockManager = ({ store, config, pageNumber, templateId }) => {
     jQuery(`#${modalBtnId}`).trigger("click")
   }
   const editForm = async (item, index) => {
-    setFormData(item)
-    setShowForm(true)
+    setFormData((prevData) => ({ ...prevData, ...item }))
+
     jQuery(`#${modalBtnId}`).trigger("click")
   }
   const viewBlocks = async (item, index) => {

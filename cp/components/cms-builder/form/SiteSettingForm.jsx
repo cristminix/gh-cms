@@ -16,7 +16,6 @@ import CryptoJS from "crypto-js"
 import { FormRow, FormRowImageValidation, FormRowValidation, FormRowSwitch } from "@cp/components/shared/ux/Form"
 import { Prx } from "@cp/global/fn"
 import Button from "@cp/components/shared/ux/Button"
-import Switch from "@cp/components/shared/ux/Switch"
 
 const createUntitledSiteSetting = () => {
   const idx = crc32(new Date().getTime().toString()).toString(16)

@@ -169,7 +169,7 @@ const WebContactPerson = ({ store, config, pageNumber }) => {
     numberWidthCls: "w-[10px]",
     actionWidthCls: "w-[50px]",
     widthCls: [""],
-    headers: ["name", "shortName", "kind", "contactDetail", "enabled"],
+    headers: ["name", "shortName", "kind", "contact Detail", "enabled"],
     fields: ["name", "shortName", "kind", "contactDetail", "enabled"],
     enableEdit: true,
     callbackFields: {},

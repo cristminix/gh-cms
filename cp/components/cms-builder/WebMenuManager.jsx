@@ -121,7 +121,9 @@ const WebMenuManager = ({ config, store }) => {
     jQuery(`#${modalBtnId}`).trigger("click")
   }
   const editMenuForm = async (item) => {
-    setFormData(item.data)
+    setFormData((prevData) => ({ ...prevData, ...item.data }))
+
+    // setFormData(item.data)
     setShowForm(true)
     jQuery(`#${modalBtnId}`).trigger("click")
   }

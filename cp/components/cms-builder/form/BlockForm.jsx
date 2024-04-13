@@ -16,6 +16,7 @@ import CryptoJS from "crypto-js"
 import { FormRow, FormRowImageValidation, FormRowSelect, FormRowValidation } from "@cp/components/shared/ux/Form"
 import { Prx } from "@cp/global/fn"
 import BlockPicker from "./BlockPicker"
+import Button from "@cp/components/shared/ux/Button"
 
 const createUntitledBlock = () => {
   const idx = crc32(new Date().getTime().toString()).toString(16)
@@ -406,17 +407,25 @@ const BlockForm = ({
                       }}
                       autofocus="yes"
                     />
-
-                    <FormRowValidation
-                      validationErrors={validationErrors}
-                      label="Slug"
-                      value={slug}
-                      fieldname="slug"
-                      onChange={(e) => {
-                        setSlug(e.target.value)
-                      }}
-                    />
-
+                    <div className="flex gap-2">
+                      <FormRowValidation
+                        validationErrors={validationErrors}
+                        label="Slug"
+                        value={slug}
+                        fieldname="slug"
+                        onChange={(e) => {
+                          setSlug(e.target.value)
+                        }}
+                        className="w-full"
+                      />
+                      <Button
+                        className="m-2"
+                        icon="fa fa-refresh"
+                        onClick={() => {
+                          setSlug(slugify(name))
+                        }}
+                      />
+                    </div>
                     <FormRowValidation
                       validationErrors={validationErrors}
                       label="Description"
@@ -427,7 +436,6 @@ const BlockForm = ({
                         setDescription(e.target.value)
                       }}
                     />
-
                     <FormRowSelect
                       validationErrors={validationErrors}
                       label="Kind"
@@ -438,17 +446,25 @@ const BlockForm = ({
                         setKind(e)
                       }}
                     />
-
-                    <FormRowValidation
-                      validationErrors={validationErrors}
-                      label="Path"
-                      value={path}
-                      fieldname="path"
-                      onChange={(e) => {
-                        setPath(e.target.value)
-                      }}
-                    />
-
+                    <div className="flex gap-2">
+                      <FormRowValidation
+                        validationErrors={validationErrors}
+                        label="Path"
+                        value={path}
+                        fieldname="path"
+                        className="w-full"
+                        onChange={(e) => {
+                          setPath(e.target.value)
+                        }}
+                      />
+                      <Button
+                        className="m-2"
+                        icon="fa fa-cog"
+                        onClick={() => {
+                          setPath(`${slugify(name)}.twig`)
+                        }}
+                      />
+                    </div>
                     <FormRowImageValidation
                       className="mb-4"
                       validationErrors={validationErrors}
@@ -468,7 +484,7 @@ const BlockForm = ({
                     setTemplateId(e.target.value)
                   }}
                 /> */}
-                    {kind == "section" && (
+                    {/* {kind == "section" && (
                       <FormRowSelect
                         // validationErrors={validationErrors}
                         url={cmsApiUrl(["web-template", "dropdown", themeId], { pk })}
@@ -479,8 +495,7 @@ const BlockForm = ({
                           setTemplateId(e)
                         }}
                       />
-                    )}
-
+                    ) */}
                     {/* <FormRow
                       validationErrors={validationErrors}
                       label="Parent"

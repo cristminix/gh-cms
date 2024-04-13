@@ -12,6 +12,7 @@ import {
   modalBtnFrmSaveCls,
 } from "@cp/components/shared/ux/cls"
 import CryptoJS from "crypto-js"
+import Button from "@cp/components/shared/ux/Button"
 
 import { FormRow, FormRowImageValidation, FormRowSelect, FormRowValidation } from "@cp/components/shared/ux/Form"
 import { Prx } from "@cp/global/fn"
@@ -350,15 +351,25 @@ const TemplateForm = ({
                   autofocus="yes"
                 />
 
-                <FormRowValidation
-                  validationErrors={validationErrors}
-                  label="Slug"
-                  value={slug}
-                  fieldname="slug"
-                  onChange={(e) => {
-                    setSlug(e.target.value)
-                  }}
-                />
+                <div className="flex gap-2">
+                  <FormRowValidation
+                    validationErrors={validationErrors}
+                    label="Slug"
+                    value={slug}
+                    fieldname="slug"
+                    onChange={(e) => {
+                      setSlug(e.target.value)
+                    }}
+                    className="w-full"
+                  />
+                  <Button
+                    className="m-2"
+                    icon="fa fa-refresh"
+                    onClick={() => {
+                      setSlug(slugify(name))
+                    }}
+                  />
+                </div>
 
                 <FormRowValidation
                   validationErrors={validationErrors}
@@ -370,17 +381,25 @@ const TemplateForm = ({
                     setDescription(e.target.value)
                   }}
                 />
-
-                <FormRowValidation
-                  validationErrors={validationErrors}
-                  label="Path"
-                  value={path}
-                  fieldname="path"
-                  onChange={(e) => {
-                    setPath(e.target.value)
-                  }}
-                />
-
+                <div className="flex gap-2">
+                  <FormRowValidation
+                    validationErrors={validationErrors}
+                    label="Path"
+                    value={path}
+                    fieldname="path"
+                    className="w-full"
+                    onChange={(e) => {
+                      setPath(e.target.value)
+                    }}
+                  />
+                  <Button
+                    className="m-2"
+                    icon="fa fa-cog"
+                    onClick={() => {
+                      setPath(`${slugify(name)}.twig`)
+                    }}
+                  />
+                </div>
                 <FormRowImageValidation
                   className="mb-4"
                   validationErrors={validationErrors}

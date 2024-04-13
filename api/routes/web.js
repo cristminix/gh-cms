@@ -299,7 +299,17 @@ class WebRouter {
       res.end("No website setting found as default")
     }
   }
-
+  async initWebMenuRouter() {
+    const webMenu = await this.mWebMenu.getList(1, 100, "id", "asc")
+    webMenu.records.forEach((menu) => {
+      let slug = menu.slug
+      if (slug == "home") {
+        slug = "homepage"
+      }
+      console.log(menu.link, slug)
+      this.router.get(menu.link, (req, res) => this.homepage(req, res, slug))
+    })
+  }
   initRouter() {
     const staticPath = path.join(this.appConfig.get("basepath"), "themes")
     const storagePath = path.join(this.appConfig.get("basepath"), "storage")
@@ -307,19 +317,13 @@ class WebRouter {
     this.router.use("/storage", express.static(storagePath)) // Serve static files
     this.router.use("/themes", serveIndex(staticPath, { icons: true }))
     this.router.use("/storage", serveIndex(storagePath, { icons: true }))
-    this.router.get("/web/setImportAttributes", async (req, res) => await this.setImportAttributes(req, res))
+    this.router.get("/web/setImportAttributes", (req, res) => this.setImportAttributes(req, res))
 
-    this.router.get("/web/arrayLoader/:template", async (req, res) => await this.arrayLoader(req, res))
-    this.router.get("/web/tplFunc/:fn", async (req, res) => await this.tplFunc(req, res))
+    this.router.get("/web/arrayLoader/:template", (req, res) => this.arrayLoader(req, res))
+    this.router.get("/web/tplFunc/:fn", (req, res) => this.tplFunc(req, res))
 
-    this.router.get("/", async (req, res) => await this.homepage(req, res, "homepage"))
-    this.router.get("/profile", async (req, res) => await this.homepage(req, res, "profile"))
-    this.router.get("/berita", async (req, res) => await this.homepage(req, res, "berita"))
-    this.router.get("/lembaga", async (req, res) => await this.homepage(req, res, "lembaga"))
-    this.router.get("/kegiatan", async (req, res) => await this.homepage(req, res, "kegiatan"))
-    this.router.get("/pendaftaran", async (req, res) => await this.homepage(req, res, "pendaftaran"))
-    this.router.get("/kontak", async (req, res) => await this.homepage(req, res, "kontak"))
-    this.router.get("/lihat-berita/:block/:slug?", async (req, res) => await this.homepage(req, res, "lihat-berita"))
+    this.router.get("/", async (req, res) => this.homepage(req, res, "homepage"))
+    this.initWebMenuRouter()
   }
 }
 
