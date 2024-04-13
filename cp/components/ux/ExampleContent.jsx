@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { cls28 } from "@cp/components/shared/ux/cls"
 import { useOutlet } from "react-router-dom"
 // import DownloadManager from "../DownloadManager"
+import Dashboard from "../Dashboard"
 const ExampleContent = ({ store, config, showCaptionMenu }) => {
   // const [outletEmpty, setOutletEmpty] = useState(true)
   const [hideSidebar, setHideSidebar] = useState(false)
@@ -29,7 +30,7 @@ const ExampleContent = ({ store, config, showCaptionMenu }) => {
       <div className={`pt-[90px] ${mainContentCls} bg-white dark:bg-transparent`}>
         {/*<!-- Page Heading -->*/}
 
-        {outlet || "Hello"}
+        {outlet || <Dashboard store={store} config={config} />}
         {/*
         <header> 
           <p className={cls29}> Starter Pages &amp; Examples </p> 

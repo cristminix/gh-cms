@@ -6,12 +6,14 @@ import ErrorPage from "./ErrorPage"
 import Apps, { loader as ncAppLoader } from "./components/Apps"
 import ManualApp, { loader as manualAppLoader } from "./components/ManualApp"
 import CMSBuilder, { loader as buildLoader } from "./components/CMSBuilder"
+import Dashboard, { loader as dashboardLoader } from "./components/Dashboard"
 
 export default function Router({ config, store }) {
   const router = createHashRouter(
     createRoutesFromElements(
       <Route path="/" errorElement={<ErrorPage />} element={<Template config={config} store={store} />}>
         <Route path="/setting" element={<SettingPage store={store} />} />
+        <Route path="/dashboard" element={<Dashboard loader={dashboardLoader} store={store} config={config} />} />
 
         <Route
           path="/developer"

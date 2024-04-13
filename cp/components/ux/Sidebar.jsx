@@ -36,7 +36,7 @@ const Sidebar = ({ store, config, sideMenuRef, showCaptionMenu }) => {
       {/*<!-- Sidebar -->*/}
       <div
         id="application-sidebar"
-        className={`${sidebarCls} !rounded-md overflow-hidden lg:mt-[70px] lg:pt-4 ${showCaptionMenu ? "" : "lg:w-[90px]"}`}
+        className={`${sidebarCls} !rounded-md overflow-hidden lg:mt-[72px] lg:pt-4 ${showCaptionMenu ? "" : "lg:w-[90px]"}`}
         data-hs-overlay-backdrop-container="#sidebar-overlay-backdrop"
       >
         <SideMenu store={store} config={config} ref={sideMenuRef} />
