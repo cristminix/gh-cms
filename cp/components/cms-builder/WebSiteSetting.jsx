@@ -95,9 +95,12 @@ const WebSiteSetting = ({ store, config, pageNumber }) => {
     jQuery(`#${modalBtnId}`).trigger("click")
   }
   const editForm = async (item, index) => {
-    setFormData(item)
+    setFormData((prevFormData) => ({ ...prevFormData, ...item }))
+    // setTimeout(() => {
+    // setFormData(item)
     setShowForm(true)
     jQuery(`#${modalBtnId}`).trigger("click")
+    // }, 256)
   }
   const deleteForm = async (item, index) => {
     // console.log(item)

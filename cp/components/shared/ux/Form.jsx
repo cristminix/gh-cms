@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import AdvancedSelect from "./AdvancedSelect"
 import Button from "./Button"
+import Switch from "./Switch"
 import CheckBox from "./CheckBox"
 import { ValidationErrIcon } from "./ValidationIcon"
 import { inputCls, niceScrollbarCls, inputClsError } from "./cls"
@@ -191,4 +192,23 @@ const FormRowCheckbox = ({ label, className = "", onChange = (f) => f, value }) 
     </div>
   )
 }
-export { FormRowCheckbox, FormRow, FormRowValidation, FormRowImageValidation, FormRowSelect }
+
+const FormRowSwitch = ({ label, switchDesc = ["Yes", "No"], className = "", onChange = (f) => f, value }) => {
+  return (
+    <div className={`flex items-center p-2 px-2 ${className}`}>
+      <div className="w-[80px]">
+        <label className="font-bold">{label}</label>
+      </div>
+      <div>
+        <Switch
+          value={value}
+          onChange={(checked) => onChange(checked)}
+          switchDesc={switchDesc}
+          withDescription={true}
+        />
+        {/* {value} */}
+      </div>
+    </div>
+  )
+}
+export { FormRowCheckbox, FormRow, FormRowValidation, FormRowImageValidation, FormRowSelect, FormRowSwitch }
