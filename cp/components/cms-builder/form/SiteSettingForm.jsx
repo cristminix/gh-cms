@@ -13,7 +13,13 @@ import {
 } from "@cp/components/shared/ux/cls"
 import CryptoJS from "crypto-js"
 
-import { FormRow, FormRowImageValidation, FormRowValidation, FormRowSwitch } from "@cp/components/shared/ux/Form"
+import {
+  FormRow,
+  FormRowImageValidation,
+  FormRowValidation,
+  FormRowSwitch,
+  FormRowSelect,
+} from "@cp/components/shared/ux/Form"
 import { Prx } from "@cp/global/fn"
 import Button from "@cp/components/shared/ux/Button"
 
@@ -333,18 +339,20 @@ const SiteSettingForm = ({
                     }}
                   />
                 </div>
-                <FormRowValidation
-                  validationErrors={validationErrors}
+                <FormRowSelect
+                  // validationErrors={validationErrors}
+                  url={cmsApiUrl(["web-theme/dropdown/slug"])}
                   label="Theme"
                   value={theme}
                   fieldname="theme"
                   onChange={(e) => {
-                    setTheme(e.target.value)
+                    setTheme(e)
                   }}
                 />
 
-                <FormRowValidation
-                  validationErrors={validationErrors}
+                <FormRowSelect
+                  // validationErrors={validationErrors}
+                  url={cmsApiUrl(["web-company/dropdown"])}
                   label="Company"
                   value={companyId}
                   fieldname="companyId"

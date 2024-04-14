@@ -43,12 +43,16 @@ class WebThemeRouter extends AuthenticatedRouter {
     return this.router
   }
   async getDropdown(req, res) {
+    let { key } = req.params
+    if (!key) {
+      key = "id"
+    }
     const results = await this.mWebTheme.getList(1, 100, "name", "asc")
     if (Array.isArray(results.records)) {
       const data = results.records.map((item) => {
         return {
           text: item.name,
-          value: item.id,
+          value: item[key],
         }
       })
       return res.send({ data })
@@ -226,7 +230,7 @@ class WebThemeRouter extends AuthenticatedRouter {
       (req, res, next) => this.authenticateToken(req, res, next),
       (req, res) => this.getState(req, res),
     )
-    this.router.get("/web-theme/dropdown", async (req, res) => await this.getDropdown(req, res))
+    this.router.get("/web-theme/dropdown/:key?", async (req, res) => await this.getDropdown(req, res))
     this.router.get(
       "/web-theme/:id",
       async (req, res, next) => {

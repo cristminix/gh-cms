@@ -68,7 +68,7 @@ const FormRowSelect = ({
     }
   }, [url])
   return (
-    <div className={`h-[100px] flex items-center p-2 px-2 ${className}`}>
+    <div className={`h-[60px] flex items-center p-2 px-2 ${className}`}>
       <div className="w-[70px]">
         <label className="font-bold">{label}</label>
       </div>

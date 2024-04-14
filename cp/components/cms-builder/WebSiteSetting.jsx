@@ -172,10 +172,35 @@ const WebSiteSetting = ({ store, config, pageNumber }) => {
     numberWidthCls: "w-[10px]",
     actionWidthCls: "w-[50px]",
     widthCls: [""],
-    headers: ["name", "slug", "theme", "companyId", "setAsDefault"],
-    fields: ["name", "slug", "theme", "companyId", "setAsDefault"],
+    headers: [
+      "name",
+      // "slug",
+      "theme",
+      //  "companyId",
+      "Default",
+    ],
+    fields: [
+      "name",
+      // "slug",
+      "theme",
+      //  "companyId",
+
+      "setAsDefault",
+    ],
     enableEdit: true,
-    callbackFields: {},
+    callbackFields: {
+      name: (field, value, item, index) => {
+        return (
+          <div className="flex flex-col">
+            <span>{item.name}</span>
+            <span>{item.slug}</span>
+          </div>
+        )
+      },
+      setAsDefault: (field, value, item, index) => {
+        return item.setAsDefault == 1 ? "Yes" : "No"
+      },
+    },
     callbackHeaders: {},
     callbackActions: {
       edit: (item, index, options, linkCls, gridAction) => {
