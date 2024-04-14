@@ -108,7 +108,7 @@ export class MWebTheme {
       return { limit, total_pages, total_records, record_count: records.length }
     } catch (e) {
       // res.send(e)
-      // console.error(e)
+      console.error(e)
     }
     return { limit, total_pages: 0, total_records: 0, record_count: 0 }
   }

@@ -2,9 +2,15 @@ import { Component } from "react"
 import twigPkg from "twig"
 import twingPkg from "twing"
 const { twig } = twigPkg
-import { capitalize, snakeToCamel, camelToSnake, slugify } from "@themes/green-ponpes/js/components/fn"
 import { createArrayLoader, createEnvironment } from "twing"
-import { applyEnvFunction, getBlockFeatureByTemplate } from "@themes/green-ponpes/js/components/fn.js"
+import {
+  capitalize,
+  snakeToCamel,
+  camelToSnake,
+  slugify,
+  applyEnvFunction,
+  getBlockFeatureByTemplate,
+} from "@themes/js/components/fn"
 
 class TwigComponent extends Component {
   constructor(props) {
@@ -20,7 +26,7 @@ class TwigComponent extends Component {
     this.setState({
       containerCls: "",
     })
-    const target = this.path.replace(".twig", "")
+    const target = this.basePath.replace(".twig", "")
     Object.keys(iAttr).forEach((key) => {
       const opt = iAttr[key]
       if (opt.target == target) {
@@ -56,13 +62,13 @@ class TwigComponent extends Component {
     }
 
     const loader = createArrayLoader({
-      [this.path]: code,
+      [this.basePath]: code,
     })
     // console.log(twigTplData)
     const environment = createEnvironment(loader)
     applyEnvFunction(environment, tplData)
     environment
-      .render(this.path, tplData)
+      .render(this.basePath, tplData)
       .then((content) => {
         console.log(content)
         this.setState({ rerender: true, content })

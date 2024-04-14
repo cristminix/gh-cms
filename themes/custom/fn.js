@@ -3,9 +3,15 @@ import twingPkg from "twing"
 import path from "path"
 import fs from "fs"
 const { twig } = twigPkg
-import { capitalize, snakeToCamel, camelToSnake, slugify } from "../green-ponpes/js/components/fn"
 import { createArrayLoader, createEnvironment } from "twing"
-import { applyEnvFunction, getBlockFeatureByTemplate } from "../green-ponpes/js/components/fn.js"
+import {
+  capitalize,
+  snakeToCamel,
+  camelToSnake,
+  slugify,
+  applyEnvFunction,
+  getBlockFeatureByTemplate,
+} from "../js/components/fn.js"
 // import jQuery from "jquery"
 // import { Cheerio } from "cheerio"
 import cheerio from "cheerio"
@@ -17,22 +23,8 @@ async function parseTemplate(code, id, templateData = {}) {
   let importAttribute = {}
   let hasImportAttr = false
   const basePath = path.basename(id)
-
-  // try {
-  //   const jsonStr = fs.readFileSync("./themes/custom/import-attributes.json")
-  //   importAttributes = JSON.parse(jsonStr)
-  //   if (importAttributes[basePath]) {
-  //     console.log(basePath, importAttributes[basePath])
-  //     hasImportAttr = true
-  //     Object.keys(importAttributes[basePath]).forEach((key) => {
-  //       const value = importAttributes[basePath][key]
-
-  //       code = `{% set ${key}="${value}" %}\n${code}`
-  //     })
-  //   }
-  // } catch (e) {
-  //   console.log(e)
-  // }
+  const basePathRelative = path.relative(".", id)
+  const basePosixImportPath = `${basePathRelative.split(path.sep).join(path.posix.sep)}`
 
   const twigObj = twig({ data: code })
   let newSourceBuffer = []
@@ -85,14 +77,20 @@ async function parseTemplate(code, id, templateData = {}) {
   let refBuffer = []
   importBuffer.forEach((item) => {
     const importPath = item.tpl
-    if (item.tpl.match(/^\.\//)) {
+    const baseDir = path.dirname(id)
+    const realPath = path.join(baseDir, importPath)
+    const realPathRelative = path.relative(".", realPath)
+    const posixImportPath = `@${realPathRelative.split(path.sep).join(path.posix.sep)}`
+    // console.log(importPath, realPath, posixImportPath)
+    /*if (item.tpl.match(/^\.\//)) {
       item.tpl = item.tpl.replace(/^\.\//, "@templates/")
     } else if (item.tpl.match(/^\.\.\/blocks/)) {
       item.tpl = item.tpl.replace(/^\.\.\/blocks\//, "@templates/blocks/")
     } else {
       item.tpl = `@default_templates/${item.tpl}`
     }
-    parserBuff += `import ${item.name} from '${item.tpl}'\n`
+    */
+    parserBuff += `import ${item.name} from '${posixImportPath}'\n`
   })
   // const tplPaths = id.split("/")
   // console.log(id)
@@ -225,13 +223,14 @@ if (import.meta.hot) {
   import.meta.hot.accept(HMREventHandler)
 }
 
-import {useEffect,useState,Component} from "react"
+
 import {Link} from "react-router-dom"
 import importAttributes from "@themes/custom/import-attributes.json"
 class ${mainComponentName} extends TwigComponent {
     constructor(props){
       super(props)
-      this.path="${basePath}"
+      this.path="${basePosixImportPath}"
+      this.basePath="${basePath}"
       this.code = \`${code}\`
       this.state = {
         content:null,
@@ -263,7 +262,7 @@ export default ${mainComponentName}
 
 
     `
-  // saveTwigComponent(id, parserBuff, mainComponentName)
+  saveTwigComponent(id, parserBuff, mainComponentName, kind)
   saveTwigCompiled(twigTplRendered, mainComponentName, kind)
   return parserBuff
 }

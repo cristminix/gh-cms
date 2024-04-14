@@ -21,12 +21,13 @@ function decodeHTMLEntities(text) {
 
   return text
 }
-export function saveTwigComponent(id, parserBuff, mainComponentName) {
+export function saveTwigComponent(id, parserBuff, mainComponentName, kind) {
   try {
     const fileDir = path.dirname(id)
-    const componentDir = path.join(fileDir, "generated-react-jsx")
+    const componentDir = path.join(".", ".generated-react-jsx", kind)
+
     if (!fs.existsSync(componentDir)) {
-      fs.mkdirSync(componentDir)
+      fs.mkdirSync(componentDir, true)
     }
     const componentFilePath = `${componentDir}/${mainComponentName}.jsx`
 

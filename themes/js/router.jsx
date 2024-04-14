@@ -1,5 +1,5 @@
 import { createBrowserRouter, createHashRouter } from "react-router-dom"
-import CMSApp, { loader as cmsLoader } from "@components/CmsApp"
+import WebPreviewApp, { loader as webLoader } from "@components/WebPreviewApp"
 import TemplateViewer, { loader as tplLoader } from "@components/TemplateViewer"
 
 const router = createHashRouter([
@@ -11,8 +11,8 @@ const router = createHashRouter([
 
   {
     path: "/:template?/:block?/:slug?",
-    element: <CMSApp />,
-    loader: cmsLoader,
+    element: <WebPreviewApp />,
+    loader: webLoader,
   },
 ])
 

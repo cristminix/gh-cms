@@ -1,5 +1,5 @@
 import { createFilter, createFunction } from "twing"
-import { apiUrl, readingTime } from "../../../../lib/shared/fn.js"
+import { apiUrl, readingTime } from "../../../lib/shared/fn.js"
 import TimeAgo from "javascript-time-ago"
 import id from "javascript-time-ago/locale/id"
 import blocksToHtml from "editorjs-render"

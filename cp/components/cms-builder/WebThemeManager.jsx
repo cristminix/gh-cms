@@ -105,7 +105,7 @@ const WebThemeManager = ({ store, config, pageNumber }) => {
   const goToPage = (pageNum) => {
     pageNum = parseInt(pageNum) || 1
 
-    document.location.hash = `/apps/web-theme/page/${pageNum}`
+    document.location.hash = `/builder/web-theme-manager/page/${pageNum}`
     if (pageNum == grid.page) {
       updateList()
     }

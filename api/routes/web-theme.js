@@ -25,7 +25,7 @@ class WebThemeRouter extends AuthenticatedRouter {
     this.previewImageDir = appConfig.get("module.previewImageDir")
     // this.uploader = multer()
     this.uploader = multer({
-      dest: this.previewImageDir
+      dest: this.previewImageDir,
     })
     this.initRouter()
   }
@@ -36,7 +36,7 @@ class WebThemeRouter extends AuthenticatedRouter {
   async getState(req, res) {
     let { limit, page } = req.query
     page = parseInt(page) || null
-    const results = await this.mYtUpload.getState(limit, page)
+    const results = await this.mWebTheme.getState(limit, page)
     return res.send(results)
   }
   getRouter() {
@@ -45,10 +45,10 @@ class WebThemeRouter extends AuthenticatedRouter {
   async getDropdown(req, res) {
     const results = await this.mWebTheme.getList(1, 100, "name", "asc")
     if (Array.isArray(results.records)) {
-      const data = results.records.map(item => {
+      const data = results.records.map((item) => {
         return {
           text: item.name,
-          value: item.id
+          value: item.id,
         }
       })
       return res.send({ data })
@@ -57,12 +57,7 @@ class WebThemeRouter extends AuthenticatedRouter {
   }
   async getList(req, res) {
     const { page, limit, order_by, order_dir } = req.query
-    const results = await this.mWebTheme.getList(
-      page,
-      limit,
-      order_by,
-      order_dir
-    )
+    const results = await this.mWebTheme.getList(page, limit, order_by, order_dir)
     return res.send(results)
   }
   async get(req, res) {
@@ -91,7 +86,7 @@ class WebThemeRouter extends AuthenticatedRouter {
       previewImage = `${baseName}.${ext}`
       const oldFilePath = file.path
       const newFilePath = `${this.previewImageDir}/${previewImage}`
-      fs.rename(oldFilePath, newFilePath, err => {
+      fs.rename(oldFilePath, newFilePath, (err) => {
         if (err) {
           this.logger.info("Error renaming file:", err)
         } else {
@@ -102,12 +97,7 @@ class WebThemeRouter extends AuthenticatedRouter {
 
     let { name, slug, description } = req.body
     try {
-      const webtheme = await this.mWebTheme.create(
-        name,
-        slug,
-        description,
-        previewImage
-      )
+      const webtheme = await this.mWebTheme.create(name, slug, description, previewImage)
       return res.send({ data: webtheme })
     } catch (e) {
       return res.send({ data: e.toString() })
@@ -153,14 +143,14 @@ class WebThemeRouter extends AuthenticatedRouter {
         previewImage = `${baseName}.${ext}`
         const oldFilePath = file.path
         const newFilePath = `${this.previewImageDir}/${previewImage}`
-        fs.rename(oldFilePath, newFilePath, err => {
+        fs.rename(oldFilePath, newFilePath, (err) => {
           if (err) {
             this.logger.info("Error renaming file:", err)
           } else {
             this.logger.info("File renamed successfully!")
             const oldThumbnailPath = `${this.previewImageDir}/${oldThumbnail}`
 
-            fs.unlink(oldThumbnailPath, err => {
+            fs.unlink(oldThumbnailPath, (err) => {
               if (err) {
                 this.logger.info("Error deleting file:", err)
               } else {
@@ -179,7 +169,7 @@ class WebThemeRouter extends AuthenticatedRouter {
       return res.send({
         data: webtheme,
         message: "Record updated",
-        success: true
+        success: true,
       })
     } else {
       return res.send({ success: false, message: "Record not found" })
@@ -203,7 +193,7 @@ class WebThemeRouter extends AuthenticatedRouter {
       const webtheme = await this.mWebTheme.delete(id)
       const oldThumbnailPath = `${this.previewImageDir}/${existingRec.previewImage}`
 
-      fs.unlink(oldThumbnailPath, err => {
+      fs.unlink(oldThumbnailPath, (err) => {
         if (err) {
           this.logger.info("Error deleting file:", err)
         } else {
@@ -213,40 +203,36 @@ class WebThemeRouter extends AuthenticatedRouter {
       return res.send({
         data: webtheme,
         success: true,
-        message: "Record deleted"
+        message: "Record deleted",
       })
     } else {
       return res.send({ success: false, message: "Record not found" })
     }
   }
   initRouter() {
-    const staticPath = path.join(
-      this.appConfig.get("basepath"),
-      this.previewImageDir
-    )
+    const staticPath = path.join(this.appConfig.get("basepath"), this.previewImageDir)
 
     this.router.use("/web-themes/preview", express.static(staticPath)) // Serve static files
-    this.router.use(
-      "/web-themes/preview",
-      serveIndex(staticPath, { icons: true })
-    )
+    this.router.use("/web-themes/preview", serveIndex(staticPath, { icons: true }))
     this.router.get(
       "/web-themes",
       async (req, res, next) => {
         this.authenticateToken(req, res, next)
       },
-      async (req, res) => await this.getList(req, res)
+      async (req, res) => await this.getList(req, res),
     )
     this.router.get(
-      "/web-theme/dropdown",
-      async (req, res) => await this.getDropdown(req, res)
+      "/web-theme/states",
+      (req, res, next) => this.authenticateToken(req, res, next),
+      (req, res) => this.getState(req, res),
     )
+    this.router.get("/web-theme/dropdown", async (req, res) => await this.getDropdown(req, res))
     this.router.get(
       "/web-theme/:id",
       async (req, res, next) => {
         this.authenticateToken(req, res, next)
       },
-      async (req, res) => await this.get(req, res)
+      async (req, res) => await this.get(req, res),
     )
 
     this.router.post(
@@ -255,16 +241,10 @@ class WebThemeRouter extends AuthenticatedRouter {
         this.authenticateToken(req, res, next)
       },
       this.uploader.array("previewImage"),
-      check("name", "title field is required")
-        .not()
-        .isEmpty(),
-      check("description", "description field is required")
-        .not()
-        .isEmpty(),
-      check("slug", "slug field is required")
-        .not()
-        .isEmpty(),
-      async (req, res) => await this.create(req, res)
+      check("name", "title field is required").not().isEmpty(),
+      check("description", "description field is required").not().isEmpty(),
+      check("slug", "slug field is required").not().isEmpty(),
+      async (req, res) => await this.create(req, res),
     )
 
     this.router.put(
@@ -274,16 +254,10 @@ class WebThemeRouter extends AuthenticatedRouter {
       },
       this.uploader.array("previewImage"),
       // formValidation
-      check("name", "title field is required")
-        .not()
-        .isEmpty(),
-      check("description", "description field is required")
-        .not()
-        .isEmpty(),
-      check("slug", "slug field is required")
-        .not()
-        .isEmpty(),
-      async (req, res) => await this.update(req, res)
+      check("name", "title field is required").not().isEmpty(),
+      check("description", "description field is required").not().isEmpty(),
+      check("slug", "slug field is required").not().isEmpty(),
+      async (req, res) => await this.update(req, res),
     )
 
     this.router.delete(
@@ -291,7 +265,7 @@ class WebThemeRouter extends AuthenticatedRouter {
       async (req, res, next) => {
         this.authenticateToken(req, res, next)
       },
-      async (req, res) => await this.delete(req, res)
+      async (req, res) => await this.delete(req, res),
     )
   }
 }

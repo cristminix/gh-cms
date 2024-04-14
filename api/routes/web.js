@@ -85,7 +85,9 @@ class WebRouter {
     const { limit, page, order_by, order_dir, blockId, tplPath, slug } = req.query
     const websiteSetting = await this.mWebSiteSetting.getDefault()
     let data
-    if (fn === "web_menu_get_list") {
+    if (fn === "site_setting") {
+      data = websiteSetting
+    } else if (fn === "web_menu_get_list") {
       data = await this.mWebMenu.getList(limit, page)
     } else if (fn === "web_contact_person_get_list") {
       data = await this.mWebContactPerson.getList(limit, page, order_by, order_dir, {

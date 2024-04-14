@@ -11,10 +11,12 @@ import { useLoaderData } from "react-router-dom"
 import base64 from "base-64"
 import { apiUrl } from "@lib/shared/fn"
 import "./web.css"
-const CMSApp = () => {
+import { Prx } from "@cp/global/fn"
+const WebPreviewApp = () => {
   let { template, path, slug, block } = useLoaderData()
 
   const [tpl, setTpl] = useState(null)
+  const [siteSetting, setSiteSetting] = useState(null)
   const templateRef = useRef(template)
   const pathRef = useRef(path)
   const slugRef = useRef(slug)
@@ -33,6 +35,7 @@ const CMSApp = () => {
     },
   })
   const loadPath = async (t = null) => {
+    const { theme } = siteSetting
     jQuery("#root").removeClass("opacity-1").addClass("opacity-0")
 
     console.log(t, template, path, slug, block)
@@ -47,15 +50,15 @@ const CMSApp = () => {
     tstamp = `&t=${tstamp}`
     if (pathRef.current) {
       pathRef.current = base64.decode(pathRef.current)
-      pathRef.current = pathRef.current.replace("themes/green-ponpes/templates/", "")
+      pathRef.current = pathRef.current.replace(`themes/${theme}/templates/`, "")
 
-      tplPath = `../../templates/${pathRef.current}?import`
+      tplPath = `../../${theme}/templates/${pathRef.current}?import`
       instanceKey = getTwigComponentName(pathRef.current)
     } else {
       if (!templateRef.current) {
         templateRef.current = "homepage"
       }
-      tplPath = `../../templates/${templateRef.current}.twig?import${tstamp}`
+      tplPath = `../../${theme}/templates/${templateRef.current}.twig?import${tstamp}`
       instanceKey = getTwigComponentName(`${templateRef.current}.twig`)
     }
     console.log(tplPath, instanceKey)
@@ -90,12 +93,27 @@ const CMSApp = () => {
       console.error(e)
     }
   }
+
+  const loadSiteSetting = async () => {
+    const url = apiUrl("/web/tplFunc/site_setting")
+    const { data, validJson, code, text } = await Prx.get(url)
+    if (validJson) {
+      console.log(data)
+      setSiteSetting(data)
+    } else {
+      toast(`Failed to get site settings server sent http ${code} ${text}`, "error")
+    }
+  }
   useEffect(() => {
-    // if (path) {
-    loadPath()
-    // }
-  }, [template, path])
+    if (siteSetting) {
+      loadPath()
+    }
+  }, [template, path, siteSetting])
+
+  useEffect(() => {
+    loadSiteSetting()
+  }, [])
   return <>{tpl && tpl}</>
 }
 
-export default CMSApp
+export default WebPreviewApp

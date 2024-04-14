@@ -122,8 +122,10 @@ const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
 
   const addForm = async (item, index) => {
     const defaultTemplate = createUntitledTemplate()
-
-    setFormData(defaultTemplate)
+    if (themeId) {
+      defaultTemplate.themeId = themeId
+    }
+    setFormData((oData) => ({ ...oData, ...defaultTemplate }))
     setShowForm(true)
 
     jQuery(`#${modalBtnId}`).trigger("click")
