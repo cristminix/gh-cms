@@ -308,7 +308,7 @@ class WebRouter {
       if (slug == "home") {
         slug = "homepage"
       }
-      console.log(menu.link, slug)
+      // console.log(menu.link, slug)
       this.router.get(menu.link, (req, res) => this.homepage(req, res, slug))
     })
   }

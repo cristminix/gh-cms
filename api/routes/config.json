@@ -7,6 +7,13 @@
         }
       }
     },
+    "openai": {
+      "routes": {
+        "v1": {
+          "path": "{routePath}/v1/chat/completions"
+        }
+      }
+    },
     "man": {
       "routePath": "/api/cms/user",
       "routes": {

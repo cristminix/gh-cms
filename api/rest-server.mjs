@@ -50,8 +50,10 @@ const main = async () => {
 
   app.use(cors())
   app.use(HTTP_LOG)
-  app.use(bodyParser.urlencoded({ extended: true }))
+  app.use(bodyParser.json())
 
+  app.use(bodyParser.urlencoded({ extended: true }))
+  // app.use(enableCORS)
   // LOG.info("Memulai gh-cms rest server.")
   // console.log(fs.existsSync(`./templates/index.twig`))
   // const liveReloadServer = livereload.createServer()
@@ -103,7 +105,7 @@ const main = async () => {
   if (ds) {
     ds.then((f) => {
       LOG.info("Database connected")
-      routers.attach(app, datasource, appConfig, LOG, ["web"])
+      routers.attach(app, datasource, appConfig, LOG, ["web", "openai"])
     }).catch((e) => {
       LOG.error("Database not connected")
     })
