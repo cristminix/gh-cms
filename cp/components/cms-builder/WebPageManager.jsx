@@ -303,12 +303,12 @@ const WebPageManager = ({ store, config, pageNumber, cmd, pk }) => {
           <>
             <PageEditor
               data={formData}
+              pk={pk}
               closeEditor={(e) => {
                 document.location.hash = `/builder/web-page-manager/page/${pageNumber || 1}`
               }}
               toast={toast}
               requestToken={requestToken}
-              pk={pk}
             />
           </>
         ) : (

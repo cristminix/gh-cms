@@ -26,6 +26,8 @@ import PageTitle from "./editor-js/pageTitle"
 import Highlight from "./editor-js/highlight"
 import $ from "jquery"
 import { crc32 } from "crc"
+import CryptoJS from "crypto-js"
+
 import { makeDelay } from "@cp/global/fn"
 const delay = makeDelay(256)
 class SimpleImage {
@@ -92,9 +94,10 @@ const createBlock = (type, content) => {
   return { version: "2.29.1", time: tm, blocks }
 }
 
-const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
+const PageEditor = ({ data, toast, requestToken, closeEditor ,pk}) => {
   const [row, setRow] = useState(data)
   const [blocks, setBlocks] = useState(null)
+  const lastFromChecksumRef = useRef(null)
   const editorCore = useRef(null)
 
   const handleInitialize = useCallback((instance) => {
@@ -102,23 +105,70 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
     console.log(instance)
   }, [])
 
+  const getRemoteRowData = async (pk_) => {
+    const url = cmsApiUrl(["web-page", pk_])
+
+    try {
+      const { data, validJson, code, text } = await Prx.get(url, requestToken)
+      if (validJson) {
+        setRow(data.data)
+        const fromChecksum = calculateFormChecksum({id:data.data.id,blocks:JSON.stringify(data.data.blocks.blocks)})
+              lastFromChecksumRef.current = fromChecksum
+      } else {
+        toast(`Failed to get record id:${pk} server sent http ${code} ${text}`, "error")
+      }
+    } catch (e) {
+      toast(e.toString(), "error")
+    }
+  }
+
   const handleSave = useCallback(async () => {
     const savedData = await editorCore.current.dangerouslyLowLevelInstance?.save()
-    console.log(savedData)
+    // console.log(savedData)
     const title = savedData.blocks.shift()
     const highlight = savedData.blocks.shift()
     const blocks = JSON.stringify(savedData)
 
-    saveForm(blocks, title, highlight)
+    saveForm(blocks, title, highlight,savedData)
   }, [row])
   const ReactEditorJS = createReactEditorJS()
-  const saveForm = async (blocks, title = null, highlight = null) => {
+  const calculateFormChecksum = (data = null) => {
+    // console.log(data)
+    let formDataItem = null
+    if (data) {
+      const {
+        id,blocks
+      } = data
+      formDataItem = {
+        id,
+        blocks
+      }
+    } else {
+      formDataItem = {
+        id: pk,
+        blocks
+      }
+    }
+    if (!formDataItem.id) {
+      formDataItem.id = null
+    }
+    let values = []
+    const keys = Object.keys(formDataItem)
+    for (const key of keys) {
+      const value = formDataItem[key]
+      values.push(key + "=" + value)
+    }
+    var formString = values.join("&")
+    // console.log(formString)
+    return CryptoJS.SHA256(formString).toString()
+  }
+  const saveForm = async (blocks, title = null, highlight = null,blocksObj=null) => {
     let pk = null
     if (row.id) {
       pk = row.id
       row.blocks = blocks
     }
-    console.log(title, highlight)
+    // console.log(title, highlight)
     if (title) {
       // row.title = title.data.text
       row.title = title.data.text
@@ -127,6 +177,14 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
       // row.highlight = highlight.data.text
       row.highlight = highlight.data.text
     }
+    // console.log(blocksObj.blocks)
+    const fromChecksum = calculateFormChecksum({id:row.id,blocks:JSON.stringify(blocksObj.blocks)})
+    if(fromChecksum == lastFromChecksumRef.current){
+      console.log("form is not dirty save canceled")
+      return
+    }
+    lastFromChecksumRef.current = fromChecksum
+    console.log(lastFromChecksumRef.current)
     const formDataItem = row
     const formData = new FormData()
 
@@ -173,8 +231,14 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
     }
   }
   useEffect(() => {
-    setRow(data)
-  }, [data])
+    if(data){
+      setRow(data)
+    }else{
+      if(pk){
+        getRemoteRowData(pk)
+      }
+    }
+  }, [data,pk])
   const selector = ".ce-toolbar__actions .ce-toolbar__plus,.ce-toolbar__actions .ce-toolbar__settings-btn"
 
   useEffect(() => {
@@ -249,10 +313,62 @@ const PageEditor = ({ data, toast, requestToken, closeEditor }) => {
       console.log($related.attr("class"))
     }
   }
+  const autosaveRef = useRef(null)
+  const autosaveRefTm = useRef(null)
+  const autosaveInterval = 5000
+  const autosaveIvClock = 1000
+
+  const calculateBlockChecksum = ()=>{
+
+  }
+
+  const autosaveIvFn = ()=>{
+    if(!autosaveRefTm.current){
+      autosaveRefTm.current = (new Date).getTime()
+    }
+    const nowTm = (new Date).getTime()
+    const restTm = nowTm - autosaveRefTm.current
+
+    if(restTm >= autosaveInterval){
+      console.log('Saving ...')
+      try{
+        handleSave()
+        autosaveRefTm.current = null
+      }catch(e){
+        console.error(e)
+      }
+      
+    }
+  }
+  const loadAutosave = ()=>{
+    if(autosaveRef.current){
+      clearInterval(autosaveRef.current)
+      autosaveRefTm.current = null
+    }
+    autosaveRef.current = setInterval(()=>{
+      autosaveIvFn()
+    },autosaveIvClock)
+    console.log('loadAutosave')
+
+  }
+
+  const unloadAutosave = ()=>{
+    console.log('unloadAutosave')
+    if(autosaveRef.current){
+      clearInterval(autosaveRef.current)
+    }
+  }
+
   const mouseOutListener = (e) => {}
   useEffect(() => {
     $("body,div[contenteditable]").attr("spellcheck", false)
+    loadAutosave()
+
+    return ()=>{
+      unloadAutosave()
+    }
   }, [])
+  
   const onCloseEditor = (e) => {
     // if (confirm("Are you sure you want to close this editor?")) {
     //   // $("#page-editor-save-btn").click()

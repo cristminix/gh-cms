@@ -85,6 +85,7 @@ class OpenAIRouter {
       let created = Math.floor(Date.now() / 1000)
       let finish_reason = null
       for await (const message of StreamCompletion(response.data)) {
+        console.log(message)
         if (message.match(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{6}$/)) continue
         const parsed = JSON.parse(message)
         let content = parsed?.message?.content?.parts[0] ?? ""

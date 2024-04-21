@@ -1,4 +1,7 @@
 import { cls27, cls26, cls25, cls24, cls23, cls16, cls13, cls11, cls10, cls9, cls30, cls28, cls29 } from "../cls"
+import ReactMarkdown from "react-markdown"
+import "@cp/global/styles/markdown-viewer.css"
+
 const BubleThree = ({ text = "Hello" }) => {
   return (
     <>
@@ -36,7 +39,11 @@ const BubleThree = ({ text = "Hello" }) => {
 
         <div className={cls23}>
           {/*<!-- Card -->*/}
-          <div className={cls11}>{text}</div>
+          <div className={`${cls11}`}>
+            <article className=" markdown-viewer">
+              <ReactMarkdown>{text}</ReactMarkdown>
+            </article>
+          </div>
           {/*<!-- End Card -->*/}
 
           {/*<!-- Button Group -->*/}

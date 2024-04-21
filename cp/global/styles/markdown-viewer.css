@@ -26,7 +26,16 @@
   @apply marker:text-blue-600 list-disc ps-5 space-y-2 text-sm text-gray-600 dark:text-gray-400 ml-2;
 }
 .markdown-viewer p {
-  @apply dark:text-white my-2;
+  @apply dark:text-white ;
+}
+.markdown-viewer ol li  {
+  @apply mb-4;
+}
+  .markdown-viewer ol li > * {
+    @apply my-4;
+  }
+    .markdown-viewer ol li >p {
+  @apply dark:text-white mt-2 !inline py-2 ;
 }
 .markdown-viewer pre {
   @apply dark:bg-slate-800 p-4 rounded rounded-xl;

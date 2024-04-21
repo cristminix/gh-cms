@@ -4,14 +4,14 @@ import Title from "./TItle"
 import { cls1, cls0 } from "./cls"
 import ChatBuble from "./ChatBuble"
 
-const ChatApp = ({ prompt, bubles = [], gptLoading }) => {
+const ChatApp = ({ prompt, bubles = [], gptLoading, store }) => {
   return (
     <>
       {/*<!-- Content -->*/}
       <div className={cls0}>
         <div className={cls1}>{/* <Title /> */}</div>
         <ChatBuble bubles={bubles} />
-        <Search prompt={prompt} gptLoading={gptLoading} />
+        <Search prompt={prompt} gptLoading={gptLoading} store={store} />
       </div>
       {/*<!-- End Content -->*/}
     </>

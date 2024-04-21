@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import {
   cls90,
   cls89,
@@ -16,7 +16,12 @@ import {
   cls77,
   cls28,
 } from "./cls"
-const Search = ({ prompt, gptLoading }) => {
+
+import $ from "jquery"
+import { makeDelay } from "@cp/global/fn"
+
+const delay = makeDelay(128)
+const Search = ({ prompt, gptLoading, store }) => {
   const inputTextRef = useRef(null)
   const doChat = async () => {
     const text = inputTextRef.current.value
@@ -24,6 +29,15 @@ const Search = ({ prompt, gptLoading }) => {
     // console.log(chatCompletion)
     inputTextRef.current.value = ""
   }
+
+  useEffect(() => {
+    if (gptLoading) {
+      delay(() => {
+        $(inputTextRef.current).focus()
+      })
+    }
+  }, [gptLoading])
+
   return (
     <>
       {/*<!-- Search -->*/}
@@ -67,7 +81,16 @@ const Search = ({ prompt, gptLoading }) => {
         </div>
 
         {/*<!-- Input -->*/}
-        <div className={cls82}>
+        {gptLoading && (
+          <div
+            className="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500"
+            role="status"
+            aria-label="loading"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+        )}
+        <div className={`${cls82} ${gptLoading ? "hidden" : ""}`}>
           <textarea placeholder="Ask me anything..." className={cls83} ref={inputTextRef} />
 
           {/*<!-- Toolbar -->*/}

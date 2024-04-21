@@ -13,7 +13,7 @@ export async function loader({ params }) {
 const Apps = ({ store, config }) => {
   const { module, pageNumber, fk } = useLoaderData()
   if (module == "openai") {
-    return <OpenAIChat />
+    return <OpenAIChat config={config} store={store} />
   } else if (module == "yt-upload") {
     return <YTUpload store={store} config={config} pageNumber={pageNumber} />
   } else if (module == "yt-upload-tt") {

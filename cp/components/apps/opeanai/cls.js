@@ -1,4 +1,4 @@
-const cls0 = "cls-0 relative h-screen"
+const cls0 = "cls-0 relative min-h-screen w-full"
 const cls1 = "cls-1 max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto"
 const cls2 = "cls-2 text-center"
 const cls3 = "cls-3 w-28 h-auto mx-auto mb-4"
@@ -8,7 +8,7 @@ const cls6 = "cls-6 text-3xl font-bold text-gray-800 sm:text-4xl dark:text-white
 const cls7 = "cls-7 mt-3 text-gray-600 dark:text-neutral-400"
 const cls8 = "cls-8 mt-16 space-y-5"
 const cls9 = "cls-9 flex gap-x-2 sm:gap-x-4"
-const cls10 = "cls-10 flex-shrink-0 w-[2.375rem] h-[2.375rem] rounded-full"
+const cls10 = "cls-10 flex-shrink-0  rounded-full"
 const cls11 =
   "cls-11 bg-white border border-gray-200 rounded-lg p-4 space-y-3 dark:bg-neutral-900 dark:border-neutral-700"
 const cls12 = "cls-12 font-medium text-gray-800 dark:text-white"
@@ -22,7 +22,7 @@ const cls19 = "cls-19 inline-block bg-blue-600 rounded-lg p-4 shadow-sm"
 const cls20 = "cls-20 text-sm text-white"
 const cls21 = "cls-21 flex-shrink-0 inline-flex items-center justify-center size-[38px] rounded-full bg-gray-600"
 const cls22 = "cls-22 text-sm font-medium text-white leading-none"
-const cls23 = "cls-23 grow max-w-[90%] md:max-w-2xl w-full space-y-3"
+const cls23 = "cls-23 grow  w-full space-y-3"
 const cls24 =
   "cls-24 text-sm text-blue-600 decoration-2 hover:underline font-medium dark:text-blue-500 dark:hover:text-blue-400"
 const cls25 = "cls-25 sm:flex sm:justify-between"
@@ -91,7 +91,7 @@ const cls76 =
 // const cls77 =
 //   "cls-77 max-w-4xl mx-auto sticky bottom-0 z-10 bg-white border-t border-gray-200 pt-2 pb-4 sm:pt-4 sm:pb-6 px-4 sm:px-6 lg:px-0 dark:bg-neutral-900 dark:border-neutral-700"
 const cls77 =
-  "cls-77 max-w-4xl mx-auto bg-white border-t border-gray-200 pt-2 pb-4 sm:pt-4 sm:pb-6 px-4 sm:px-6 lg:px-0 dark:bg-neutral-900 dark:border-neutral-700"
+  "cls-77 mt-4 px-2 py-2 w-full mx-auto bg-white border-t border-gray-200 pt-2 pb-4 sm:pt-4 sm:pb-6 px-4 sm:px-6 lg:px-0 dark:bg-neutral-900 dark:border-neutral-700"
 const cls78 = "cls-78 flex justify-between items-center mb-3"
 const cls79 =
   "cls-79 inline-flex justify-center items-center gap-x-2 rounded-lg font-medium text-gray-800 hover:text-blue-600 text-xs sm:text-sm dark:text-neutral-200 dark:hover:text-blue-500"
