@@ -7,10 +7,10 @@ import { useEffect, useRef, useState } from "react"
 import UserData from "@cp/global/models/UserData"
 const openai = new OpenAI({
   // apiKey: "sk-proj-ZBce7aXfkdqG8VXqsf1hT3BlbkFJ7wlpqXrKF4y8qWgFViAZ",
-  apiKey: "pk-RjIYvleyeXpgJMtxtunYCIbrnZhXdkzsnWPlRaeeMXaqErqg",
+  // apiKey: "pk-RjIYvleyeXpgJMtxtunYCIbrnZhXdkzsnWPlRaeeMXaqErqg",
   // baseURL: apiUrl("openai/v1"),
   // baseURL: "https://api.pawan.krd/v1",
-  baseURL: "https://reveals-complaints-christopher-climate.trycloudflare.com/v1",
+  // baseURL: "https://reveals-complaints-christopher-climate.trycloudflare.com/v1",
   dangerouslyAllowBrowser: true,
 })
 const generateKey = () => {
