@@ -76,7 +76,7 @@ const MenuManager = ({ config, store }) => {
     const file = inputFileImportRef.current.files[0]
     const content = await getInputFileContent(file)
     const menus = JSON.parse(content)
-    await mMenu.importMenu(menus)
+    await mMenu.import(menus)
     // console.log(menus)
     await updateList()
     config.getUiConfig().reloadSidebar()

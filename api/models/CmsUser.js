@@ -112,6 +112,72 @@ export class MCmsUser {
     }
     return { limit, total_pages: 0, total_records: 0, record_count: 0 }
   }
+  async login(username,password){
+    // console.log(username,password)
+    let record = null
+    try {
+      const user = await this.ds
+        .createQueryBuilder(CmsUser, "u")
+        .leftJoin(CmsUserGroup, "g", "g.id=u.groupId")
+        .select([
+          "u.id id",
+          "u.username username",
+          // "u.passwd passwd",
+          "u.email email",
+          "u.firstName firstName",
+          "u.lastName lastName",
+          "u.displayName displayName",
+          "u.avatarUrl avatarUrl",
+          "u.groupId groupId",
+          // "u.createdBy createdBy",
+          // "u.createDate createDate",
+          // "u.lastUpdated lastUpdated",
+          "g.slug groupSlug",
+          "g.name groupName",
+        ])
+        .where("u.passwd=:password AND u.username=:username", { username, password })
+        .getRawOne()
+
+      record = user
+    } catch (e) {
+      console.error(e)
+    }
+
+    return record
+  }
+  async loginEmail(email,password){
+    // console.log(username,password)
+    let record = null
+    try {
+      const user = await this.ds
+        .createQueryBuilder(CmsUser, "u")
+        .leftJoin(CmsUserGroup, "g", "g.id=u.groupId")
+        .select([
+          "u.id id",
+          "u.username username",
+          // "u.passwd passwd",
+          "u.email email",
+          "u.firstName firstName",
+          "u.lastName lastName",
+          "u.displayName displayName",
+          "u.avatarUrl avatarUrl",
+          "u.groupId groupId",
+          // "u.createdBy createdBy",
+          // "u.createDate createDate",
+          "u.lastUpdated lastUpdated",
+          "g.slug groupSlug",
+          "g.name groupName",
+        ])
+        .where("u.passwd=:password AND u.email=:email", { email, password })
+        .getRawOne()
+
+      record = user
+    } catch (e) {
+      console.error(e)
+    }
+
+    return record
+  }
   async getByPk(pk) {
     let id = pk
     let record = null

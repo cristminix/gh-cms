@@ -3,7 +3,7 @@ import { generateAccessToken } from "../libs/fn.js"
 import multer from "multer"
 class AuthRouter {
   datasource = null
-  mUser = null
+  mCmsUser = null
   router = null
   appConfig = null
   logger = null
@@ -13,6 +13,8 @@ class AuthRouter {
     this.appConfig = appConfig
     this.logger = logger
     this.multer = multer()
+    this.mCmsUser = datasource.factory('MCmsUser', true)
+
     this.router = express.Router()
     this.initRouter()
   }
@@ -30,10 +32,29 @@ class AuthRouter {
     }
     return res.send({ appId, token: null })
   }
+  async login(req, res){
+    let success = false
+    let { appId,username,password } = req.body
+    let token = null
+    let result = await this.mCmsUser.login(username,password)
+    if(result){
+       token = generateAccessToken(username, password)
 
+    }
+
+    res.send({
+      token,
+      result,
+      success,
+      username,
+      password
+    })
+
+  }
   initRouter() {
     // console.log("initRouter")
     this.router.post("/auth/generateToken", this.multer.none(), async (req, res) => await this.generateToken(req, res))
+    this.router.post("/auth/login", this.multer.none(), async (req, res) => await this.login(req, res))
   }
 }
 

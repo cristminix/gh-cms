@@ -7,6 +7,7 @@ import Apps, { loader as ncAppLoader } from "./components/Apps"
 import ManualApp, { loader as manualAppLoader } from "./components/ManualApp"
 import CMSBuilder, { loader as buildLoader } from "./components/CMSBuilder"
 import Dashboard, { loader as dashboardLoader } from "./components/Dashboard"
+import Account, { loader as accLoader } from "./components/Account"
 
 export default function Router({ config, store }) {
   const router = createHashRouter(
@@ -97,6 +98,20 @@ export default function Router({ config, store }) {
           path="/settings/:module/:fk/page/:pageNumber"
           element={<SettingPage store={store} config={config} />}
           loader={settingLoader}
+        />
+
+        <Route path="/account" element={<Account store={store} config={config} />} loader={accLoader} />
+        <Route path="/account/:module" element={<Account store={store} config={config} />} loader={accLoader} />
+        <Route
+          path="/account/:module/page/:pageNumber"
+          element={<Account store={store} config={config} />}
+          loader={accLoader}
+        />
+        <Route path="/account/:module/:fk" element={<Account store={store} config={config} />} loader={accLoader} />
+        <Route
+          path="/account/:module/:fk/page/:pageNumber"
+          element={<Account store={store} config={config} />}
+          loader={accLoader}
         />
       </Route>,
     ),

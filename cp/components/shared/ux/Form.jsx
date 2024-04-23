@@ -94,18 +94,34 @@ const FormRowValidation = ({
   autofocus = false,
   useTextArea = false,
   className = "",
+  usePlaceholder = false,
+  passwordField = false,
 }) => {
+  let elProps = {}
+  if (usePlaceholder) {
+    elProps = {
+      placeholder: label,
+    }
+  }
+
+  if (passwordField) {
+    elProps = { ...elProps, type: "password" }
+  }
   return (
     <div className={"flex items-center p-2 px-2 " + className}>
-      <div className={`w-[70px] ${useTextArea ? "self-start py-4" : ""} `}>
-        <label className="font-bold ">{label}</label>
-      </div>
+      {!usePlaceholder && (
+        <div className={`w-[70px] ${useTextArea ? "self-start py-4" : ""} `}>
+          <label className="font-bold ">{label}</label>
+        </div>
+      )}
+
       <div className="flex-grow">
         <div className="relative">
           {useTextArea ? (
             <textarea
+              {...elProps}
               className={`${
-                validationErrors[fieldname] ? inputClsError : inputCls
+                validationErrors && validationErrors[fieldname] ? inputClsError : inputCls
               }  ${niceScrollbarCls} ${fieldname} ${className} min-h-[128px]`}
               value={value}
               onChange={onChange}
@@ -113,16 +129,17 @@ const FormRowValidation = ({
             ></textarea>
           ) : (
             <input
-              className={`${validationErrors[fieldname] ? inputClsError : inputCls} ${fieldname} ${className}`}
+              {...elProps}
+              className={`${validationErrors && validationErrors[fieldname] ? inputClsError : inputCls} ${fieldname} ${className}`}
               value={value}
               onChange={onChange}
               autofocus={autofocus} /*eslint-disable*/
             />
           )}
-          {validationErrors[fieldname] && <ValidationErrIcon absolute="yes" />}
+          {validationErrors && validationErrors[fieldname] && <ValidationErrIcon absolute="yes" />}
         </div>
 
-        {validationErrors[fieldname] && (
+        {validationErrors && validationErrors[fieldname] && (
           <p className="text-sm text-red-600 mt-2">{validationErrors[fieldname].message}</p>
         )}
       </div>
