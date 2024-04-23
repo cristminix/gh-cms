@@ -11,8 +11,11 @@ import Toast from "@cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@cp/global/fn"
 import { useLocation } from "react-router-dom"
 import base64 from "base-64"
+import { useCookies } from "react-cookie"
 
 const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
+  const [cookies] = useCookies(["requestToken", "uid"])
+
   const toastRef = useRef(null)
   const [grid, setGrid] = useState({
     records: [],
@@ -65,9 +68,8 @@ const WebTemplateManager = ({ store, config, pageNumber, themeId }) => {
     document.location.hash = `/builder/code-editor/template/${item.id}`
   }
   const retrieveIdentityToken = async () => {
-    const appId = config.getAppId()
-    const url = cmsApiUrl("auth/generateToken")
-    const token = await requestIdentityToken(appId, url, toast)
+    const { requestToken, uid } = cookies
+    const token = `u${uid}-${requestToken}`
     if (token) {
       setRequestToken(token)
     }

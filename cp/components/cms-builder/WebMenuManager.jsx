@@ -10,6 +10,7 @@ import MenuForm, { createUntitledMenu } from "./web-menu-manager/MenuForm"
 import Toast from "@cp/components/shared/ux/Toast"
 import "@cp/global/styles/treeTable.css"
 import { cmsApiUrl } from "../apps/fn"
+import { useCookies } from "react-cookie"
 
 const mMenu = Menu.getInstance()
 
@@ -34,6 +35,8 @@ const TreeTableAppState = ({ lastRow = null }) => {
   )
 }
 const WebMenuManager = ({ config, store }) => {
+  const [cookies] = useCookies(["requestToken", "uid"])
+
   const [requestToken, setRequestToken] = useState(null)
 
   const [blockMainContent, setBlockMainContent] = useState(false)
@@ -56,10 +59,8 @@ const WebMenuManager = ({ config, store }) => {
   }, [requestToken])
 
   const retrieveIdentityToken = async () => {
-    // console.log(`retrieveIdentityToken`)
-    const appId = config.getAppId()
-    const url = cmsApiUrl("auth/generateToken")
-    const token = await requestIdentityToken(appId, url, toast)
+    const { requestToken, uid } = cookies
+    const token = `u${uid}-${requestToken}`
     if (token) {
       setRequestToken(token)
     }

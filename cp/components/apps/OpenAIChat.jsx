@@ -6,6 +6,7 @@ import BubleThree from "./opeanai/chat-bubles/BubleThree"
 import { useEffect, useRef, useState } from "react"
 import UserData from "@cp/global/models/UserData"
 const openai = new OpenAI({
+  apiKey: "",
   dangerouslyAllowBrowser: true,
 })
 const generateKey = () => {

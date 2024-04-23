@@ -10,8 +10,11 @@ import jQuery from "jquery"
 import { niceScrollbarCls } from "@cp/components/shared/ux/cls"
 import Toast from "@cp/components/shared/ux/Toast"
 import { Prx, requestIdentityToken } from "@cp/global/fn"
+import { useCookies } from "react-cookie"
 
 const WebBlockFeatureManager = ({ routePath = null, store, config, pageNumber, blockId }) => {
+  const [cookies] = useCookies(["requestToken", "uid"])
+
   const toastRef = useRef(null)
   const [grid, setGrid] = useState({
     records: [],
@@ -54,9 +57,8 @@ const WebBlockFeatureManager = ({ routePath = null, store, config, pageNumber, b
   }, [])
 
   const retrieveIdentityToken = async () => {
-    const appId = config.getAppId()
-    const url = cmsApiUrl("auth/generateToken")
-    const token = await requestIdentityToken(appId, url, toast)
+    const { requestToken, uid } = cookies
+    const token = `u${uid}-${requestToken}`
     if (token) {
       setRequestToken(token)
     }

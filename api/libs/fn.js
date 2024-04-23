@@ -25,8 +25,18 @@ function getFileExtensionFromMimeType(mimeType) {
   return extension || "unknown"
 }
 
-function generateAccessToken(identity, TOKEN_SECRET) {
-  return jwt.sign({ name: identity }, TOKEN_SECRET, { expiresIn: 60 * 60 })
+function generateAccessToken(identity, secret, TOKEN_SECRET) {
+  const token = jwt.sign(
+    {
+      identity,
+      role: { name: "_role.name", sections: "sections_fetched" },
+    },
+    secret,
+    { expiresIn: "24h" },
+    TOKEN_SECRET,
+  )
+  return token
+  // return jwt.sign({ name: identity }, TOKEN_SECRET, { expiresIn: 60 * 60 })
 }
 function convertToTitleCase(str) {
   let words = str.split(/(?=[A-Z])/).map((word) => word.toLowerCase())

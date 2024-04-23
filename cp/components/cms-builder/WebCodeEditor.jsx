@@ -17,9 +17,12 @@ import WebBlockFeatureManager from "./WebBlockFeatureManager"
 import TwigViewer from "./TwigViewer"
 import $ from "jquery"
 import { makeDelay } from "@cp/global/fn"
+import { useCookies } from "react-cookie"
 const delay = makeDelay(512)
 
 const WebCodeEditor = ({ store, config, mode, pk }) => {
+  const [cookies] = useCookies(["requestToken", "uid"])
+
   const toastRef = useRef(null)
   const [kind, setKind] = useState(mode)
   const [requestToken, setRequestToken] = useState(null)
@@ -142,9 +145,8 @@ const WebCodeEditor = ({ store, config, mode, pk }) => {
     // return response
   }
   const retrieveIdentityToken = async () => {
-    const appId = config.getAppId()
-    const url = cmsApiUrl("auth/generateToken")
-    const token = await requestIdentityToken(appId, url, toast)
+    const { requestToken, uid } = cookies
+    const token = `u${uid}-${requestToken}`
     if (token) {
       setRequestToken(token)
     }

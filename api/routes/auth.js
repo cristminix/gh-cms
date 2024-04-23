@@ -13,7 +13,7 @@ class AuthRouter {
     this.appConfig = appConfig
     this.logger = logger
     this.multer = multer()
-    this.mCmsUser = datasource.factory('MCmsUser', true)
+    this.mCmsUser = datasource.factory("MCmsUser", true)
 
     this.router = express.Router()
     this.initRouter()
@@ -32,24 +32,25 @@ class AuthRouter {
     }
     return res.send({ appId, token: null })
   }
-  async login(req, res){
+  async login(req, res) {
     let success = false
-    let { appId,username,password } = req.body
+    let { appId, username, password } = req.body
     let token = null
-    let result = await this.mCmsUser.login(username,password)
-    if(result){
-       token = generateAccessToken(username, password)
+    const TOKEN_SECRET = this.appConfig.get("auth.TOKEN_SECRET")
 
+    let result = await this.mCmsUser.login(username, password)
+    if (result) {
+      token = generateAccessToken(username, TOKEN_SECRET)
+      success = true
     }
 
     res.send({
       token,
       result,
       success,
-      username,
-      password
+      // username,
+      // password,
     })
-
   }
   initRouter() {
     // console.log("initRouter")

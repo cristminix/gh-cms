@@ -2,8 +2,14 @@ import { useEffect, useState } from "react"
 import { FormRowValidation } from "../shared/ux/Form"
 import Button from "../shared/ux/Button"
 import $ from "jquery"
+import { cmsApiUrl } from "../apps/fn"
+import { Prx } from "@cp/global/fn"
+import { useCookies } from "react-cookie"
+
 const LoginPage = ({ config }) => {
   const [validationErrors, setValidationErrors] = useState({})
+  const [cookies, setCookie, removeCookie] = useCookies(["uid", "requestToken"])
+
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const main = () => {
@@ -32,6 +38,30 @@ const LoginPage = ({ config }) => {
       setTimeout(() => {
         $(`.${firstField}`).trigger("focus")
       }, 512)
+    } else {
+      const url = cmsApiUrl(["auth/login"])
+
+      try {
+        const formData = new FormData()
+        formData.append("username", username)
+        formData.append("password", password)
+        const { data, validJson, code, text } = await Prx.post(url, "", formData)
+        console.log(data)
+        if (validJson) {
+          const { success, token, result } = data
+          setCookie("uid", result.id)
+          setCookie("requestToken", token)
+          document.location.hash = "#/account/user-profile"
+          if (success) {
+          } else {
+            console.log(data)
+          }
+        } else {
+          console.error(`Failed to create record server sent http ${code} ${text}`, "error")
+        }
+      } catch (e) {
+        console.error(e.toString(), "error")
+      }
     }
     console.log(username, password)
   }

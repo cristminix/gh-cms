@@ -9,12 +9,15 @@ import { sendMessage } from "@cp/global/fn"
 // import { devcmsApiUrl } from "../developers/fn"
 import JsonView from "react18-json-view"
 import UserData from "@cp/global/models/UserData"
+import { useCookies } from "react-cookie"
 // import jQuery from "jquery"
 // const inputCls =
 //   "py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
 // import { crc32 } from "crc"
 
 const ServerConfig = ({ store, config }) => {
+  const [cookies] = useCookies(["requestToken", "uid"])
+
   const [grid, setGrid] = useState({
     records: [],
     limit: 5,

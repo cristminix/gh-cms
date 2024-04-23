@@ -112,7 +112,7 @@ export class MCmsUser {
     }
     return { limit, total_pages: 0, total_records: 0, record_count: 0 }
   }
-  async login(username,password){
+  async login(username, password) {
     // console.log(username,password)
     let record = null
     try {
@@ -145,7 +145,7 @@ export class MCmsUser {
 
     return record
   }
-  async loginEmail(email,password){
+  async loginEmail(email, password) {
     // console.log(username,password)
     let record = null
     try {
@@ -178,29 +178,32 @@ export class MCmsUser {
 
     return record
   }
-  async getByPk(pk) {
+  async getByPk(pk, includePasswd = false) {
     let id = pk
     let record = null
     try {
+      const select = [
+        "u.id id",
+        "u.username username",
+        "u.email email",
+        "u.firstName firstName",
+        "u.lastName lastName",
+        "u.displayName displayName",
+        "u.avatarUrl avatarUrl",
+        "u.groupId groupId",
+        "u.createdBy createdBy",
+        "u.createDate createDate",
+        "u.lastUpdated lastUpdated",
+        "g.slug groupSlug",
+        "g.name groupName",
+      ]
+      if (includePasswd) {
+        select.push("u.passwd passwd")
+      }
       const user = await this.ds
         .createQueryBuilder(CmsUser, "u")
         .leftJoin(CmsUserGroup, "g", "g.id=u.groupId")
-        .select([
-          "u.id id",
-          "u.username username",
-          "u.passwd passwd",
-          "u.email email",
-          "u.firstName firstName",
-          "u.lastName lastName",
-          "u.displayName displayName",
-          "u.avatarUrl avatarUrl",
-          "u.groupId groupId",
-          "u.createdBy createdBy",
-          "u.createDate createDate",
-          "u.lastUpdated lastUpdated",
-          "g.slug groupSlug",
-          "g.name groupName",
-        ])
+        .select(select)
         .where("u.id=:id", { id })
         .getRawOne()
 
