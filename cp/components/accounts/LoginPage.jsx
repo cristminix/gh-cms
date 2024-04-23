@@ -8,7 +8,10 @@ import { useCookies } from "react-cookie"
 
 const LoginPage = ({ config }) => {
   const [validationErrors, setValidationErrors] = useState({})
-  const [cookies, setCookie, removeCookie] = useCookies(["uid", "requestToken"])
+  const [cookies, setCookie] = useCookies(["uid", "requestToken"])
+  const [isLogedIn, setIsLoggedIn] = useState(cookies.uid)
+
+  const [errorMessages, setErrorMessages] = useState([])
 
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
@@ -16,11 +19,14 @@ const LoginPage = ({ config }) => {
     setTimeout(() => {
       $(`.username`).trigger("focus")
     }, 512)
-    console.log(config)
+    // console.log(config)
   }
-
+  const doForgetPassword = () => {
+    setErrorMessages(["Sayang sekali sepertinya anda harus tanya admin untuk reset password anda"])
+  }
   const doLogin = async () => {
     setValidationErrors(null)
+    setErrorMessages([])
     let errorCount = 0
     let verrors = {}
     if (username.length == 0) {
@@ -52,6 +58,7 @@ const LoginPage = ({ config }) => {
           setCookie("uid", result.id)
           setCookie("requestToken", token)
           document.location.hash = "#/account/user-profile"
+          document.location.reload()
           if (success) {
           } else {
             console.log(data)
@@ -68,6 +75,13 @@ const LoginPage = ({ config }) => {
   useEffect(() => {
     main()
   }, [])
+
+  useEffect(() => {
+    if (isLogedIn) {
+      document.location.hash = "#/account/user-profile"
+      // document.location.reload()
+    }
+  }, [isLogedIn])
   return (
     <>
       <div className="login-form flex items-center flex-col">
@@ -95,8 +109,20 @@ const LoginPage = ({ config }) => {
           label="Password"
           validationErrors={validationErrors}
         />
+        {Array.isArray(errorMessages) && errorMessages.length > 0 && (
+          <>
+            <div className="error-messages lg:w-1/6 flex flex-col items-center p-4">
+              {errorMessages.map((msg, i) => (
+                <div key={i} className="text-red-500">
+                  {msg}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
-        <div className="flex">
+        <div className="flex gap-2 justify-between p-4">
+          <Button caption="Lupa Password ?" onClick={(e) => doForgetPassword()} />
           <Button caption="Login" icon="fa fa-sign-in" onClick={(e) => doLogin()} />
         </div>
       </div>

@@ -6,8 +6,11 @@ import DialogContent from "@cp/components/shared/ux/DialogContent"
 
 import { cls0 } from "@cp/components/shared/ux/cls"
 import TopHeader from "./components/ux/TopHeader"
+import { useCookies } from "react-cookie"
 
 const Template = ({ store, config }) => {
+  const [cookies] = useCookies(["uid", "requestToken"])
+  const [isLogedIn, setIsLoggedIn] = useState(cookies.uid)
   const sideMenuRef = useRef(null)
 
   const [hideSidebar, setHideSidebar] = useState(false)
@@ -32,16 +35,25 @@ const Template = ({ store, config }) => {
     )
     window.dialogContentRef = dialogContentRef
   }, [])
+
+  useEffect(() => {
+    console.log(cookies)
+    console.log(isLogedIn)
+  }, [isLogedIn])
   return (
     <>
       <div className={cls0}>
-        <TopHeader store={store} config={config} onToggleMenu={onToggleMenu} />
+        <TopHeader isLogedIn={isLogedIn} store={store} config={config} onToggleMenu={onToggleMenu} />
         {/*<!-- ========== MAIN CONTENT ========== -->*/}
         <DialogContent ref={dialogContentRef} />
+        {isLogedIn && (
+          <>
+            <SidebarToggle store={store} config={config} />
+            <Sidebar store={store} config={config} sideMenuRef={sideMenuRef} showCaptionMenu={showCaptionMenu} />
+          </>
+        )}
 
-        <SidebarToggle store={store} config={config} />
-        <Sidebar store={store} config={config} sideMenuRef={sideMenuRef} showCaptionMenu={showCaptionMenu} />
-        <Content store={store} config={config} showCaptionMenu={showCaptionMenu} />
+        <Content isLogedIn={isLogedIn} store={store} config={config} showCaptionMenu={showCaptionMenu} />
 
         {/*<!-- ========== END MAIN CONTENT ========== -->*/}
       </div>

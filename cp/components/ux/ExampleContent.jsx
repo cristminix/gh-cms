@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react"
 import { cls28 } from "@cp/components/shared/ux/cls"
 import { useOutlet } from "react-router-dom"
 // import DownloadManager from "../DownloadManager"
+import LoginPage from "../accounts/LoginPage"
 import Dashboard from "../Dashboard"
-const ExampleContent = ({ store, config, showCaptionMenu }) => {
+import { useLocation } from "react-router-dom"
+const ExampleContent = ({ isLogedIn, store, config, showCaptionMenu }) => {
   // const [outletEmpty, setOutletEmpty] = useState(true)
+  const location = useLocation()
+  const [pathname, setPathname] = useState(location.pathname)
   const [hideSidebar, setHideSidebar] = useState(false)
   useEffect(() => {
     config.getUiConfig().applyHiddenSidebarStatus(
@@ -24,13 +28,30 @@ const ExampleContent = ({ store, config, showCaptionMenu }) => {
     ],
   )
   const ps = showCaptionMenu ? " " : "lg:ps-[128px]"
-  const mainContentCls = !hideSidebar ? `${cls28} ${ps} pb-2` : `${cls28} lg:ps-8`
+  let mainContentCls = !hideSidebar ? `${cls28} ${ps} pb-2` : `${cls28} lg:ps-8`
+
+  let displayContent = outlet || <Dashboard store={store} config={config} />
+  if (!isLogedIn) {
+    mainContentCls = `${cls28} lg:ps-8 py-4 !h-full`
+    displayContent = <LoginPage store={store} config={config} />
+  }
+
+  useEffect(() => {
+    if (!isLogedIn) {
+      // setPathname("/login")
+      if (pathname !== "/account/login") {
+        // setPathname("/login")
+        document.location.hash = "#/account/login"
+      }
+    }
+  }, [pathname])
+
   return (
     <>
       <div className={`pt-[90px] ${mainContentCls} bg-white dark:bg-transparent`}>
         {/*<!-- Page Heading -->*/}
 
-        {outlet || <Dashboard store={store} config={config} />}
+        {displayContent}
         {/*
         <header> 
           <p className={cls29}> Starter Pages &amp; Examples </p> 

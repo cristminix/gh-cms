@@ -5,7 +5,14 @@ import { cmsApiUrl } from "../apps/fn"
 import Toast from "../shared/ux/Toast"
 import { Prx } from "@cp/global/fn"
 import Button from "../shared/ux/Button"
-import { FormRow, FormRowSelect, FormRowValidation } from "../shared/ux/Form"
+import {
+  btnCls,
+  modalCls,
+  modalBtnCloseCls,
+  modalBtnFrmCloseCls,
+  modalBtnFrmSaveCls,
+} from "@cp/components/shared/ux/cls"
+import { FormRow, FormRowImageValidation, FormRowSelect, FormRowValidation } from "../shared/ux/Form"
 const UserProfile = ({ config }) => {
   const [pk, setPk] = useState("")
   const [username, setUsername] = useState("")
@@ -60,20 +67,7 @@ const UserProfile = ({ config }) => {
     }
   }, [uid])
   const setFormData = (data) => {
-    const {
-      id,
-      username,
-      passwd,
-      email,
-      firstName,
-      lastName,
-      displayName,
-      avatarUrl,
-      groupId,
-      createdBy,
-      createDate,
-      lastUpdated,
-    } = data
+    const { id, username, email, firstName, lastName, displayName, avatarUrl, groupId, groupName } = data
     setPk(id)
 
     setUsername(username)
@@ -83,7 +77,7 @@ const UserProfile = ({ config }) => {
     setLastName(lastName)
     setDisplayName(displayName)
     setAvatarUrl(avatarUrl)
-    setGroupId(groupId)
+    setGroupId(groupName)
     setCreatedBy(createdBy)
     setCreateDate(createDate)
     setLastUpdated(lastUpdated)
@@ -97,17 +91,31 @@ const UserProfile = ({ config }) => {
   const [validationErrors, setValidationErrors] = useState({})
   //   const { uid, requestToken } = cookies
   const formId = "user-profile-from"
-  const modalCls = ""
+  const modalCls = "py-4"
   const modalBtnId = "user-profile-modal-btn"
   const modalCloseBtnId = "user-profile-modal-close-btn"
-  const modalBtnCloseCls = ""
-  const modalBtnFrmSaveCls = ""
-  const modalBtnFrmCloseCls = ""
+  //   const modalBtnCloseCls = ""
+  //   const modalBtnFrmSaveCls = ""
+  //   const modalBtnFrmCloseCls = ""
   return (
     <div className="user-profile">
       <Toast ref={toastRef} />
+      {uid && (
+        <>
+          <h2 className="text-2xl py-2">User Profile</h2>
+          <Button
+            caption="Logout"
+            icon="fa fa-sign-out"
+            onClick={(e) => {
+              removeCookie("uid")
+              removeCookie("requestToken")
+              document.location.hash = "#/account/login"
+              document.location.reload()
+            }}
+          />
+        </>
+      )}
 
-      <h2 className="text-2xl py-2">User Profile</h2>
       {uid ? (
         <>
           <div>{/* <p>{uid}</p> */}</div>
@@ -117,6 +125,16 @@ const UserProfile = ({ config }) => {
                 <div className="flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
                   <div className="p-4 overflow-y-auto">
                     <form className={"className"} ref={formRef}>
+                      <FormRowImageValidation
+                        validationErrors={validationErrors}
+                        label="Avatar"
+                        value={avatarUrl}
+                        fieldname="avatarUrl"
+                        className="mb-4"
+                        onChange={(e) => {
+                          setAvatarUrl(e.target.value)
+                        }}
+                      />
                       <FormRowValidation
                         validationErrors={validationErrors}
                         label="Username"
@@ -178,16 +196,6 @@ const UserProfile = ({ config }) => {
                         }}
                       />
 
-                      <FormRowValidation
-                        validationErrors={validationErrors}
-                        label="AvatarUrl"
-                        value={avatarUrl}
-                        fieldname="avatarUrl"
-                        onChange={(e) => {
-                          setAvatarUrl(e.target.value)
-                        }}
-                      />
-
                       <FormRow
                         // validationErrors={validationErrors}
                         label="Group"
@@ -202,6 +210,9 @@ const UserProfile = ({ config }) => {
                   </div>
                   <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
                     <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
+                      Edit
+                    </button>
+                    <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
                       Save changes
                     </button>
                   </div>
@@ -211,7 +222,8 @@ const UserProfile = ({ config }) => {
           )}
         </>
       ) : (
-        <>
+        <div className="flexflex-col gap-2 items-center p-2">
+          <h4 className="text-2xl text-red-500">You are not login</h4>
           <Button
             caption="Login"
             icon="fa fa-lock"
@@ -219,7 +231,7 @@ const UserProfile = ({ config }) => {
               document.location.hash = "#/account/login"
             }}
           />
-        </>
+        </div>
       )}
     </div>
   )

@@ -1,10 +1,10 @@
 import ExampleContent from "./ExampleContent"
 
-const Content = ({ store, config, showCaptionMenu }) => {
+const Content = ({ isLogedIn, store, config, showCaptionMenu }) => {
   return (
     <>
       {/*<!-- Content -->*/}
-      <ExampleContent store={store} config={config} showCaptionMenu={showCaptionMenu} />
+      <ExampleContent isLogedIn={isLogedIn} store={store} config={config} showCaptionMenu={showCaptionMenu} />
       {/*<!-- End Content -->*/}{" "}
     </>
   )
