@@ -7,10 +7,13 @@ import DialogContent from "@cp/components/shared/ux/DialogContent"
 import { cls0 } from "@cp/components/shared/ux/cls"
 import TopHeader from "./components/ux/TopHeader"
 import { useCookies } from "react-cookie"
-
+import { useAuth } from "./firebase/auth"
 const Template = ({ store, config }) => {
   const [cookies] = useCookies(["uid", "requestToken"])
-  const [isLogedIn, setIsLoggedIn] = useState(cookies.uid)
+  const { isLoading, user } = useAuth()
+  const isAuthed = !!user
+  const isLogedIn = isAuthed
+  // console.log(isAuthed, user, isLogedIn)
   const sideMenuRef = useRef(null)
 
   const [hideSidebar, setHideSidebar] = useState(false)

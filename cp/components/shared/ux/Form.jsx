@@ -93,6 +93,7 @@ const FormRowValidation = ({
   fieldname,
   autofocus = false,
   useTextArea = false,
+  emailField = false,
   className = "",
   usePlaceholder = false,
   passwordField = false,
@@ -103,7 +104,9 @@ const FormRowValidation = ({
       placeholder: label,
     }
   }
-
+  if (emailField) {
+    elProps = { ...elProps, type: "email" }
+  }
   if (passwordField) {
     elProps = { ...elProps, type: "password" }
   }

@@ -1,0 +1,10 @@
+{
+    "cp8tg0tbik.sqlite.cloud" : {
+        "provider" : "sqlitecloud",
+        "connectionString" : "sqlitecloud://bbd33:Sejati86*#@cp8tg0tbik.sqlite.cloud:8860"
+    },
+    "gh-cms-repo":{
+        "provider" : "github",
+        "connectionString" : "https://github.com/cristminix/gh-cms/raw/main/storage/cms.sqlite"
+    }
+}

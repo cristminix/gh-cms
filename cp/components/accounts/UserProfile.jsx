@@ -13,6 +13,8 @@ import {
   modalBtnFrmSaveCls,
 } from "@cp/components/shared/ux/cls"
 import { FormRow, FormRowImageValidation, FormRowSelect, FormRowValidation } from "../shared/ux/Form"
+import { signOut } from "@cp/firebase/auth"
+import { useNavigate } from "react-router-dom"
 const UserProfile = ({ config }) => {
   const [pk, setPk] = useState("")
   const [username, setUsername] = useState("")
@@ -30,6 +32,7 @@ const UserProfile = ({ config }) => {
   const [cookies, setCookie, removeCookie] = useCookies(["uid", "requestToken"])
   const [user, setUser] = useState(null)
   const [uid, setUid] = useState(cookies.uid)
+
   const toastRef = useRef(null)
   const toast = (message, t) => {
     if (toastRef.current) {
@@ -97,140 +100,124 @@ const UserProfile = ({ config }) => {
   //   const modalBtnCloseCls = ""
   //   const modalBtnFrmSaveCls = ""
   //   const modalBtnFrmCloseCls = ""
+  const navigate = useNavigate()
   return (
     <div className="user-profile">
       <Toast ref={toastRef} />
-      {uid && (
-        <>
-          <h2 className="text-2xl py-2">User Profile</h2>
-          <Button
-            caption="Logout"
-            icon="fa fa-sign-out"
-            onClick={(e) => {
-              removeCookie("uid")
-              removeCookie("requestToken")
-              document.location.hash = "#/account/login"
-              document.location.reload()
-            }}
-          />
-        </>
-      )}
+      <h2 className="text-2xl py-2">User Profile</h2>
+      <Button
+        caption="Logout"
+        icon="fa fa-sign-out"
+        onClick={async (e) => {
+          // removeCookie("uid")
+          // removeCookie("requestToken")
+          // document.location.hash = "#/account/login"
+          // document.location.reload()
+          await signOut()
+          navigate("/account/login")
+        }}
+      />
 
-      {uid ? (
-        <>
-          <div>{/* <p>{uid}</p> */}</div>
-          {user && (
-            <div id={formId} className={`${modalCls} text-xs`}>
-              <div className="transition-all">
-                <div className="flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
-                  <div className="p-4 overflow-y-auto">
-                    <form className={"className"} ref={formRef}>
-                      <FormRowImageValidation
-                        validationErrors={validationErrors}
-                        label="Avatar"
-                        value={avatarUrl}
-                        fieldname="avatarUrl"
-                        className="mb-4"
-                        onChange={(e) => {
-                          setAvatarUrl(e.target.value)
-                        }}
-                      />
-                      <FormRowValidation
-                        validationErrors={validationErrors}
-                        label="Username"
-                        value={username}
-                        fieldname="username"
-                        onChange={(e) => {
-                          setUsername(e.target.value)
-                        }}
-                        autofocus="yes"
-                      />
+      <div>{/* <p>{uid}</p> */}</div>
+      {user && (
+        <div id={formId} className={`${modalCls} text-xs`}>
+          <div className="transition-all">
+            <div className="flex flex-col bg-white border shadow-sm rounded-xl pointer-events-auto dark:bg-gray-800 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+              <div className="p-4 overflow-y-auto">
+                <form className={"className"} ref={formRef}>
+                  <FormRowImageValidation
+                    validationErrors={validationErrors}
+                    label="Avatar"
+                    value={avatarUrl}
+                    fieldname="avatarUrl"
+                    className="mb-4"
+                    onChange={(e) => {
+                      setAvatarUrl(e.target.value)
+                    }}
+                  />
+                  <FormRowValidation
+                    validationErrors={validationErrors}
+                    label="Username"
+                    value={username}
+                    fieldname="username"
+                    onChange={(e) => {
+                      setUsername(e.target.value)
+                    }}
+                    autofocus="yes"
+                  />
 
-                      <FormRowValidation
-                        validationErrors={validationErrors}
-                        label="Passwd"
-                        value={passwd}
-                        fieldname="passwd"
-                        onChange={(e) => {
-                          setPasswd(e.target.value)
-                        }}
-                      />
+                  <FormRowValidation
+                    validationErrors={validationErrors}
+                    label="Passwd"
+                    value={passwd}
+                    fieldname="passwd"
+                    onChange={(e) => {
+                      setPasswd(e.target.value)
+                    }}
+                  />
 
-                      <FormRowValidation
-                        validationErrors={validationErrors}
-                        label="Email"
-                        value={email}
-                        fieldname="email"
-                        onChange={(e) => {
-                          setEmail(e.target.value)
-                        }}
-                      />
-                      <div className="flex gap-2">
-                        <FormRowValidation
-                          validationErrors={validationErrors}
-                          label="First Name"
-                          value={firstName}
-                          fieldname="firstName"
-                          onChange={(e) => {
-                            setFirstName(e.target.value)
-                          }}
-                        />
+                  <FormRowValidation
+                    validationErrors={validationErrors}
+                    label="Email"
+                    value={email}
+                    fieldname="email"
+                    onChange={(e) => {
+                      setEmail(e.target.value)
+                    }}
+                  />
+                  <div className="flex gap-2">
+                    <FormRowValidation
+                      validationErrors={validationErrors}
+                      label="First Name"
+                      value={firstName}
+                      fieldname="firstName"
+                      onChange={(e) => {
+                        setFirstName(e.target.value)
+                      }}
+                    />
 
-                        <FormRowValidation
-                          validationErrors={validationErrors}
-                          label="Last Name"
-                          value={lastName}
-                          fieldname="lastName"
-                          onChange={(e) => {
-                            setLastName(e.target.value)
-                          }}
-                        />
-                      </div>
-                      <FormRowValidation
-                        validationErrors={validationErrors}
-                        label="Display"
-                        value={displayName}
-                        fieldname="displayName"
-                        onChange={(e) => {
-                          setDisplayName(e.target.value)
-                        }}
-                      />
-
-                      <FormRow
-                        // validationErrors={validationErrors}
-                        label="Group"
-                        value={groupId}
-                        fieldname="groupId"
-                        // url={cmsApiUrl("cms-user-group/dropdown")}
-                        onChange={(e) => {
-                          setGroupId(e)
-                        }}
-                      />
-                    </form>
+                    <FormRowValidation
+                      validationErrors={validationErrors}
+                      label="Last Name"
+                      value={lastName}
+                      fieldname="lastName"
+                      onChange={(e) => {
+                        setLastName(e.target.value)
+                      }}
+                    />
                   </div>
-                  <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
-                    <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
-                      Edit
-                    </button>
-                    <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
-                      Save changes
-                    </button>
-                  </div>
-                </div>
+                  <FormRowValidation
+                    validationErrors={validationErrors}
+                    label="Display"
+                    value={displayName}
+                    fieldname="displayName"
+                    onChange={(e) => {
+                      setDisplayName(e.target.value)
+                    }}
+                  />
+
+                  <FormRow
+                    // validationErrors={validationErrors}
+                    label="Group"
+                    value={groupId}
+                    fieldname="groupId"
+                    // url={cmsApiUrl("cms-user-group/dropdown")}
+                    onChange={(e) => {
+                      setGroupId(e)
+                    }}
+                  />
+                </form>
+              </div>
+              <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t dark:border-gray-700">
+                <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
+                  Edit
+                </button>
+                <button tabIndex={10} onClick={(e) => saveForm(e)} type="button" className={modalBtnFrmSaveCls}>
+                  Save changes
+                </button>
               </div>
             </div>
-          )}
-        </>
-      ) : (
-        <div className="flexflex-col gap-2 items-center p-2">
-          <h4 className="text-2xl text-red-500">You are not login</h4>
-          <Button
-            caption="Login"
-            icon="fa fa-lock"
-            onClick={() => {
-              document.location.hash = "#/account/login"
-            }}
-          />
+          </div>
         </div>
       )}
     </div>

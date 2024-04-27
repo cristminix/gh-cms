@@ -5,16 +5,22 @@ import $ from "jquery"
 import { cmsApiUrl } from "../apps/fn"
 import { Prx } from "@cp/global/fn"
 import { useCookies } from "react-cookie"
-
+// import { doLogin } from "@cp/cloud/models/users"
+// import { doLogin } from "@cp/cloud/models/users"
+import { signIn, useAuth } from "@cp/firebase/auth"
+import { useNavigate } from "react-router-dom"
 const LoginPage = ({ config }) => {
   const [validationErrors, setValidationErrors] = useState({})
   const [cookies, setCookie] = useCookies(["uid", "requestToken"])
-  const [isLogedIn, setIsLoggedIn] = useState(cookies.uid)
+  const { isLoading, user } = useAuth()
+  const isLogedIn = !!user
 
   const [errorMessages, setErrorMessages] = useState([])
 
   const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const navigate = useNavigate()
   const main = () => {
     setTimeout(() => {
       $(`.username`).trigger("focus")
@@ -24,14 +30,14 @@ const LoginPage = ({ config }) => {
   const doForgetPassword = () => {
     setErrorMessages(["Sayang sekali sepertinya anda harus tanya admin untuk reset password anda"])
   }
-  const doLogin = async () => {
+  const onLogin = async () => {
     setValidationErrors(null)
     setErrorMessages([])
     let errorCount = 0
     let verrors = {}
-    if (username.length == 0) {
+    if (email.length == 0) {
       errorCount += 1
-      verrors = { ...verrors, username: { message: "Username is required" } }
+      verrors = { ...verrors, username: { message: "Email is required" } }
     }
     if (password.length == 0) {
       errorCount += 1
@@ -45,7 +51,26 @@ const LoginPage = ({ config }) => {
         $(`.${firstField}`).trigger("focus")
       }, 512)
     } else {
-      const url = cmsApiUrl(["auth/login"])
+      try {
+        await signIn(email, password)
+        // setCookie("uid", result.id)
+
+        navigate("/account/user-profile")
+      } catch (e) {
+        const message = e.message.replace("FirebaseError:", "").replace("Firebase:", "")
+        setErrorMessages([message])
+      }
+      // const result = await signIn(email, password)
+      // // console.log(result)
+      // if (result) {
+      //   setCookie("uid", result.id)
+      //   // setCookie("requestToken", result.request_token)
+      //   document.location.hash = "#/account/user-profile"
+      //   document.location.reload()
+      // } else {
+      //   setErrorMessages(["Email atau password salah"])
+      // }
+      /*const url = cmsApiUrl(["auth/login"])
 
       try {
         const formData = new FormData()
@@ -68,9 +93,9 @@ const LoginPage = ({ config }) => {
         }
       } catch (e) {
         console.error(e.toString(), "error")
-      }
+      }*/
     }
-    console.log(username, password)
+    console.log(email, password)
   }
   useEffect(() => {
     main()
@@ -92,11 +117,12 @@ const LoginPage = ({ config }) => {
 
         <FormRowValidation
           usePlaceholder={true}
-          fieldname="username"
+          fieldname="email"
+          emailField={true}
           onChange={(e) => {
-            setUsername(e.target.value)
+            setEmail(e.target.value)
           }}
-          label="Username"
+          label="Email"
           validationErrors={validationErrors}
         />
         <FormRowValidation
@@ -123,7 +149,7 @@ const LoginPage = ({ config }) => {
 
         <div className="flex gap-2 justify-between p-4">
           <Button caption="Lupa Password ?" onClick={(e) => doForgetPassword()} />
-          <Button caption="Login" icon="fa fa-sign-in" onClick={(e) => doLogin()} />
+          <Button caption="Login" icon="fa fa-sign-in" onClick={(e) => onLogin()} />
         </div>
       </div>
     </>

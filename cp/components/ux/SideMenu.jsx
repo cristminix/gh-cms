@@ -7,7 +7,8 @@ import { waitForElm } from "@cp/global/fn"
 import MenuDB from "@cp/global/models/Menu"
 
 const mMenu = MenuDB.getInstance()
-
+import side_menu from "@cp/global/installer/data/side-menu.json"
+await mMenu.import(side_menu)
 class SideMenu extends Component {
   selector = "#application-sidebar"
   backdropSelector = "div#sidebar-overlay-backdrop[data-hs-overlay-backdrop-template]"

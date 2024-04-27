@@ -5,3 +5,5 @@ package-lock.json
 .compiled-twig
 .compiled-twig-cache
 .generated-react-jsx
+.vercel
+/cp/firebase/cred.json
