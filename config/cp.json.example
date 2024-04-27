@@ -1,0 +1,8 @@
+{
+    "useDbProvider":true,
+    "dbProvider" : "gh-cms-repo",
+    "useIsomorphicGit": true,
+    "githubToken": "",
+    "githubRepo":"https://github.com/kanzululum/kanzululum.github.io.git",
+    "corsProxyUrl":"https://cors.isomorphic-git.org"
+}

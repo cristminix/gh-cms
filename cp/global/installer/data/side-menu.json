@@ -40,6 +40,26 @@
     "childIconCls": "",
     "children": [
       {
+        "title": "Github",
+        "slug": "github-manager",
+        "parent": 2,
+        "path": "/builder/github-manager",
+        "iconCls": "bi bi-github",
+        "hidden": false,
+        "dev": false,
+        "level": 0,
+        "order": 0,
+        "hasChild": false,
+        "useModel": false,
+        "model": "",
+        "modelListMethod": "",
+        "slugField": "",
+        "displayField": "",
+        "childRoutePath": "",
+        "childIconCls": "",
+        "id": ""
+      },
+      {
         "title": "Tema",
         "slug": "web-theme-manager",
         "parent": 2,
@@ -609,6 +629,26 @@
         "childRoutePath": "",
         "childIconCls": "",
         "id": 27
+      },
+      {
+        "title": "Profile",
+        "slug": "user-profile",
+        "parent": 23,
+        "path": "/account/user-profile",
+        "iconCls": "fa fa-users",
+        "hidden": false,
+        "dev": false,
+        "level": 0,
+        "order": 0,
+        "hasChild": false,
+        "useModel": false,
+        "model": "",
+        "modelListMethod": "",
+        "slugField": "",
+        "displayField": "",
+        "childRoutePath": "",
+        "childIconCls": "",
+        "id": 28
       }
     ],
     "id": 23

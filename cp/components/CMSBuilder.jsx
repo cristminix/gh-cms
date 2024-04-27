@@ -15,6 +15,7 @@ import WebSiteSetting from "./cms-builder/WebSiteSetting"
 import WebCompany from "./cms-builder/WebCompany"
 import WebContactPerson from "./cms-builder/WebContactPerson"
 import WebBlockFeatureManager from "./cms-builder/WebBlockFeatureManager"
+import GithubManager from "./cms-builder/GithubManager"
 
 export async function loader({ params }) {
   const { module, fk, pageNumber, pk } = params
@@ -37,7 +38,7 @@ const CMSBuilder = ({ store, config }) => {
   } else if (module == "web-template-manager") {
     return <WebTemplateManager store={store} config={config} pageNumber={pageNumber} themeId={fk} />
   } else if (module == "web-page-manager") {
-    return <WebPageManager store={store} config={config} pageNumber={pageNumber} cmd={fk} pk={pk}/>
+    return <WebPageManager store={store} config={config} pageNumber={pageNumber} cmd={fk} pk={pk} />
   } else if (module == "website-setting") {
     return <WebSiteSetting store={store} config={config} pageNumber={pageNumber} />
   } else if (module == "web-company") {
@@ -46,6 +47,8 @@ const CMSBuilder = ({ store, config }) => {
     return <WebContactPerson store={store} config={config} pageNumber={pageNumber} />
   } else if (module == "code-editor") {
     return <WebCodeEditor store={store} config={config} mode={fk} pk={pk} />
+  } else if (module == "github-manager") {
+    return <GithubManager store={store} config={config} mode={fk} pk={pk} />
   }
   // }
   // useEffect(() => {

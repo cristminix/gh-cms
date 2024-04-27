@@ -14,7 +14,7 @@ import { useCookies } from "react-cookie"
 // const inputCls =
 //   "py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
 // import { crc32 } from "crc"
-
+// console.log(git)
 const ServerConfig = ({ store, config }) => {
   const [cookies] = useCookies(["requestToken", "uid"])
 
@@ -121,22 +121,25 @@ const ServerConfig = ({ store, config }) => {
   const updateList = async () => {
     const records = [
       {
-        name: "backendEndpoint",
-        description: "Backend url endpoint for cmsApiUrl",
+        name: "dbProvider",
+        description: "Database provider",
         value: "",
-        defaultValue: "http://localhost:7700",
+        type: "select",
+        values: ["gh-cms-repo", "dbhub.io"],
+
+        defaultValue: "gh-cms-repo",
       },
       {
-        name: "viteTemplateEndpoint",
-        description: "Backend Vite endpoint for template HMR",
+        name: "github-token",
+        description: "Github token for repository",
         value: "",
-        defaultValue: "http://localhost:3000",
+        defaultValue: "",
       },
       {
-        name: "enableAuth",
-        description: "Enable App Auth",
-        value: "",
-        defaultValue: "no",
+        name: "authProvider",
+        description: "Setup auth provider",
+        value: "firebase",
+        defaultValue: "firebase",
       },
     ]
 
@@ -151,6 +154,7 @@ const ServerConfig = ({ store, config }) => {
     updateList()
   }, [])
 
+  useEffect(() => {}, [])
   const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
   return (
     <div className="min-h-screen">

@@ -56,7 +56,13 @@ const Template = ({ store, config }) => {
           </>
         )}
 
-        <Content isLogedIn={isLogedIn} store={store} config={config} showCaptionMenu={showCaptionMenu} />
+        <Content
+          isLoading={isLoading}
+          isLogedIn={isLogedIn}
+          store={store}
+          config={config}
+          showCaptionMenu={showCaptionMenu}
+        />
 
         {/*<!-- ========== END MAIN CONTENT ========== -->*/}
       </div>

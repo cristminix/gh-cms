@@ -5,7 +5,7 @@ import { useOutlet } from "react-router-dom"
 import LoginPage from "../accounts/LoginPage"
 import Dashboard from "../Dashboard"
 import { useLocation } from "react-router-dom"
-const ExampleContent = ({ isLogedIn, store, config, showCaptionMenu }) => {
+const ExampleContent = ({ isLoading, isLogedIn, store, config, showCaptionMenu }) => {
   // const [outletEmpty, setOutletEmpty] = useState(true)
   const location = useLocation()
   const [pathname, setPathname] = useState(location.pathname)
@@ -27,6 +27,10 @@ const ExampleContent = ({ isLogedIn, store, config, showCaptionMenu }) => {
       /*props.children*/
     ],
   )
+
+  if (isLoading) {
+    return <>Loading ....</>
+  }
   const ps = showCaptionMenu ? " " : "lg:ps-[128px]"
   let mainContentCls = !hideSidebar ? `${cls28} ${ps} pb-2` : `${cls28} lg:ps-8`
 
@@ -41,7 +45,7 @@ const ExampleContent = ({ isLogedIn, store, config, showCaptionMenu }) => {
       // setPathname("/login")
       if (pathname !== "/account/login") {
         // setPathname("/login")
-        document.location.hash = "#/account/login"
+        // document.location.hash = "#/account/login"
       }
     }
   }, [pathname])
