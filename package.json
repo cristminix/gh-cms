@@ -34,6 +34,7 @@
     "@editorjs/warning": "^1.4.0",
     "@isomorphic-git/cors-proxy": "^2.7.1",
     "@isomorphic-git/lightning-fs": "^4.6.0",
+    "@nteract/directory-listing": "^2.1.0",
     "@shopify/prettier-plugin-liquid": "^1.4.4",
     "@ssddanbrown/codemirror-lang-twig": "^1.0.0",
     "@styleshit/vite-plugin-twig-loader": "^0.1.1",
