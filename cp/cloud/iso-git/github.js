@@ -87,6 +87,10 @@ class Github {
     const { git, fs, dir } = this
     return await git.add({ fs, dir, filepath })
   }
+  async remove(filepath) {
+    const { git, fs, dir } = this
+    return await git.remove({ fs, dir, filepath })
+  }
   async log() {
     const { git, fs, dir } = this
     return await git.log({ fs, dir })

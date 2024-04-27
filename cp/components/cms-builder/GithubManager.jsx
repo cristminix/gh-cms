@@ -1,11 +1,9 @@
-import { git } from "@cp/cloud/iso-git/test"
 import Button from "../shared/ux/Button"
 import JsonView from "react18-json-view"
 import { useEffect, useRef, useState } from "react"
 import { github, DirectoryListing, dataUrlToFile, dataUrlToUint8Array } from "@cp/cloud/iso-git"
 import { getFile64 } from "@cp/global/fn"
-const { fs, fsp, dir } = github
-console.log(fs)
+const { fs, fsp, dir, git } = github
 const GithubManager = ({}) => {
   const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
   const [logs, setLogs] = useState([])
@@ -27,6 +25,53 @@ const GithubManager = ({}) => {
     setLs(lsContents)
     console.log(lsContents)
   }
+  const getStatusTree = async () => {
+    // // All the files in the previous commit
+    // let files = await git.listFiles({ fs, dir, ref: "HEAD" })
+    // console.log(files)
+    // // // All the files in the current staging area
+    // // files = await git.listFiles({ fs, dir })
+    // console.log(files)
+    let { files, changes } = await throughDirectory()
+    console.log(files, changes)
+  }
+
+  const throughDirectory = async () => {
+    const files = []
+    let changes = 0
+    const walkDirectory = async (targetDir) => {
+      const listing = await fsp.readdir(targetDir)
+      for (const item of listing) {
+        const absolutePath = `${targetDir}/${item}`
+        const stat = await fsp.stat(absolutePath)
+        if (stat.type === "dir" && item !== ".git") {
+          await walkDirectory(absolutePath)
+        } else {
+          if (item !== ".git") {
+            const filepath = absolutePath.replace(`${dir}/`, "")
+            let status = await git.status({ fs, dir, filepath })
+
+            if (status === "*added") {
+              await github.add(filepath)
+              status = "added"
+            }
+            if (status === "*deleted") {
+              await github.remove(filepath)
+              status = "deleted"
+            }
+            if (["modified", "added", "deleted"].includes(status)) {
+              changes += 1
+            }
+            // console.log(status)
+            files.push({ filepath, status })
+          }
+        }
+      }
+    }
+    await walkDirectory(dir)
+    return { files, changes }
+  }
+
   useEffect(() => {
     listFs()
   }, [fsBasePath])
@@ -48,22 +93,29 @@ const GithubManager = ({}) => {
                 icon="fa fa-exclamation"
                 caption="Status"
                 onClick={(e) => {
-                  github.status()
+                  // github.status()
+                  getStatusTree()
                 }}
               />
               <Button
                 icon="fa fa-history"
                 caption="Commit"
-                onClick={(e) => {
-                  github.pull()
+                onClick={async (e) => {
+                  const { changes } = await throughDirectory()
+                  if (changes > 0) {
+                    const sha = await github.commit(`Commit message at ${new Date()}`)
+                    console.log(sha, changes)
+                  } else {
+                    console.log(changes)
+                  }
                 }}
               />
 
               <Button
                 icon="fa fa-upload"
                 caption="Push"
-                onClick={(e) => {
-                  github.pull()
+                onClick={async (e) => {
+                  await github.push()
                 }}
               />
               <Button
