@@ -3,6 +3,7 @@ import JsonView from "react18-json-view"
 import { useEffect, useRef, useState } from "react"
 import { github, DirectoryListing, dataUrlToFile, dataUrlToUint8Array } from "@cp/cloud/iso-git"
 import { getFile64 } from "@cp/global/fn"
+
 const { fs, fsp, dir, git } = github
 const GithubManager = ({}) => {
   const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
@@ -23,17 +24,31 @@ const GithubManager = ({}) => {
       index += 1
     }
     setLs(lsContents)
-    console.log(lsContents)
+    // console.log(lsContents)
   }
   const getStatusTree = async () => {
-    // // All the files in the previous commit
-    // let files = await git.listFiles({ fs, dir, ref: "HEAD" })
-    // console.log(files)
-    // // // All the files in the current staging area
-    // // files = await git.listFiles({ fs, dir })
-    // console.log(files)
     let { files, changes } = await throughDirectory()
-    console.log(files, changes)
+    if (changes > 0) {
+      return true
+    }
+
+    // // All the files in the current staging area
+    files = await git.listFiles({ fs, dir, ref: "HEAD" })
+    for (const item of files) {
+      const absolutePath = `${dir}/${item}`
+      const filepath = absolutePath.replace(`${dir}/`, "")
+      let status = await git.status({ fs, dir, filepath })
+
+      if (status === "*deleted") {
+        await github.remove(filepath)
+        status = "deleted"
+      }
+      if (["modified", "added", "deleted"].includes(status)) {
+        changes += 1
+      }
+      // console.log(status)
+    }
+    return { files, changes }
   }
 
   const throughDirectory = async () => {
@@ -71,7 +86,14 @@ const GithubManager = ({}) => {
     await walkDirectory(dir)
     return { files, changes }
   }
-
+  const deleteFile = async (filename) => {
+    if (confirm(`Delete ${filename}`)) {
+      try {
+        await fsp.unlink(`${fsBasePath}/${filename}`)
+        listFs()
+      } catch (error) {}
+    }
+  }
   useEffect(() => {
     listFs()
   }, [fsBasePath])
@@ -101,7 +123,7 @@ const GithubManager = ({}) => {
                 icon="fa fa-history"
                 caption="Commit"
                 onClick={async (e) => {
-                  const { changes } = await throughDirectory()
+                  const { changes } = await getStatusTree()
                   if (changes > 0) {
                     const sha = await github.commit(`Commit message at ${new Date()}`)
                     console.log(sha, changes)
@@ -170,7 +192,13 @@ const GithubManager = ({}) => {
             <div className="-m-1.5 overflow-x-auto">
               <div className="p-1.5 min-w-full inline-block align-middle">
                 <div className="overflow-hidden">
-                  <DirectoryListing ls={ls} fsp={fsp} fsBasePath={fsBasePath} setFsBasePath={setFsBasePath} />
+                  <DirectoryListing
+                    ls={ls}
+                    fsp={fsp}
+                    fsBasePath={fsBasePath}
+                    deleteFile={deleteFile}
+                    setFsBasePath={setFsBasePath}
+                  />
                   {logs.map((output, index) => {
                     return <JsonView src={output} key={index} collapseStringsAfterLength={25} />
                   })}

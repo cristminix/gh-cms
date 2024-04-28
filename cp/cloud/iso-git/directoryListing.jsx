@@ -1,11 +1,8 @@
 import { Listing, Entry, Icon, Name, LastSaved } from "@nteract/directory-listing"
 import { useEffect, useState } from "react"
 import "./dir-list.css"
-export const DirectoryListing = ({ ls, fsp, fsBasePath, setFsBasePath }) => {
-  //   const [lsWithStat, setLsWithStat] = useState([])
-  //     useEffect(()=>{
-
-  //     },[ls])
+import Button from "@cp/components/shared/ux/Button"
+export const DirectoryListing = ({ ls, fsp, fsBasePath, setFsBasePath, deleteFile }) => {
   return (
     <Listing>
       <Entry className="!dark:bg-black">
@@ -28,8 +25,19 @@ export const DirectoryListing = ({ ls, fsp, fsBasePath, setFsBasePath }) => {
       {ls.map((item, index) => {
         const { name, stat } = item
         const { type, mtimeMs } = stat
+        if (name === ".git") return null
         return (
           <Entry key={index}>
+            <div className="flex gap-2">
+              {type === "file" && (
+                <Button
+                  icon="bi bi-trash"
+                  onClick={async (e) => {
+                    deleteFile(name)
+                  }}
+                />
+              )}
+            </div>
             <Icon fileType={type === "dir" ? "directory" : "notebook"} />
             <Name>
               <a
@@ -55,6 +63,7 @@ export const DirectoryListing = ({ ls, fsp, fsBasePath, setFsBasePath }) => {
                 {name}
               </a>
             </Name>
+
             <LastSaved lastModified={mtimeMs} />
           </Entry>
         )
