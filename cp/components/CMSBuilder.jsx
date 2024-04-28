@@ -16,6 +16,7 @@ import WebCompany from "./cms-builder/WebCompany"
 import WebContactPerson from "./cms-builder/WebContactPerson"
 import WebBlockFeatureManager from "./cms-builder/WebBlockFeatureManager"
 import GithubManager from "./cms-builder/GithubManager"
+import SqlJsDemo from "./cms-builder/SqlJsDemo"
 
 export async function loader({ params }) {
   const { module, fk, pageNumber, pk } = params
@@ -49,6 +50,8 @@ const CMSBuilder = ({ store, config }) => {
     return <WebCodeEditor store={store} config={config} mode={fk} pk={pk} />
   } else if (module == "github-manager") {
     return <GithubManager store={store} config={config} mode={fk} pk={pk} />
+  } else if (module == "sql-js") {
+    return <SqlJsDemo store={store} config={config} mode={fk} pk={pk} />
   }
   // }
   // useEffect(() => {
