@@ -3,7 +3,8 @@ import JsonView from "react18-json-view"
 import { useEffect, useRef, useState } from "react"
 import { github, DirectoryListing, dataUrlToFile, dataUrlToUint8Array } from "@cp/cloud/iso-git"
 import { getFile64 } from "@cp/global/fn"
-
+import { testFn } from "../orm/fn"
+console.log(testFn())
 const { fs, fsp, dir, git } = github
 const GithubManager = ({}) => {
   const containerCls = "border mb-2 rounded-xl shadow-sm p-6 dark:bg-gray-800 dark:border-gray-700"
@@ -107,16 +108,21 @@ const GithubManager = ({}) => {
               <Button
                 icon="fa fa-copy"
                 caption="Clone"
-                onClick={(e) => {
-                  github.clone()
+                onClick={async (e) => {
+                  const { error, success } = await github.clone()
+                  console.log(error, success)
+                  if (success) {
+                    listFs()
+                  }
                 }}
               />
               <Button
                 icon="fa fa-exclamation"
                 caption="Status"
-                onClick={(e) => {
+                onClick={async (e) => {
                   // github.status()
-                  getStatusTree()
+                  const status = await getStatusTree()
+                  console.log(status)
                 }}
               />
               <Button

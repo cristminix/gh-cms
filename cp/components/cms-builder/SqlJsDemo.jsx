@@ -14,9 +14,7 @@ const SqlJsDemo = ({}) => {
     const filebuffer = await fsp.readFile(databasePath)
 
     initSqlJs({
-      locateFile: () => {
-        return "http://localhost:5000/node_modules/sql.js/dist/sql-wasm.wasm"
-      },
+      locateFile: (file) => `https://sql.js.org/dist/${file}`,
     }).then((SQL) => {
       // Load the db
       const db = new SQL.Database(filebuffer)

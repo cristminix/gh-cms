@@ -38,7 +38,7 @@ class Github {
       http,
       dir: this.dir,
       url,
-      corsProxy: corsProxyUrl,
+      // corsProxy: corsProxyUrl,
     }
     this.pushOptions = { ...this.options, url: this.remote }
   }
@@ -60,7 +60,17 @@ class Github {
 
     let error, success
     try {
-      await git.clone(options)
+      await git.clone({
+        ...options,
+        onProgress: (event) => {
+          console.log(event.phase)
+          if (event.total) {
+            console.log(event.loaded / event.total)
+          } else {
+            console.log(event.loaded)
+          }
+        },
+      })
 
       success = await fsp.readdir(dir)
     } catch (e) {
