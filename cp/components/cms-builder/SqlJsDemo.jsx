@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react"
 import { github, DirectoryListing, dataUrlToFile, dataUrlToUint8Array } from "@cp/cloud/iso-git"
 import { getFile64 } from "@cp/global/fn"
 import initSqlJs from "sql.js"
+import { initOrm } from "../orm/initOrm"
+import { cms_user } from "../orm/schema"
 const { fs, fsp, dir, git } = github
 
 const SqlJsDemo = ({}) => {
@@ -11,22 +13,10 @@ const SqlJsDemo = ({}) => {
   const [databasePath, setDatabasePath] = useState(`${dir}/cms.sqlite`)
   const db = null
   const loadDatabase = async () => {
-    const filebuffer = await fsp.readFile(databasePath)
-
-    initSqlJs({
-      locateFile: (file) => `https://sql.js.org/dist/${file}`,
-    }).then((SQL) => {
-      // Load the db
-      const db = new SQL.Database(filebuffer)
-      console.log(db)
-
-      // Prepare an sql statement
-      const stmt = db.prepare("SELECT * FROM cms_user WHERE id=:bval")
-
-      // Bind values to the parameters and fetch the results of the query
-      const result = stmt.getAsObject({ ":bval": 1 })
-      console.log(result)
-    })
+    const database = await initOrm(fsp, databasePath)
+    const res = database.select().from(cms_user).all()
+    console.log(database)
+    console.log(res)
   }
   useEffect(() => {
     loadDatabase()
