@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { github, DirectoryListing, dataUrlToFile, dataUrlToUint8Array } from "@cp/cloud/iso-git"
 import { getFile64 } from "@cp/global/fn"
 import { testFn } from "../orm/fn"
+import CheckBox from "../shared/ux/CheckBox"
 console.log(testFn())
 const { fs, fsp, dir, git } = github
 const GithubManager = ({}) => {
@@ -13,11 +14,13 @@ const GithubManager = ({}) => {
   const [fsBasePath, setFsBasePath] = useState(dir)
   const fileInputRef = useRef(null)
   const listFs = async () => {
-    let lsNames = await fsp.readdir(fsBasePath)
+    console.log(fsBasePath)
+    let targetDir = fsBasePath.length > 0 ? fsBasePath : "/"
+    let lsNames = await fsp.readdir(targetDir)
     let lsContents = []
     let index = 0
     for (const name of lsNames) {
-      const stat = await fsp.stat(`${fsBasePath}/${name}`)
+      const stat = await fsp.stat(`${targetDir}/${name}`)
       lsContents[index] = {
         name,
         stat,
@@ -30,7 +33,7 @@ const GithubManager = ({}) => {
   const getStatusTree = async () => {
     let { files, changes } = await throughDirectory()
     if (changes > 0) {
-      return true
+      return  { files, changes } 
     }
 
     // // All the files in the current staging area
@@ -115,6 +118,14 @@ const GithubManager = ({}) => {
                     listFs()
                   }
                 }}
+              />{" "}
+              <Button
+                icon="fa fa-trash"
+                caption="Wipe"
+                onClick={async (e) => {
+                  await github.wipe()
+                  listFs()
+                }}
               />
               <Button
                 icon="fa fa-exclamation"
@@ -129,16 +140,15 @@ const GithubManager = ({}) => {
                 icon="fa fa-history"
                 caption="Commit"
                 onClick={async (e) => {
-                  const { changes } = await getStatusTree()
-                  if (changes > 0) {
-                    const sha = await github.commit(`Commit message at ${new Date()}`)
+                  const  { files, changes }  = await getStatusTree()
+                  if (changes>0) {
+                    const sha = await github.commit(`Commit New message at ${new Date()}`)
                     console.log(sha, changes)
                   } else {
                     console.log(changes)
                   }
                 }}
               />
-
               <Button
                 icon="fa fa-upload"
                 caption="Push"
@@ -163,6 +173,7 @@ const GithubManager = ({}) => {
                   fileInputRef.current.click()
                 }}
               />
+
               <input
                 type="file"
                 ref={fileInputRef}
@@ -183,9 +194,24 @@ const GithubManager = ({}) => {
               />
             </div>
           </div>
+          <div className="flex gap-2 items-center py-2">
+            <label className="text-xs">Enable Cors Proxy</label>
+
+            <CheckBox
+              onChange={(flag) => {
+                github.enableCorsProxy(flag)
+                // console.log(checked)
+              }}
+            />
+            <span className="text-xs">
+              {" "}
+              Or you can use CORS Unblock Chrome Extension
+              https://chromewebstore.google.com/detail/cors-unblock/lfhmikememgdcahcdlaciloancbhjino
+            </span>
+          </div>
           <div>
             <span>Path : </span>
-            <span className="font-mono">{fsBasePath}</span>
+            <span className="font-mono">{fsBasePath.length > 0 ? fsBasePath : "/"}</span>
           </div>
         </div>
 

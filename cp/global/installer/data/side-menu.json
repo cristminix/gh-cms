@@ -80,6 +80,26 @@
         "id": ""
       },
       {
+        "title": "Zip & Unzip",
+        "slug": "gzip-js",
+        "parent": 2,
+        "path": "/builder/gzip-js",
+        "iconCls": "bi bi-database",
+        "hidden": false,
+        "dev": false,
+        "level": 0,
+        "order": 0,
+        "hasChild": false,
+        "useModel": false,
+        "model": "",
+        "modelListMethod": "",
+        "slugField": "",
+        "displayField": "",
+        "childRoutePath": "",
+        "childIconCls": "",
+        "id": ""
+      },
+      {
         "title": "Tema",
         "slug": "web-theme-manager",
         "parent": 2,

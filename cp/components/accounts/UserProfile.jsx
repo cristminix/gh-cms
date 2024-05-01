@@ -12,8 +12,10 @@ import {
   modalBtnFrmCloseCls,
   modalBtnFrmSaveCls,
 } from "@cp/components/shared/ux/cls"
+import { useDbProvider } from "../../../config/cp.json"
 import { FormRow, FormRowImageValidation, FormRowSelect, FormRowValidation } from "../shared/ux/Form"
-import { signOut } from "@cp/firebase/auth"
+import { signOut, useAuth } from "@cp/firebase/auth"
+import { getCurrentUserInfo } from "@cp/firebase/user"
 import { useNavigate } from "react-router-dom"
 const UserProfile = ({ config }) => {
   const [pk, setPk] = useState("")
@@ -30,7 +32,8 @@ const UserProfile = ({ config }) => {
   const [lastUpdated, setLastUpdated] = useState("")
 
   const [cookies, setCookie, removeCookie] = useCookies(["uid", "requestToken"])
-  const [user, setUser] = useState(null)
+  const { user } = useAuth()
+  const [userInfo, setUserInfo] = useState({})
   const [uid, setUid] = useState(cookies.uid)
 
   const toastRef = useRef(null)
@@ -64,11 +67,24 @@ const UserProfile = ({ config }) => {
   }, [])
 
   useEffect(() => {
-    // main()
-    if (uid) {
-      getRemoteRowData(uid)
+    if (useDbProvider) {
+      if (user) {
+        console.log(user)
+
+        const loadUserInfo = async () => {
+          const userInfo = await getCurrentUserInfo()
+          console.log(userInfo)
+          setFormData(userInfo)
+        }
+        loadUserInfo()
+      }
+    } else {
+      if (uid) {
+        getRemoteRowData(uid)
+      }
     }
-  }, [uid])
+    // main()
+  }, [user, uid])
   const setFormData = (data) => {
     const { id, username, email, firstName, lastName, displayName, avatarUrl, groupId, groupName } = data
     setPk(id)

@@ -73,6 +73,7 @@
     "jquery": "^3.7.1",
     "jsonwebtoken": "^9.0.2",
     "jsstore": "^4.7.3",
+    "jszip": "^3.10.1",
     "mime-types": "^2.1.35",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.0",

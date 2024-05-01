@@ -29,7 +29,8 @@ class Github {
     this.url = url
     this.token = token
     this.remote = url.replace("github.com", `${token}@github.com`)
-    this.fs = new LightningFS("fs")
+    this.fs = new LightningFS()
+    this.fs.init("fs")
     this.fsp = this.fs.promises
     this.dir = getRepoDir(url)
     this.corsProxyUrl = corsProxyUrl
@@ -37,10 +38,29 @@ class Github {
       fs: this.fs,
       http,
       dir: this.dir,
-      url,
-      // corsProxy: corsProxyUrl,
+      url:this.remote,
     }
-    this.pushOptions = { ...this.options, url: this.remote }
+    this.pushOptions ={
+      fs: this.fs,
+      http,
+      dir: this.dir,
+      url: this.remote
+    } 
+  }
+  disableCorsProxy() {
+    delete this.options.corsProxy
+    delete this.pushOptions.corsProxy
+  }
+  enableCorsProxy(flag = true) {
+    if (!flag) return this.disableCorsProxy()
+    this.options.corsProxy = this.corsProxyUrl
+    this.pushOptions.corsProxy = this.corsProxyUrl
+  }
+  async wipe() {
+    await this.fs.init("fs", {
+      wipe: true,
+    })
+    await this.fsp.mkdir(this.dir)
   }
   async isCloned() {
     const { fsp, dir } = this
@@ -125,6 +145,7 @@ class Github {
 
   async push() {
     const { git, pushOptions } = this
+    console.log(pushOptions)
     return git.push(pushOptions)
   }
   async writeFile(path, content) {
